@@ -57,22 +57,26 @@ const PhoneAuth = () => {
     setIsSubmitting(true);
     clearError();
 
-    const fullPhoneNumber = `+1${phone}`;
-    console.log('Full phone number:', fullPhoneNumber);
-    
-    const result = await signInWithPhone(fullPhoneNumber);
-    console.log('SignInWithPhone result:', result);
+    try {
+      const fullPhoneNumber = `+1${phone}`;
+      console.log('Full phone number:', fullPhoneNumber);
+      
+      const result = await signInWithPhone(fullPhoneNumber);
+      console.log('SignInWithPhone result:', result);
 
-    if (result.success) {
-      console.log('OTP sent successfully, moving to OTP step');
-      setStep('otp');
-      setCountdown(60); // 60 second countdown
-      setResendAttempts(prev => prev + 1);
-    } else {
-      console.log('OTP send failed:', result.error);
+      if (result && result.success) {
+        console.log('OTP sent successfully, moving to OTP step');
+        setStep('otp');
+        setCountdown(60); // 60 second countdown
+        setResendAttempts(prev => prev + 1);
+      } else {
+        console.log('OTP send failed:', result?.error || 'Unknown error');
+      }
+    } catch (error) {
+      console.error('Error in handleSendOTP:', error);
+    } finally {
+      setIsSubmitting(false);
     }
-    
-    setIsSubmitting(false);
   };
 
   // Verify OTP
@@ -86,15 +90,21 @@ const PhoneAuth = () => {
     setIsSubmitting(true);
     clearError();
 
-    const fullPhoneNumber = `+1${phone}`;
-    const result = await verifyOTP(fullPhoneNumber, otp);
+    try {
+      const fullPhoneNumber = `+1${phone}`;
+      const result = await verifyOTP(fullPhoneNumber, otp);
 
-    if (result.success) {
-      // Success - user will be redirected by AuthContext
-      console.log('Phone verification successful!');
+      if (result && result.success) {
+        // Success - user will be redirected by AuthContext
+        console.log('Phone verification successful!');
+      } else {
+        console.log('OTP verification failed:', result?.error || 'Unknown error');
+      }
+    } catch (error) {
+      console.error('Error in handleVerifyOTP:', error);
+    } finally {
+      setIsSubmitting(false);
     }
-    
-    setIsSubmitting(false);
   };
 
   // Resend OTP
@@ -104,15 +114,21 @@ const PhoneAuth = () => {
     setIsSubmitting(true);
     clearError();
 
-    const fullPhoneNumber = `+1${phone}`;
-    const result = await signInWithPhone(fullPhoneNumber);
+    try {
+      const fullPhoneNumber = `+1${phone}`;
+      const result = await signInWithPhone(fullPhoneNumber);
 
-    if (result.success) {
-      setCountdown(60);
-      setResendAttempts(prev => prev + 1);
+      if (result && result.success) {
+        setCountdown(60);
+        setResendAttempts(prev => prev + 1);
+      } else {
+        console.log('Resend OTP failed:', result?.error || 'Unknown error');
+      }
+    } catch (error) {
+      console.error('Error in handleResendOTP:', error);
+    } finally {
+      setIsSubmitting(false);
     }
-    
-    setIsSubmitting(false);
   };
 
   // Back to phone step
