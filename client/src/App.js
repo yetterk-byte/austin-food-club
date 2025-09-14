@@ -4,14 +4,14 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import './App.css';
 import Header from './components/Header';
 import BottomNav from './components/BottomNav';
+import ProtectedRoute from './components/ProtectedRoute';
 import CurrentPage from './pages/app/CurrentPage';
 import WishlistPage from './pages/app/WishlistPage';
 import ProfilePage from './pages/app/ProfilePage';
-import LoginPage from './pages/auth/LoginPage';
+import Login from './pages/Login';
 
 const AppContent = () => {
   const location = useLocation();
-  const { user, loading } = useAuth();
   const [currentPage, setCurrentPage] = useState('current');
   const [selectedDay, setSelectedDay] = useState(null); // eslint-disable-line no-unused-vars
   const [rsvpStatus, setRsvpStatus] = useState(null);
@@ -50,58 +50,49 @@ const AppContent = () => {
     console.log('RSVP status:', status);
   };
 
-  // Show loading spinner while checking authentication
-  if (loading) {
-    return (
-      <div className="app">
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Show login page if not authenticated
-  if (!user) {
-    return (
-      <div className="app">
-        <Header currentPage={getPageName(location.pathname)} />
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
-      </div>
-    );
-  }
-
-  // Show main app if authenticated
   return (
     <div className="app">
       <Header currentPage={getPageName(location.pathname)} />
       
       <Routes>
+        {/* Public routes */}
+        <Route path="/login" element={<Login />} />
+        
+        {/* Protected routes */}
         <Route path="/current" element={
-          <CurrentPage 
-            onDayChange={handleDayChange}
-            onStatusChange={handleStatusChange}
-          />
+          <ProtectedRoute>
+            <CurrentPage 
+              onDayChange={handleDayChange}
+              onStatusChange={handleStatusChange}
+            />
+          </ProtectedRoute>
         } />
-        <Route path="/wishlist" element={<WishlistPage />} />
+        <Route path="/wishlist" element={
+          <ProtectedRoute>
+            <WishlistPage />
+          </ProtectedRoute>
+        } />
         <Route path="/profile" element={
-          <ProfilePage 
-            rsvpStatus={rsvpStatus}
-            setCurrentPage={setCurrentPage}
-          />
+          <ProtectedRoute>
+            <ProfilePage 
+              rsvpStatus={rsvpStatus}
+              setCurrentPage={setCurrentPage}
+            />
+          </ProtectedRoute>
         } />
-        <Route path="/login" element={<Navigate to="/current" replace />} />
+        
+        {/* Default redirects */}
         <Route path="/" element={<Navigate to="/current" replace />} />
+        <Route path="*" element={<Navigate to="/current" replace />} />
       </Routes>
       
-      <BottomNav 
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-      />
+      {/* Only show bottom nav on protected routes */}
+      {location.pathname !== '/login' && (
+        <BottomNav 
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
     </div>
   );
 };
