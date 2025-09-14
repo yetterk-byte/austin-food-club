@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
+const { verifySupabaseToken, requireAuth, optionalAuth } = require('./middleware/auth');
 
 const app = express();
 const PORT = 3001;
@@ -92,14 +93,15 @@ app.get('/api/restaurants/current', async (req, res) => {
 });
 
 // RSVP endpoints
-app.post('/api/rsvp', async (req, res) => {
+app.post('/api/rsvp', verifySupabaseToken, requireAuth, async (req, res) => {
   try {
-    const { userId, day, status, restaurantId } = req.body;
+    const { day, status, restaurantId } = req.body;
+    const userId = req.user.id; // Get userId from authenticated user
     
     // Validate required fields
-    if (!userId || !day || !status) {
+    if (!day || !status) {
       return res.status(400).json({ 
-        error: 'Missing required fields: userId, day, and status are required' 
+        error: 'Missing required fields: day and status are required' 
       });
     }
     
@@ -165,13 +167,9 @@ app.post('/api/rsvp', async (req, res) => {
   }
 });
 
-app.get('/api/rsvp/:userId', async (req, res) => {
+app.get('/api/rsvp', verifySupabaseToken, requireAuth, async (req, res) => {
   try {
-    const { userId } = req.params;
-    
-    if (!userId) {
-      return res.status(400).json({ error: 'userId is required' });
-    }
+    const userId = req.user.id; // Get userId from authenticated user
     
     // Get all RSVPs for this user with restaurant details
     const userRsvps = await prisma.rSVP.findMany({
@@ -212,20 +210,41 @@ app.get('/api/rsvp/:userId', async (req, res) => {
 });
 
 // Wishlist endpoints
-app.get('/api/wishlist/:userId', (req, res) => {
+app.get('/api/wishlist', verifySupabaseToken, requireAuth, async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.user.id; // Get userId from authenticated user
     
-    if (!userId) {
-      return res.status(400).json({ error: 'userId is required' });
-    }
-    
-    // Get user's wishlist or return empty array
-    const wishlist = wishlists.get(userId) || [];
+    // Get user's wishlist from database
+    const wishlist = await prisma.wishlist.findMany({
+      where: {
+        userId
+      },
+      include: {
+        restaurant: {
+          select: {
+            id: true,
+            name: true,
+            cuisine: true,
+            area: true,
+            price: true,
+            description: true,
+            address: true,
+            imageUrl: true
+          }
+        }
+      },
+      orderBy: {
+        addedAt: 'desc'
+      }
+    });
     
     res.json({ 
       userId,
-      wishlist 
+      wishlist: wishlist.map(item => ({
+        id: item.id,
+        restaurant: item.restaurant,
+        addedAt: item.addedAt
+      }))
     });
   } catch (error) {
     console.error('Error fetching wishlist:', error);
@@ -233,46 +252,74 @@ app.get('/api/wishlist/:userId', (req, res) => {
   }
 });
 
-app.post('/api/wishlist', (req, res) => {
+app.post('/api/wishlist', verifySupabaseToken, requireAuth, async (req, res) => {
   try {
-    const { userId, restaurant } = req.body;
+    const { restaurantId } = req.body;
+    const userId = req.user.id; // Get userId from authenticated user
     
     // Validate required fields
-    if (!userId || !restaurant) {
+    if (!restaurantId) {
       return res.status(400).json({ 
-        error: 'Missing required fields: userId and restaurant are required' 
+        error: 'Missing required field: restaurantId is required' 
       });
     }
     
-    // Validate restaurant object has required fields
-    if (!restaurant.id || !restaurant.name) {
-      return res.status(400).json({ 
-        error: 'Restaurant must have id and name fields' 
+    // Check if restaurant exists
+    const restaurant = await prisma.restaurant.findUnique({
+      where: { id: restaurantId }
+    });
+    
+    if (!restaurant) {
+      return res.status(404).json({ 
+        error: 'Restaurant not found' 
       });
     }
     
-    // Get existing wishlist or create new one
-    const wishlist = wishlists.get(userId) || [];
+    // Check if restaurant already exists in user's wishlist
+    const existingWishlistItem = await prisma.wishlist.findUnique({
+      where: {
+        userId_restaurantId: {
+          userId,
+          restaurantId
+        }
+      }
+    });
     
-    // Check if restaurant already exists in wishlist
-    const existingRestaurant = wishlist.find(r => r.id === restaurant.id);
-    if (existingRestaurant) {
+    if (existingWishlistItem) {
       return res.status(409).json({ 
         error: 'Restaurant already exists in wishlist' 
       });
     }
     
     // Add restaurant to wishlist
-    const restaurantWithTimestamp = {
-      ...restaurant,
-      addedAt: new Date().toISOString()
-    };
-    wishlist.push(restaurantWithTimestamp);
-    wishlists.set(userId, wishlist);
+    const wishlistItem = await prisma.wishlist.create({
+      data: {
+        userId,
+        restaurantId
+      },
+      include: {
+        restaurant: {
+          select: {
+            id: true,
+            name: true,
+            cuisine: true,
+            area: true,
+            price: true,
+            description: true,
+            address: true,
+            imageUrl: true
+          }
+        }
+      }
+    });
     
     res.status(201).json({ 
       message: 'Restaurant added to wishlist successfully',
-      restaurant: restaurantWithTimestamp
+      wishlistItem: {
+        id: wishlistItem.id,
+        restaurant: wishlistItem.restaurant,
+        addedAt: wishlistItem.addedAt
+      }
     });
   } catch (error) {
     console.error('Error adding to wishlist:', error);
@@ -280,35 +327,60 @@ app.post('/api/wishlist', (req, res) => {
   }
 });
 
-app.delete('/api/wishlist/:userId/:restaurantId', (req, res) => {
+app.delete('/api/wishlist/:restaurantId', verifySupabaseToken, requireAuth, async (req, res) => {
   try {
-    const { userId, restaurantId } = req.params;
+    const { restaurantId } = req.params;
+    const userId = req.user.id; // Get userId from authenticated user
     
-    if (!userId || !restaurantId) {
+    if (!restaurantId) {
       return res.status(400).json({ 
-        error: 'userId and restaurantId are required' 
+        error: 'restaurantId is required' 
       });
     }
     
-    // Get user's wishlist
-    const wishlist = wishlists.get(userId) || [];
+    // Find and delete wishlist item
+    const wishlistItem = await prisma.wishlist.findUnique({
+      where: {
+        userId_restaurantId: {
+          userId,
+          restaurantId
+        }
+      },
+      include: {
+        restaurant: {
+          select: {
+            id: true,
+            name: true,
+            cuisine: true,
+            area: true
+          }
+        }
+      }
+    });
     
-    // Find restaurant index
-    const restaurantIndex = wishlist.findIndex(r => r.id === restaurantId);
-    
-    if (restaurantIndex === -1) {
+    if (!wishlistItem) {
       return res.status(404).json({ 
         error: 'Restaurant not found in wishlist' 
       });
     }
     
     // Remove restaurant from wishlist
-    const removedRestaurant = wishlist.splice(restaurantIndex, 1)[0];
-    wishlists.set(userId, wishlist);
+    await prisma.wishlist.delete({
+      where: {
+        userId_restaurantId: {
+          userId,
+          restaurantId
+        }
+      }
+    });
     
     res.json({ 
       message: 'Restaurant removed from wishlist successfully',
-      removedRestaurant 
+      removedRestaurant: {
+        id: wishlistItem.id,
+        restaurant: wishlistItem.restaurant,
+        addedAt: wishlistItem.addedAt
+      }
     });
   } catch (error) {
     console.error('Error removing from wishlist:', error);
@@ -321,8 +393,10 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   console.log(`Test endpoint: http://localhost:${PORT}/api/test`);
   console.log(`Restaurants endpoint: http://localhost:${PORT}/api/restaurants/current`);
-  console.log(`RSVP endpoints: POST/GET http://localhost:${PORT}/api/rsvp`);
-  console.log(`Wishlist endpoints: GET/POST/DELETE http://localhost:${PORT}/api/wishlist`);
+  console.log(`RSVP endpoints (AUTH REQUIRED): POST/GET http://localhost:${PORT}/api/rsvp`);
+  console.log(`Wishlist endpoints (AUTH REQUIRED): GET/POST/DELETE http://localhost:${PORT}/api/wishlist`);
+  console.log(`\nAuthentication required for RSVP and Wishlist endpoints.`);
+  console.log(`Include Authorization header: Bearer <supabase-jwt-token>`);
 });
 
 // Graceful shutdown
