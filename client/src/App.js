@@ -9,6 +9,8 @@ import AuthTest from './components/AuthTest';
 import CurrentPage from './pages/app/CurrentPage';
 import WishlistPage from './pages/app/WishlistPage';
 import ProfilePage from './pages/app/ProfilePage';
+import RestaurantDetail from './pages/RestaurantDetail';
+import Wishlist from './pages/Wishlist';
 import Login from './pages/Login';
 
 const AppContent = () => {
@@ -72,7 +74,7 @@ const AppContent = () => {
         } />
         <Route path="/wishlist" element={
           <ProtectedRoute>
-            <WishlistPage />
+            <Wishlist />
           </ProtectedRoute>
         } />
         <Route path="/profile" element={
@@ -83,6 +85,7 @@ const AppContent = () => {
             />
           </ProtectedRoute>
         } />
+        <Route path="/restaurant/:restaurantId" element={<RestaurantDetail />} />
         
         {/* Default redirects */}
         <Route path="/" element={<Navigate to="/current" replace />} />
@@ -90,7 +93,9 @@ const AppContent = () => {
       </Routes>
       
       {/* Only show bottom nav on protected routes */}
-      {location.pathname !== '/login' && location.pathname !== '/test-auth' && (
+      {location.pathname !== '/login' && 
+       location.pathname !== '/test-auth' && 
+       !location.pathname.startsWith('/restaurant/') && (
         <BottomNav 
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
