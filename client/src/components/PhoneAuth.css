@@ -1,0 +1,369 @@
+/* PhoneAuth Component Styles */
+.phone-auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+}
+
+.phone-auth-card {
+  background: #2a2a2a;
+  border-radius: 16px;
+  padding: 32px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid #333;
+}
+
+.phone-auth-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.phone-auth-header h2 {
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+}
+
+.phone-auth-header p {
+  color: #b0b0b0;
+  font-size: 16px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Error Message */
+.error-message {
+  background: #3d1a1a;
+  border: 1px solid #5c2a2a;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #ff6b6b;
+  font-size: 14px;
+}
+
+.clear-error-btn {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.clear-error-btn:hover {
+  background-color: rgba(255, 107, 107, 0.1);
+}
+
+/* Form Styles */
+.phone-form,
+.otp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group label {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+/* Phone Input */
+.phone-input-container {
+  display: flex;
+  align-items: center;
+  background: #1a1a1a;
+  border: 2px solid #333;
+  border-radius: 12px;
+  padding: 0 16px;
+  transition: all 0.2s ease;
+  height: 56px;
+}
+
+.phone-input-container:focus-within {
+  border-color: #4a9eff;
+  box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.1);
+}
+
+.country-code {
+  color: #b0b0b0;
+  font-size: 16px;
+  font-weight: 500;
+  margin-right: 8px;
+  user-select: none;
+}
+
+.phone-input {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 16px;
+  flex: 1;
+  outline: none;
+  padding: 16px 0;
+}
+
+.phone-input::placeholder {
+  color: #666;
+}
+
+/* OTP Input */
+.otp-input {
+  background: #1a1a1a;
+  border: 2px solid #333;
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 8px;
+  padding: 16px 20px;
+  text-align: center;
+  outline: none;
+  transition: all 0.2s ease;
+  height: 56px;
+}
+
+.otp-input:focus {
+  border-color: #4a9eff;
+  box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.1);
+}
+
+.otp-input::placeholder {
+  color: #666;
+  letter-spacing: 4px;
+}
+
+/* Input Hints */
+.input-hint {
+  color: #ffa500;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Submit Button */
+.submit-btn {
+  background: linear-gradient(135deg, #4a9eff 0%, #357abd 100%);
+  border: none;
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 16px 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #5ba8ff 0%, #4a8bc7 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit-btn:disabled {
+  background: #333;
+  color: #666;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* OTP Header */
+.otp-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.otp-header h3 {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.otp-header p {
+  color: #b0b0b0;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* OTP Actions */
+.otp-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.resend-section {
+  text-align: center;
+}
+
+.countdown {
+  color: #b0b0b0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.resend-btn {
+  background: none;
+  border: 1px solid #4a9eff;
+  border-radius: 8px;
+  color: #4a9eff;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.resend-btn:hover:not(:disabled) {
+  background: #4a9eff;
+  color: #ffffff;
+}
+
+.resend-btn:disabled {
+  border-color: #333;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.back-btn {
+  background: none;
+  border: 1px solid #555;
+  border-radius: 8px;
+  color: #b0b0b0;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  align-self: center;
+}
+
+.back-btn:hover:not(:disabled) {
+  border-color: #777;
+  color: #ffffff;
+}
+
+.back-btn:disabled {
+  border-color: #333;
+  color: #666;
+  cursor: not-allowed;
+}
+
+/* Footer */
+.phone-auth-footer {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.phone-auth-footer p {
+  color: #666;
+  font-size: 12px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Loading States */
+.submit-btn:disabled {
+  position: relative;
+}
+
+.submit-btn:disabled::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #666;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-left: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+  .phone-auth-container {
+    padding: 16px;
+  }
+  
+  .phone-auth-card {
+    padding: 24px;
+  }
+  
+  .phone-auth-header h2 {
+    font-size: 24px;
+  }
+  
+  .otp-input {
+    font-size: 20px;
+    letter-spacing: 6px;
+  }
+}
+
+/* Focus States for Accessibility */
+.phone-input:focus,
+.otp-input:focus {
+  outline: none;
+}
+
+.submit-btn:focus,
+.resend-btn:focus,
+.back-btn:focus {
+  outline: 2px solid #4a9eff;
+  outline-offset: 2px;
+}
+
+/* Animation for step transitions */
+.phone-form,
+.otp-form {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
