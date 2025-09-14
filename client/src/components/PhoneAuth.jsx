@@ -46,20 +46,30 @@ const PhoneAuth = () => {
   const handleSendOTP = async (e) => {
     e.preventDefault();
     
+    console.log('Send OTP clicked, phone length:', phone.length);
+    
     if (phone.length !== 10) {
+      console.log('Phone number too short, not sending OTP');
       return;
     }
 
+    console.log('Sending OTP to phone:', phone);
     setIsSubmitting(true);
     clearError();
 
     const fullPhoneNumber = `+1${phone}`;
+    console.log('Full phone number:', fullPhoneNumber);
+    
     const result = await signInWithPhone(fullPhoneNumber);
+    console.log('SignInWithPhone result:', result);
 
     if (result.success) {
+      console.log('OTP sent successfully, moving to OTP step');
       setStep('otp');
       setCountdown(60); // 60 second countdown
       setResendAttempts(prev => prev + 1);
+    } else {
+      console.log('OTP send failed:', result.error);
     }
     
     setIsSubmitting(false);

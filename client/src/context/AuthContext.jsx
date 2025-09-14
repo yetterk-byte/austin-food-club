@@ -62,7 +62,6 @@ export const AuthProvider = ({ children }) => {
   // Sign in with phone number (sends OTP)
   const signInWithPhone = async (phone) => {
     try {
-      setLoading(true);
       setError(null);
 
       const { data, error } = await supabase.auth.signInWithOtp({
@@ -84,15 +83,12 @@ export const AuthProvider = ({ children }) => {
       console.error('Phone sign-in exception:', err);
       setError(err.message);
       return { success: false, error: err.message };
-    } finally {
-      setLoading(false);
     }
   };
 
   // Verify OTP code
   const verifyOTP = async (phone, token) => {
     try {
-      setLoading(true);
       setError(null);
 
       const { data, error } = await supabase.auth.verifyOtp({
@@ -120,8 +116,6 @@ export const AuthProvider = ({ children }) => {
       console.error('OTP verification exception:', err);
       setError(err.message);
       return { success: false, error: err.message };
-    } finally {
-      setLoading(false);
     }
   };
 
