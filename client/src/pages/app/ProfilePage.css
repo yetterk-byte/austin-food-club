@@ -1,0 +1,361 @@
+.profile-page {
+  padding: 20px 0 100px 0; /* Space for bottom nav */
+  background: #1a1a1a;
+  min-height: 100vh;
+  color: #ffffff;
+}
+
+/* Profile Header */
+.profile-header {
+  text-align: center;
+  padding: 20px;
+  background: #333;
+  margin: 0 20px 20px 20px;
+  border-radius: 8px;
+  border: 1px solid #444;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  background: #ffffff;
+  color: #1a1a1a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0 auto 16px auto;
+}
+
+.profile-name {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #ffffff;
+}
+
+.profile-email {
+  font-size: 14px;
+  color: #999;
+  margin: 0;
+}
+
+/* Stats Section */
+.stats-section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 0 20px 30px 20px;
+}
+
+.stat-item {
+  background: #333;
+  padding: 20px 16px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #444;
+  transition: all 0.3s;
+}
+
+.stat-item.clickable {
+  cursor: pointer;
+}
+
+.stat-item.clickable:hover {
+  background: #444;
+  border-color: #555;
+}
+
+.stat-number {
+  font-size: 24px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Upload Section */
+.upload-section {
+  margin: 0 20px 30px 20px;
+  background: #333;
+  padding: 24px;
+  border-radius: 8px;
+  border: 1px solid #444;
+}
+
+.upload-section h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  color: #ffffff;
+}
+
+.upload-box {
+  text-align: center;
+  padding: 40px 20px;
+  border: 2px dashed #555;
+  border-radius: 8px;
+  background: #2a2a2a;
+}
+
+.upload-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.7;
+}
+
+.upload-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 8px 0;
+}
+
+.upload-subtext {
+  font-size: 14px;
+  color: #999;
+  margin: 0 0 20px 0;
+}
+
+.upload-button {
+  background: #ffffff;
+  color: #1a1a1a;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.upload-button:hover {
+  background: #f0f0f0;
+}
+
+/* Not Going Section */
+.not-going-section {
+  margin: 0 20px 30px 20px;
+  background: #333;
+  padding: 24px;
+  border-radius: 8px;
+  border: 1px solid #444;
+}
+
+.not-going-section h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  color: #ffffff;
+}
+
+.not-going-box {
+  text-align: center;
+  padding: 40px 20px;
+  border: 1px solid #555;
+  border-radius: 8px;
+  background: #2a2a2a;
+}
+
+.not-going-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.7;
+}
+
+.not-going-text {
+  font-size: 16px;
+  color: #ccc;
+  margin: 0 0 20px 0;
+}
+
+.change-rsvp-button {
+  background: #4CAF50;
+  color: #ffffff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.change-rsvp-button:hover {
+  background: #45a049;
+}
+
+/* Verified Visits Section */
+.verified-visits-section {
+  margin: 0 20px 30px 20px;
+  background: #333;
+  padding: 24px;
+  border-radius: 8px;
+  border: 1px solid #444;
+}
+
+.verified-visits-section h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  color: #ffffff;
+}
+
+.visits-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.visit-card {
+  background: #2a2a2a;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  transition: all 0.3s;
+}
+
+.visit-card:hover {
+  border-color: #555;
+  background: #3a3a3a;
+}
+
+.visit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.visit-restaurant {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: #ffffff;
+}
+
+.visit-rating {
+  color: #ffd700;
+  font-size: 16px;
+}
+
+.visit-date {
+  font-size: 12px;
+  color: #999;
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.visit-review {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #ccc;
+  margin: 0 0 16px 0;
+}
+
+.visit-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.visit-action-button {
+  background: transparent;
+  color: #999;
+  border: 1px solid #555;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.visit-action-button:hover {
+  background: #444;
+  color: #ccc;
+  border-color: #666;
+}
+
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .profile-page {
+    padding: 16px 0 100px 0;
+  }
+  
+  .profile-header,
+  .stats-section,
+  .upload-section,
+  .not-going-section,
+  .verified-visits-section {
+    margin: 0 16px 20px 16px;
+  }
+  
+  .profile-header {
+    padding: 16px;
+  }
+  
+  .avatar {
+    width: 64px;
+    height: 64px;
+    font-size: 24px;
+  }
+  
+  .profile-name {
+    font-size: 20px;
+  }
+  
+  .stats-section {
+    gap: 8px;
+  }
+  
+  .stat-item {
+    padding: 16px 12px;
+  }
+  
+  .stat-number {
+    font-size: 20px;
+  }
+  
+  .upload-box,
+  .not-going-box {
+    padding: 30px 16px;
+  }
+  
+  .upload-icon,
+  .not-going-icon {
+    font-size: 40px;
+  }
+  
+  .visit-card {
+    padding: 16px;
+  }
+  
+  .visit-restaurant {
+    font-size: 16px;
+  }
+  
+  .friends-modal {
+    margin: 0 16px;
+  }
+  
+  .friend-item {
+    padding: 12px 16px;
+  }
+  
+  .friend-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+    margin-right: 12px;
+  }
+}

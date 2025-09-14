@@ -1,0 +1,178 @@
+.attendee-list {
+  background: #1a1a1a;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 24px;
+  margin-bottom: 20px;
+  border: 1px solid #333;
+}
+
+.attendee-list h3 {
+  color: #ffffff;
+  margin: 0 0 24px 0;
+  font-size: 1.3rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.attendee-stats {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 15px;
+  border-radius: 8px;
+  min-width: 80px;
+}
+
+.stat-item.going {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.stat-item.maybe {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.stat-item.not-going {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.stat-number {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.attendees-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.attendee-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid;
+  background-color: #f8f9fa;
+}
+
+.attendee-card.going {
+  border-left-color: #28a745;
+  background-color: #d4edda;
+}
+
+.attendee-card.maybe {
+  border-left-color: #ffc107;
+  background-color: #fff3cd;
+}
+
+.attendee-card.not-going {
+  border-left-color: #dc3545;
+  background-color: #f8d7da;
+}
+
+.attendee-info h4 {
+  margin: 0 0 5px 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.party-size {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.attendee-status {
+  flex-shrink: 0;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-badge.going {
+  background-color: #28a745;
+  color: white;
+}
+
+.status-badge.maybe {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.status-badge.not-going {
+  background-color: #dc3545;
+  color: white;
+}
+
+.no-attendees {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6c757d;
+}
+
+.no-attendees p {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 20px;
+  color: #6c757d;
+}
+
+.error {
+  color: #dc3545;
+}
+
+@media (max-width: 768px) {
+  .attendee-stats {
+    gap: 15px;
+  }
+  
+  .stat-item {
+    min-width: 60px;
+    padding: 10px;
+  }
+  
+  .stat-number {
+    font-size: 1.5rem;
+  }
+  
+  .attendees-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .attendee-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+}

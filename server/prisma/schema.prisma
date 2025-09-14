@@ -1,0 +1,112 @@
+// Austin Food Club Prisma Schema
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  phone     String?
+  name      String
+  createdAt DateTime @default(now())
+  
+  // Relations
+  rsvps          RSVP[]
+  wishlists      Wishlist[]
+  verifiedVisits VerifiedVisit[]
+  friendships    Friendship[] @relation("UserFriendships")
+  friendOf       Friendship[] @relation("FriendOf")
+  
+  @@map("users")
+}
+
+model Restaurant {
+  id          String   @id @default(cuid())
+  name        String
+  cuisine     String
+  price       String   // e.g., "$", "$$", "$$$"
+  area        String   // e.g., "East Austin", "South Austin"
+  description String?
+  address     String
+  imageUrl    String?
+  weekOf      DateTime // The week this restaurant is featured
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  rsvps          RSVP[]
+  wishlists      Wishlist[]
+  verifiedVisits VerifiedVisit[]
+  
+  @@map("restaurants")
+}
+
+model RSVP {
+  id           String   @id @default(cuid())
+  userId       String
+  restaurantId String
+  day          String   // e.g., "monday", "tuesday", etc.
+  status       String   // "going", "maybe", "not_going"
+  createdAt    DateTime @default(now())
+  
+  // Relations
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  
+  // Ensure one RSVP per user per restaurant per day
+  @@unique([userId, restaurantId, day])
+  @@map("rsvps")
+}
+
+model Wishlist {
+  id           String   @id @default(cuid())
+  userId       String
+  restaurantId String
+  addedAt      DateTime @default(now())
+  
+  // Relations
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  
+  // Ensure one wishlist entry per user per restaurant
+  @@unique([userId, restaurantId])
+  @@map("wishlists")
+}
+
+model VerifiedVisit {
+  id           String   @id @default(cuid())
+  userId       String
+  restaurantId String
+  photoUrl     String?
+  rating       Int?     // 1-5 star rating
+  visitDate    DateTime
+  createdAt    DateTime @default(now())
+  
+  // Relations
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  
+  @@map("verified_visits")
+}
+
+model Friendship {
+  id        String   @id @default(cuid())
+  userId    String
+  friendId  String
+  status    String   // "pending", "accepted", "blocked"
+  createdAt DateTime @default(now())
+  
+  // Relations
+  user   User @relation("UserFriendships", fields: [userId], references: [id], onDelete: Cascade)
+  friend User @relation("FriendOf", fields: [friendId], references: [id], onDelete: Cascade)
+  
+  // Ensure unique friendship pairs
+  @@unique([userId, friendId])
+  @@map("friendships")
+}

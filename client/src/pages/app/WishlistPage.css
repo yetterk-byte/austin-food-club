@@ -1,0 +1,264 @@
+.wishlist-page {
+  padding: 20px 0 100px 0; /* Space for bottom nav */
+  background: #1a1a1a;
+  min-height: 100vh;
+  color: #ffffff;
+}
+
+/* Search Header */
+.search-header {
+  padding: 0 20px 20px 20px;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
+
+.search-container {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 16px 48px 16px 16px;
+  background: #333;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.search-input::placeholder {
+  color: #666;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #ffffff;
+  background: #444;
+}
+
+.search-icon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  font-size: 18px;
+}
+
+.wishlist-count {
+  font-size: 14px;
+  color: #999;
+  text-align: center;
+}
+
+/* Wishlist Content */
+.wishlist-content {
+  padding: 20px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #999;
+}
+
+.empty-state p {
+  font-size: 14px;
+  margin: 0;
+  color: #666;
+}
+
+/* Wishlist Grid */
+.wishlist-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.wishlist-item {
+  background: #333;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 20px;
+  transition: all 0.3s;
+}
+
+.wishlist-item:hover {
+  border-color: #555;
+  background: #3a3a3a;
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.item-name {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: #ffffff;
+  flex: 1;
+}
+
+.remove-button {
+  background: #444;
+  border: 1px solid #555;
+  color: #999;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 300;
+  transition: all 0.3s;
+  margin-left: 12px;
+}
+
+.remove-button:hover {
+  background: #f44336;
+  color: #ffffff;
+  border-color: #f44336;
+}
+
+.item-meta {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.item-meta span {
+  padding: 4px 8px;
+  background: #444;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #ccc;
+  border: 1px solid #555;
+}
+
+.item-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.rating-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.rating-label {
+  font-size: 12px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.item-description {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #ccc;
+  margin: 0 0 16px 0;
+}
+
+.item-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid #444;
+}
+
+.added-date {
+  font-size: 12px;
+  color: #666;
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .wishlist-page {
+    padding: 16px 0 100px 0;
+  }
+  
+  .search-header {
+    padding: 0 16px 16px 16px;
+  }
+  
+  .search-input {
+    padding: 14px 44px 14px 14px;
+    font-size: 15px;
+  }
+  
+  .search-icon {
+    right: 14px;
+    font-size: 16px;
+  }
+  
+  .wishlist-content {
+    padding: 16px;
+  }
+  
+  .wishlist-item {
+    padding: 16px;
+  }
+  
+  .item-name {
+    font-size: 18px;
+  }
+  
+  .item-meta {
+    gap: 8px;
+  }
+  
+  .item-meta span {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+  
+  .empty-state {
+    padding: 40px 16px;
+  }
+  
+  .empty-icon {
+    font-size: 40px;
+  }
+}
+
+/* Animation for item removal */
+.wishlist-item.removing {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: all 0.3s ease-out;
+}
+
+/* Search results highlight */
+.search-highlight {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 4px;
+  border-radius: 3px;
+}

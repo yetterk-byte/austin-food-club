@@ -1,0 +1,55 @@
+.header {
+  background-color: #2a2a2a;
+  color: white;
+  padding: 16px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 430px;
+  margin: 0 auto;
+}
+
+.logo h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+}
+
+.page-badge {
+  background-color: #4a4a4a;
+  border-radius: 12px;
+  padding: 6px 12px;
+  border: 1px solid #5a5a5a;
+}
+
+.badge-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .header {
+    padding: 14px 16px;
+  }
+  
+  .logo h1 {
+    font-size: 18px;
+  }
+  
+  .badge-text {
+    font-size: 11px;
+  }
+}

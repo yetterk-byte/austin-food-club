@@ -1,0 +1,158 @@
+.restaurant-card {
+  background: #1a1a1a;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  margin-bottom: 20px;
+  border: 1px solid #333;
+}
+
+.restaurant-header {
+  background: #1a1a1a;
+  color: white;
+  padding: 24px;
+  text-align: center;
+  border-bottom: 1px solid #333;
+}
+
+.restaurant-name {
+  font-size: 2rem;
+  margin: 0 0 10px 0;
+  font-weight: 700;
+}
+
+.restaurant-rating {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  align-items: center;
+}
+
+.rating {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.price-range {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.restaurant-info {
+  padding: 24px;
+  background: #1a1a1a;
+}
+
+.info-section {
+  margin-bottom: 20px;
+}
+
+.info-section:last-child {
+  margin-bottom: 0;
+}
+
+.info-section h3 {
+  color: #ffffff;
+  font-size: 1.1rem;
+  margin: 0 0 12px 0;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+}
+
+.info-section p {
+  color: #cccccc;
+  line-height: 1.6;
+  margin: 8px 0;
+  font-size: 0.95rem;
+}
+
+.hours-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+
+.hours-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.hours-row:last-child {
+  border-bottom: none;
+}
+
+.day {
+  font-weight: 500;
+  color: #ffffff;
+  min-width: 50px;
+  font-size: 0.9rem;
+}
+
+.hours {
+  color: #cccccc;
+  font-size: 0.9rem;
+}
+
+.specialties {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.specialty-tag {
+  background-color: #333333;
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 400;
+  border: 1px solid #555;
+}
+
+.wait-time {
+  background-color: #2a2a2a;
+  padding: 16px;
+  border-radius: 6px;
+  border-left: 3px solid #3498db;
+}
+
+.wait-time-text {
+  color: #ffffff;
+  font-weight: 500;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.website-link {
+  display: inline-block;
+  background-color: #3498db;
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.website-link:hover {
+  background-color: #2980b9;
+}
+
+@media (max-width: 768px) {
+  .hours-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .restaurant-name {
+    font-size: 1.5rem;
+  }
+  
+  .restaurant-rating {
+    flex-direction: column;
+    gap: 5px;
+  }
+}

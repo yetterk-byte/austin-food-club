@@ -1,0 +1,339 @@
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Friends Modal */
+.friends-modal {
+  background: #333;
+  border-radius: 12px;
+  border: 1px solid #444;
+  width: 100%;
+  max-width: 450px;
+  max-height: 80vh;
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 16px 24px;
+  border-bottom: 1px solid #444;
+  background: #2a2a2a;
+}
+
+.modal-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: #ffffff;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.3s;
+  font-weight: 300;
+}
+
+.close-button:hover {
+  background: #444;
+  color: #ffffff;
+}
+
+/* Friends List */
+.friends-list {
+  max-height: 50vh;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.friends-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.friends-list::-webkit-scrollbar-track {
+  background: #2a2a2a;
+}
+
+.friends-list::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 3px;
+}
+
+.friends-list::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+/* Friend Item */
+.friend-item {
+  display: flex;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #444;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.friend-item:hover {
+  background: #3a3a3a;
+}
+
+.friend-item:last-child {
+  border-bottom: none;
+}
+
+/* Friend Avatar */
+.friend-avatar {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  background: #ffffff;
+  color: #1a1a1a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.status-indicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 3px solid #333;
+}
+
+.status-indicator.online {
+  background: #4CAF50;
+}
+
+.status-indicator.offline {
+  background: #999;
+}
+
+/* Friend Info */
+.friend-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.friend-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.friend-stats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  font-size: 12px;
+  color: #999;
+  background: #444;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+/* Message Button */
+.message-button {
+  background: #4CAF50;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.message-button:hover {
+  background: #45a049;
+  transform: translateY(-1px);
+}
+
+/* Modal Footer */
+.modal-footer {
+  padding: 20px 24px;
+  border-top: 1px solid #444;
+  background: #2a2a2a;
+  text-align: center;
+}
+
+.add-friends-button {
+  background: transparent;
+  color: #4CAF50;
+  border: 1px solid #4CAF50;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.add-friends-button:hover {
+  background: #4CAF50;
+  color: #ffffff;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .modal-overlay {
+    padding: 16px;
+  }
+  
+  .friends-modal {
+    max-height: 85vh;
+  }
+  
+  .modal-header {
+    padding: 20px 20px 12px 20px;
+  }
+  
+  .modal-header h2 {
+    font-size: 18px;
+  }
+  
+  .close-button {
+    width: 32px;
+    height: 32px;
+    font-size: 24px;
+  }
+  
+  .friend-item {
+    padding: 14px 20px;
+  }
+  
+  .friend-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 16px;
+    margin-right: 12px;
+  }
+  
+  .status-indicator {
+    width: 12px;
+    height: 12px;
+    border-width: 2px;
+  }
+  
+  .friend-name {
+    font-size: 15px;
+  }
+  
+  .friend-stats {
+    gap: 8px;
+  }
+  
+  .stat {
+    font-size: 11px;
+    padding: 2px 6px;
+  }
+  
+  .message-button {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+  
+  .modal-footer {
+    padding: 16px 20px;
+  }
+  
+  .add-friends-button {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}
+
+/* Animation for friend items */
+.friend-item {
+  animation: slideInLeft 0.3s ease-out;
+  animation-fill-mode: both;
+}
+
+.friend-item:nth-child(1) { animation-delay: 0.1s; }
+.friend-item:nth-child(2) { animation-delay: 0.15s; }
+.friend-item:nth-child(3) { animation-delay: 0.2s; }
+.friend-item:nth-child(4) { animation-delay: 0.25s; }
+.friend-item:nth-child(5) { animation-delay: 0.3s; }
+.friend-item:nth-child(6) { animation-delay: 0.35s; }
+.friend-item:nth-child(7) { animation-delay: 0.4s; }
+.friend-item:nth-child(8) { animation-delay: 0.45s; }
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
