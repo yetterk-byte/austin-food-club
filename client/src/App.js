@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import './App.css';
 import Header from './components/Header';
 import BottomNav from './components/BottomNav';
 import CurrentPage from './pages/app/CurrentPage';
 import WishlistPage from './pages/app/WishlistPage';
 import ProfilePage from './pages/app/ProfilePage';
+import LoginPage from './pages/auth/LoginPage';
 
 const AppContent = () => {
   const location = useLocation();
+  const { user, loading } = useAuth();
   const [currentPage, setCurrentPage] = useState('current');
   const [selectedDay, setSelectedDay] = useState(null); // eslint-disable-line no-unused-vars
   const [rsvpStatus, setRsvpStatus] = useState(null);
@@ -18,6 +21,7 @@ const AppContent = () => {
       case '/current': return 'Current';
       case '/wishlist': return 'Wishlist';
       case '/profile': return 'Profile';
+      case '/login': return 'Login';
       default: return 'Current';
     }
   };
@@ -27,6 +31,7 @@ const AppContent = () => {
       case '/current': return 'current';
       case '/wishlist': return 'wishlist';
       case '/profile': return 'profile';
+      case '/login': return 'login';
       default: return 'current';
     }
   };
@@ -45,6 +50,32 @@ const AppContent = () => {
     console.log('RSVP status:', status);
   };
 
+  // Show loading spinner while checking authentication
+  if (loading) {
+    return (
+      <div className="app">
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login page if not authenticated
+  if (!user) {
+    return (
+      <div className="app">
+        <Header currentPage={getPageName(location.pathname)} />
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </div>
+    );
+  }
+
+  // Show main app if authenticated
   return (
     <div className="app">
       <Header currentPage={getPageName(location.pathname)} />
@@ -63,6 +94,7 @@ const AppContent = () => {
             setCurrentPage={setCurrentPage}
           />
         } />
+        <Route path="/login" element={<Navigate to="/current" replace />} />
         <Route path="/" element={<Navigate to="/current" replace />} />
       </Routes>
       
@@ -76,9 +108,11 @@ const AppContent = () => {
 
 function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <AuthProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </AuthProvider>
   );
 }
 
