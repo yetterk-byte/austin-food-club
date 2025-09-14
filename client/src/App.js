@@ -7,7 +7,6 @@ import BottomNav from './components/BottomNav';
 import ProtectedRoute from './components/ProtectedRoute';
 import AuthTest from './components/AuthTest';
 import CurrentPage from './pages/app/CurrentPage';
-import WishlistPage from './pages/app/WishlistPage';
 import ProfilePage from './pages/app/ProfilePage';
 import RestaurantDetail from './pages/RestaurantDetail';
 import Wishlist from './pages/Wishlist';

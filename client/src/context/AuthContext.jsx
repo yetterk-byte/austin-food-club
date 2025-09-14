@@ -15,6 +15,15 @@ export const AuthProvider = ({ children }) => {
     // Get initial session
     const getInitialSession = async () => {
       try {
+        // Check localStorage first for mock auth
+        const storedSession = localStorage.getItem('mock-session');
+        if (storedSession) {
+          const session = JSON.parse(storedSession);
+          setUser(session.user);
+          setLoading(false);
+          return;
+        }
+
         const { data: { user }, error } = await supabase.auth.getUser();
         if (error) {
           console.error('Error getting initial user:', error);
@@ -100,6 +109,12 @@ export const AuthProvider = ({ children }) => {
 
       console.log('Phone verification successful:', data.user?.id);
       setUser(data.user);
+      
+      // Store session in localStorage for mock auth
+      if (data.session) {
+        localStorage.setItem('mock-session', JSON.stringify(data.session));
+      }
+      
       return { success: true, data };
     } catch (err) {
       console.error('OTP verification exception:', err);
@@ -126,6 +141,10 @@ export const AuthProvider = ({ children }) => {
 
       console.log('User signed out successfully');
       setUser(null);
+      
+      // Clear session from localStorage for mock auth
+      localStorage.removeItem('mock-session');
+      
       return { success: true };
     } catch (err) {
       console.error('Sign out exception:', err);
