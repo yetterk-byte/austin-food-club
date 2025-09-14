@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import './PhoneAuth.css';
 
 const PhoneAuth = () => {
-  const { signInWithPhone, verifyOTP, loading, error, clearError } = useAuth();
+  const { signInWithPhone, verifyOTP, error, clearError } = useAuth();
   
   const [step, setStep] = useState('phone'); // 'phone' or 'otp'
   const [phone, setPhone] = useState('');
