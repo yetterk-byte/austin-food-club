@@ -5,6 +5,7 @@ import './App.css';
 import Header from './components/Header';
 import BottomNav from './components/BottomNav';
 import ProtectedRoute from './components/ProtectedRoute';
+import AuthTest from './components/AuthTest';
 import CurrentPage from './pages/app/CurrentPage';
 import WishlistPage from './pages/app/WishlistPage';
 import ProfilePage from './pages/app/ProfilePage';
@@ -22,6 +23,7 @@ const AppContent = () => {
       case '/wishlist': return 'Wishlist';
       case '/profile': return 'Profile';
       case '/login': return 'Login';
+      case '/test-auth': return 'Auth Test';
       default: return 'Current';
     }
   };
@@ -57,6 +59,7 @@ const AppContent = () => {
       <Routes>
         {/* Public routes */}
         <Route path="/login" element={<Login />} />
+        <Route path="/test-auth" element={<AuthTest />} />
         
         {/* Protected routes */}
         <Route path="/current" element={
@@ -87,7 +90,7 @@ const AppContent = () => {
       </Routes>
       
       {/* Only show bottom nav on protected routes */}
-      {location.pathname !== '/login' && (
+      {location.pathname !== '/login' && location.pathname !== '/test-auth' && (
         <BottomNav 
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
