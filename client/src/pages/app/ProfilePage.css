@@ -217,22 +217,50 @@
 }
 
 .visits-grid {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 16px;
 }
 
 .visit-card {
+  position: relative;
   background: #2a2a2a;
-  padding: 20px;
   border-radius: 8px;
   border: 1px solid #444;
   transition: all 0.3s;
+  overflow: hidden;
+  aspect-ratio: 1;
+  width: 100%;
 }
 
 .visit-card:hover {
   border-color: #555;
-  background: #3a3a3a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.visit-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #4a4a4a; /* Fallback color */
+  opacity: 0.8;
+  z-index: 1;
+}
+
+.visit-content {
+  position: relative;
+  z-index: 2;
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .visit-header {
@@ -247,49 +275,51 @@
   font-weight: 600;
   margin: 0;
   color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
 }
 
 .visit-rating {
   color: #ffd700;
   font-size: 16px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
 }
 
 .visit-date {
   font-size: 12px;
-  color: #999;
+  color: #e0e0e0;
   margin: 0 0 12px 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
 }
 
-.visit-review {
-  font-size: 14px;
-  line-height: 1.5;
-  color: #ccc;
-  margin: 0 0 16px 0;
-}
 
 .visit-actions {
   display: flex;
+  justify-content: flex-end;
   gap: 12px;
+  margin-top: auto;
+  align-self: flex-end;
 }
 
 .visit-action-button {
-  background: transparent;
-  color: #999;
-  border: 1px solid #555;
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   padding: 8px 16px;
   border-radius: 4px;
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s;
+  backdrop-filter: blur(4px);
 }
 
 .visit-action-button:hover {
-  background: #444;
-  color: #ccc;
-  border-color: #666;
+  background: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
 }
 
 

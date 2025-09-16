@@ -56,19 +56,20 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
             restaurant: 'Uchi',
             date: '2024-01-15',
             rating: 5,
-            review: 'Amazing sushi and innovative dishes. The omakase was incredible!',
-            image: null
+            image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkY2QjZCIi8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iI0ZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlN1c2hpPC90ZXh0Pgo8L3N2Zz4K',
+            verificationPhoto: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkY2QjZCIi8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iI0ZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlN1c2hpPC90ZXh0Pgo8L3N2Zz4K'
           },
           {
             id: 2,
             restaurant: 'Suerte',
             date: '2024-01-20',
             rating: 4,
-            review: 'Great modern Mexican cuisine. The masa dishes were outstanding.',
-            image: null
+            image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjNEVDREM0Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iI0ZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk1leGljYW4gRm9vZDwvdGV4dD4KPC9zdmc+Cg==',
+            verificationPhoto: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjNEVDREM0Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iI0ZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk1leGljYW4gRm9vZDwvdGV4dD4KPC9zdmc+Cg=='
           }
         ];
 
+        console.log('Mock visits with images:', mockVisits);
         setVerifiedVisits(mockVisits);
         setStats({
           verifiedVisits: mockVisits.length,
@@ -237,15 +238,22 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
         <div className="visits-grid">
           {verifiedVisits.map((visit) => (
             <div key={visit.id} className="visit-card">
-              <div className="visit-header">
-                <h3 className="visit-restaurant">{visit.restaurant}</h3>
-                <div className="visit-rating">{renderStars(visit.rating)}</div>
-              </div>
-              <p className="visit-date">{formatDate(visit.date)}</p>
-              <p className="visit-review">{visit.review}</p>
-              <div className="visit-actions">
-                <button className="visit-action-button">Edit</button>
-                <button className="visit-action-button">Share</button>
+              <div 
+                className="visit-background"
+                style={{
+                  backgroundImage: `url(${visit.verificationPhoto || visit.image})`
+                }}
+                title={`Background: ${visit.verificationPhoto || visit.image}`}
+              ></div>
+              <div className="visit-content">
+                <div className="visit-header">
+                  <h3 className="visit-restaurant">{visit.restaurant}</h3>
+                  <div className="visit-rating">{renderStars(visit.rating)}</div>
+                </div>
+                <p className="visit-date">{formatDate(visit.date)}</p>
+                <div className="visit-actions">
+                  <button className="visit-action-button">Share</button>
+                </div>
               </div>
             </div>
           ))}
