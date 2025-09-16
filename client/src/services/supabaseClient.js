@@ -33,10 +33,13 @@ if (!supabaseUrl || !supabaseAnonKey) {
           }
         };
         const mockSession = {
-          access_token: 'mock-token-' + Date.now(),
-          refresh_token: 'mock-refresh-' + Date.now(),
+          access_token: 'mock-token-consistent',
+          refresh_token: 'mock-refresh-consistent',
           user: mockUser
         };
+        
+        // Store session in localStorage for persistence
+        localStorage.setItem('mock-session', JSON.stringify(mockSession));
         return { 
           data: { user: mockUser, session: mockSession }, 
           error: null 

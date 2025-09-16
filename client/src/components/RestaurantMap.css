@@ -1,0 +1,1147 @@
+.restaurant-map-container {
+  margin: 20px 0;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.restaurant-map-container.dark-mode {
+  background: #1f2937;
+  color: #f9fafb;
+}
+
+.map-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.map-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.map-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.location-btn,
+.directions-btn,
+.landmarks-btn,
+.legend-btn,
+.streetview-btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.location-btn:hover,
+.directions-btn:hover,
+.landmarks-btn:hover,
+.legend-btn:hover,
+.streetview-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.location-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.location-error {
+  padding: 12px 20px;
+  background: #fef2f2;
+  border-left: 4px solid #ef4444;
+  color: #dc2626;
+  font-size: 0.875rem;
+}
+
+/* Distance and time info */
+.distance-info {
+  display: flex;
+  gap: 16px;
+  padding: 12px 20px;
+  background: #f0f9ff;
+  border-bottom: 1px solid #e0f2fe;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.distance-info .distance {
+  color: #0369a1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.distance-info .travel-time {
+  color: #0369a1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dark-mode .distance-info {
+  background: #1e3a8a;
+  border-bottom-color: #1e40af;
+}
+
+.dark-mode .distance-info .distance,
+.dark-mode .distance-info .travel-time {
+  color: #93c5fd;
+}
+
+.map-wrapper {
+  position: relative;
+  background: #f8fafc;
+}
+
+.restaurant-map-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  background: #f8fafc;
+  color: #64748b;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.restaurant-map-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  background: #f8fafc;
+  color: #64748b;
+}
+
+.error-message {
+  text-align: center;
+  padding: 20px;
+}
+
+.error-message h3 {
+  margin: 0 0 8px 0;
+  color: #374151;
+}
+
+.error-message p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.map-footer {
+  padding: 20px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+.dark-mode .map-footer {
+  background: #111827;
+  border-top-color: #374151;
+}
+
+.restaurant-info h4 {
+  margin: 0 0 8px 0;
+  color: #1f2937;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.restaurant-info p {
+  margin: 4px 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.dark-mode .restaurant-info h4 {
+  color: #f9fafb;
+}
+
+.dark-mode .restaurant-info p {
+  color: #d1d5db;
+}
+
+/* Travel info */
+.travel-info {
+  display: flex;
+  gap: 16px;
+  margin: 12px 0;
+  padding: 12px;
+  background: #f0f9ff;
+  border-radius: 8px;
+  border: 1px solid #e0f2fe;
+}
+
+.travel-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.travel-item .icon {
+  font-size: 1rem;
+}
+
+.travel-item .text {
+  color: #0369a1;
+}
+
+.dark-mode .travel-info {
+  background: #1e3a8a;
+  border-color: #1e40af;
+}
+
+.dark-mode .travel-item .text {
+  color: #93c5fd;
+}
+
+/* Parking info */
+.parking-info {
+  margin: 16px 0;
+  padding: 12px;
+  background: #fefce8;
+  border-radius: 8px;
+  border: 1px solid #fde047;
+}
+
+.parking-info h5 {
+  margin: 0 0 8px 0;
+  color: #a16207;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.parking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.parking-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+}
+
+.parking-name {
+  color: #a16207;
+  font-weight: 500;
+}
+
+.parking-rating {
+  color: #a16207;
+  font-size: 0.7rem;
+}
+
+.dark-mode .parking-info {
+  background: #451a03;
+  border-color: #92400e;
+}
+
+.dark-mode .parking-info h5 {
+  color: #fbbf24;
+}
+
+.dark-mode .parking-name,
+.dark-mode .parking-rating {
+  color: #fbbf24;
+}
+
+.map-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.action-btn.primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.action-btn.primary:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.action-btn.secondary {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.action-btn.secondary:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Info window styles */
+.info-window {
+  padding: 8px;
+  min-width: 200px;
+}
+
+.info-window h4 {
+  margin: 0 0 8px 0;
+  color: #1f2937;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.info-window p {
+  margin: 4px 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.info-directions-btn {
+  margin-top: 8px;
+  padding: 6px 12px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.info-directions-btn:hover {
+  background: #2563eb;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .map-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .map-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .location-btn,
+  .directions-btn {
+    flex: 1;
+    text-align: center;
+  }
+
+  .map-actions {
+    flex-direction: column;
+  }
+
+  .action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .restaurant-info {
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .map-header {
+    padding: 12px 16px;
+  }
+
+  .map-header h3 {
+    font-size: 1.125rem;
+  }
+
+  .map-footer {
+    padding: 16px;
+  }
+
+  .restaurant-info h4 {
+    font-size: 1rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .restaurant-map-container {
+    background: #1f2937;
+    color: #f9fafb;
+  }
+
+  .map-footer {
+    background: #111827;
+    border-top-color: #374151;
+  }
+
+  .restaurant-info h4 {
+    color: #f9fafb;
+  }
+
+  .restaurant-info p {
+    color: #d1d5db;
+  }
+
+  .action-btn.secondary {
+    background: #374151;
+    color: #f9fafb;
+    border-color: #4b5563;
+  }
+
+  .action-btn.secondary:hover {
+    background: #4b5563;
+  }
+}
+
+/* Map Legend */
+.map-legend {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.map-legend h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.legend-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #374151;
+}
+
+.legend-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.legend-toggles {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+.toggle-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #374151;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.toggle-item:hover {
+  background: #f3f4f6;
+}
+
+.toggle-item input[type="checkbox"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+.toggle-item span {
+  font-size: 12px;
+}
+
+/* Dark mode legend */
+.restaurant-map-container.dark-mode .map-legend {
+  background: rgba(31, 41, 55, 0.95);
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+.restaurant-map-container.dark-mode .map-legend h4 {
+  color: #f9fafb;
+}
+
+.restaurant-map-container.dark-mode .legend-item,
+.restaurant-map-container.dark-mode .toggle-item {
+  color: #d1d5db;
+}
+
+.restaurant-map-container.dark-mode .legend-toggles {
+  border-color: #4b5563;
+}
+
+.restaurant-map-container.dark-mode .toggle-item:hover {
+  background: #374151;
+}
+
+/* Transportation Mode Selector */
+.transportation-modes {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 12px;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.transportation-modes h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.transport-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.transport-btn {
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #f9fafb;
+  color: #374151;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.transport-btn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.transport-btn.active {
+  background: #3b82f6;
+  color: white;
+  border-color: #2563eb;
+}
+
+.transport-btn.active:hover {
+  background: #2563eb;
+}
+
+/* Hours Status Indicator */
+.hours-indicator {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 12px;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.hours-indicator.open {
+  border-left: 4px solid #10b981;
+  background: #f0fdf4;
+}
+
+.hours-indicator.closing-soon {
+  border-left: 4px solid #f59e0b;
+  background: #fffbeb;
+}
+
+.hours-indicator.closed {
+  border-left: 4px solid #ef4444;
+  background: #fef2f2;
+}
+
+.hours-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hours-icon {
+  font-size: 16px;
+}
+
+.hours-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.hours-indicator.open .hours-text {
+  color: #065f46;
+}
+
+.hours-indicator.closing-soon .hours-text {
+  color: #92400e;
+}
+
+.hours-indicator.closed .hours-text {
+  color: #dc2626;
+}
+
+/* Clicked Point Distance Info */
+.clicked-distance-info {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid #3b82f6;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.distance-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.distance-label {
+  font-size: 12px;
+  color: #1e40af;
+  font-weight: 500;
+}
+
+.distance-value,
+.travel-time-value {
+  font-size: 14px;
+  color: #1e40af;
+  font-weight: 600;
+}
+
+.clear-distance-btn {
+  padding: 4px 8px;
+  border: 1px solid #3b82f6;
+  border-radius: 4px;
+  background: #3b82f6;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clear-distance-btn:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+/* Dark mode for new features */
+.restaurant-map-container.dark-mode .transportation-modes {
+  background: rgba(31, 41, 55, 0.95);
+  border-color: #4b5563;
+}
+
+.restaurant-map-container.dark-mode .transportation-modes h4 {
+  color: #f9fafb;
+}
+
+.restaurant-map-container.dark-mode .transport-btn {
+  background: #374151;
+  color: #d1d5db;
+  border-color: #4b5563;
+}
+
+.restaurant-map-container.dark-mode .transport-btn:hover {
+  background: #4b5563;
+}
+
+.restaurant-map-container.dark-mode .transport-btn.active {
+  background: #3b82f6;
+  color: white;
+}
+
+.restaurant-map-container.dark-mode .hours-indicator {
+  background: rgba(31, 41, 55, 0.95);
+  border-color: #4b5563;
+}
+
+.restaurant-map-container.dark-mode .hours-text {
+  color: #d1d5db;
+}
+
+.restaurant-map-container.dark-mode .clicked-distance-info {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: #3b82f6;
+}
+
+.restaurant-map-container.dark-mode .distance-label,
+.restaurant-map-container.dark-mode .distance-value,
+.restaurant-map-container.dark-mode .travel-time-value {
+  color: #93c5fd;
+}
+
+/* Mobile Optimizations */
+.restaurant-map-container.mobile {
+  position: relative;
+  overflow: hidden;
+}
+
+.restaurant-map-container.mobile .map-controls {
+  padding: 8px;
+}
+
+.restaurant-map-container.mobile .control-buttons {
+  gap: 6px;
+}
+
+.restaurant-map-container.mobile .location-btn,
+.restaurant-map-container.mobile .directions-btn,
+.restaurant-map-container.mobile .fullscreen-btn {
+  padding: 12px 16px;
+  font-size: 14px;
+  min-height: 44px; /* iOS touch target minimum */
+  border-radius: 8px;
+}
+
+/* Full Screen Mode */
+.restaurant-map-container.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  background: #000;
+}
+
+.fullscreen-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.close-fullscreen-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  pointer-events: all;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;
+}
+
+/* Bottom Sheet */
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(calc(100% - 60px));
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  max-height: 80vh;
+  overflow: hidden;
+}
+
+.bottom-sheet.open {
+  transform: translateY(0);
+}
+
+.bottom-sheet.dragging {
+  transition: none;
+}
+
+.bottom-sheet-handle {
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  cursor: grab;
+}
+
+.bottom-sheet-handle:active {
+  cursor: grabbing;
+}
+
+.handle-bar {
+  width: 40px;
+  height: 4px;
+  background: #d1d5db;
+  border-radius: 2px;
+}
+
+.bottom-sheet-content {
+  padding: 0 20px 20px 20px;
+  max-height: calc(80vh - 60px);
+  overflow-y: auto;
+}
+
+.bottom-sheet-content h3 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.restaurant-address {
+  margin: 0 0 12px 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.restaurant-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.rating-stars {
+  font-weight: 600;
+  color: #111827;
+}
+
+.rating-count {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.hours-status-mobile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.hours-status-mobile.open {
+  background: #f0fdf4;
+  color: #065f46;
+}
+
+.hours-status-mobile.closing-soon {
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.hours-status-mobile.closed {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.mobile-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.mobile-action-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px;
+}
+
+.mobile-action-btn.primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.mobile-action-btn.primary:hover {
+  background: #2563eb;
+}
+
+.mobile-action-btn.secondary {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.mobile-action-btn.secondary:hover {
+  background: #e5e7eb;
+}
+
+/* Placeholder for lazy loading */
+.restaurant-map-placeholder {
+  width: 100%;
+  height: 300px;
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px dashed #d1d5db;
+}
+
+.restaurant-map-placeholder:hover {
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+  border-color: #9ca3af;
+}
+
+.restaurant-map-placeholder.mobile {
+  height: 250px;
+  border-radius: 8px;
+}
+
+.placeholder-content {
+  text-align: center;
+  color: #6b7280;
+}
+
+.placeholder-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.placeholder-content p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Dark mode for mobile features */
+.restaurant-map-container.dark-mode .bottom-sheet {
+  background: #1f2937;
+  color: #f9fafb;
+}
+
+.restaurant-map-container.dark-mode .bottom-sheet-content h3 {
+  color: #f9fafb;
+}
+
+.restaurant-map-container.dark-mode .restaurant-address {
+  color: #9ca3af;
+}
+
+.restaurant-map-container.dark-mode .rating-stars {
+  color: #f9fafb;
+}
+
+.restaurant-map-container.dark-mode .rating-count {
+  color: #9ca3af;
+}
+
+.restaurant-map-container.dark-mode .mobile-action-btn.secondary {
+  background: #374151;
+  color: #d1d5db;
+  border-color: #4b5563;
+}
+
+.restaurant-map-container.dark-mode .mobile-action-btn.secondary:hover {
+  background: #4b5563;
+}
+
+.restaurant-map-container.dark-mode .restaurant-map-placeholder {
+  background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+  border-color: #4b5563;
+  color: #9ca3af;
+}
+
+.restaurant-map-container.dark-mode .restaurant-map-placeholder:hover {
+  background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+  border-color: #6b7280;
+}
+
+/* Performance optimizations for mobile */
+@media (max-width: 768px) {
+  .restaurant-map-container .legend-toggles {
+    display: none; /* Hide complex legend on mobile */
+  }
+  
+  .restaurant-map-container .transportation-modes {
+    padding: 8px 12px;
+  }
+  
+  .restaurant-map-container .transport-buttons {
+    gap: 6px;
+  }
+  
+  .restaurant-map-container .transport-btn {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+  
+  .restaurant-map-container .hours-indicator {
+    padding: 8px 12px;
+    margin-top: 8px;
+  }
+  
+  .restaurant-map-container .clicked-distance-info {
+    padding: 8px 12px;
+    margin-top: 8px;
+  }
+}
+
+/* Static Map Integration Styles */
+.restaurant-map-static {
+  margin: 20px 0;
+  background: #1f2937;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.restaurant-map-static.dark-mode {
+  background: #111827;
+}
+
+.restaurant-map-static.mobile {
+  margin: 15px 0;
+}
+
+/* Smooth transition from static to interactive map */
+.restaurant-map-container.transitioning {
+  opacity: 0.8;
+  transform: scale(0.98);
+}
+
+.restaurant-map-container.transitioning .static-map-overlay {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+/* Static map loading states */
+.restaurant-map-static .static-map-container {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.restaurant-map-static .static-map-container.loading {
+  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+  background-size: 200% 100%;
+  animation: loading-shimmer 1.5s infinite;
+}
+
+.restaurant-map-static .static-map-container.error {
+  background: #1f2937;
+  border: 1px solid #ef4444;
+}
+
+.restaurant-map-static .static-map-container.not-configured {
+  background: #1f2937;
+  border: 1px solid #6b7280;
+}
+
+/* Performance optimizations for static maps */
+.restaurant-map-static .static-map-image {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Mobile optimizations for static maps */
+@media (max-width: 768px) {
+  .restaurant-map-static {
+    margin: 10px 0;
+  }
+  
+  .restaurant-map-static .static-map-container {
+    height: 300px;
+  }
+  
+  .restaurant-map-static .overlay-content {
+    padding: 12px;
+  }
+  
+  .restaurant-map-static .overlay-icon {
+    font-size: 20px;
+  }
+  
+  .restaurant-map-static .overlay-content p {
+    font-size: 13px;
+  }
+  
+  .restaurant-map-static .load-interactive-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}

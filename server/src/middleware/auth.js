@@ -1,5 +1,6 @@
 const { createClient } = require('@supabase/supabase-js');
 const { PrismaClient } = require('@prisma/client');
+const { syncUser, syncMockUser } = require('../utils/userSync');
 
 // Initialize Supabase client
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -55,57 +56,58 @@ const verifySupabaseToken = async (req, res, next) => {
     const token = authHeader.substring(7); // Remove 'Bearer ' prefix
 
     // Verify token with Supabase
-    const { data: { user: supabaseUser }, error: verifyError } = await supabase.auth.getUser(token);
-
-    if (verifyError || !supabaseUser) {
-      console.error('Token verification failed:', verifyError);
-      return res.status(401).json({ 
-        error: 'Invalid or expired token' 
-      });
-    }
-
-    // Extract user information from Supabase user
-    const supabaseId = supabaseUser.id;
-    const email = supabaseUser.email;
-    const phone = supabaseUser.phone;
-    const name = supabaseUser.user_metadata?.name || 
-                 supabaseUser.user_metadata?.full_name || 
-                 email?.split('@')[0] || 
-                 'User';
-
-    // Find or create user in database
-    let user;
-    try {
-      // Try to find existing user by supabaseId
-      user = await prisma.user.findUnique({
-        where: { supabaseId }
-      });
-
-      if (user) {
-        // Update existing user with latest info and lastLogin
-        user = await prisma.user.update({
-          where: { supabaseId },
-          data: {
-            email: email || user.email,
-            phone: phone || user.phone,
-            name: name || user.name,
-            lastLogin: new Date()
-          }
-        });
-      } else {
-        // Create new user
-        user = await prisma.user.create({
-          data: {
-            supabaseId,
-            email,
-            phone,
-            name,
-            lastLogin: new Date()
-          }
+    let supabaseUser;
+    if (token.startsWith('mock-token')) {
+      // Handle mock token for development
+      const isOAuth = token.includes('google') || token.includes('apple');
+      const isConsistent = token.includes('consistent');
+      
+      // Use consistent ID for consistent tokens, timestamp for others
+      const userId = isConsistent ? 'mock-user-consistent' : 'mock-user-' + Date.now();
+      const email = isConsistent ? 'test-consistent@example.com' : `test-${Date.now()}@example.com`;
+      const phone = isConsistent ? '+1234567891' : `+1234567${Date.now().toString().slice(-4)}`;
+      
+      supabaseUser = {
+        id: userId,
+        email: email,
+        phone: phone,
+        user_metadata: {
+          name: isOAuth ? 'John Doe' : 'Test User',
+          full_name: isOAuth ? 'John Doe' : 'Test User',
+          avatar_url: isOAuth ? 'https://lh3.googleusercontent.com/a/default-user' : null,
+          picture: isOAuth ? 'https://lh3.googleusercontent.com/a/default-user' : null
+        },
+        app_metadata: isOAuth ? {
+          providers: ['google']
+        } : {
+          providers: ['email']
+        },
+        email_confirmed_at: isOAuth ? new Date().toISOString() : null
+      };
+    } else {
+      const { data: { user }, error: verifyError } = await supabase.auth.getUser(token);
+      
+      if (verifyError || !user) {
+        console.error('Token verification failed:', verifyError);
+        return res.status(401).json({ 
+          error: 'Invalid or expired token' 
         });
       }
+      supabaseUser = user;
+    }
+
+    // Sync user with database using userSync utility
+    let user;
+    try {
+      if (token.startsWith('mock-token')) {
+        // Use mock user sync for development
+        user = await syncMockUser(supabaseUser);
+      } else {
+        // Use regular user sync for real Supabase users
+        user = await syncUser(supabaseUser);
+      }
     } catch (dbError) {
-      console.error('Database error during user lookup/creation:', dbError);
+      console.error('Database error during user sync:', dbError);
       
       // Handle unique constraint violations
       if (dbError.code === 'P2002') {
@@ -124,7 +126,7 @@ const verifySupabaseToken = async (req, res, next) => {
     req.user = user;
     
     // Log successful authentication
-    console.log(`User authenticated: ${user.name} (${user.supabaseId})`);
+    console.log(`User authenticated: ${user.name} (${user.id}) - Provider: ${user.provider} - Email: ${user.email || 'N/A'}`);
     
     next();
   } catch (error) {

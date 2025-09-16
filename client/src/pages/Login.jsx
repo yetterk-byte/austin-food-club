@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import PhoneAuth from '../components/PhoneAuth';
+import AuthOptions from '../components/AuthOptions';
 
 const Login = () => {
   const { user, loading } = useAuth();
@@ -16,28 +16,25 @@ const Login = () => {
     );
   }
 
-  // Redirect to home if already logged in
+  // Redirect to current page if already logged in
   if (user) {
     return <Navigate to="/current" replace />;
   }
 
+  const handleAuthSuccess = (data) => {
+    console.log('Authentication initiated:', data);
+  };
+
+  const handleAuthError = (error) => {
+    console.error('Authentication error:', error);
+  };
+
   return (
-    <div className="login-page">
-      <PhoneAuth />
-      
-      {/* Future: Add email auth option */}
-      <div className="auth-options" style={{ 
-        textAlign: 'center', 
-        marginTop: '20px',
-        color: '#b0b0b0',
-        fontSize: '14px'
-      }}>
-        <p>Phone authentication is currently available</p>
-        <p style={{ fontSize: '12px', marginTop: '8px' }}>
-          Email authentication coming soon
-        </p>
-      </div>
-    </div>
+    <AuthOptions 
+      onSuccess={handleAuthSuccess}
+      onError={handleAuthError}
+      mode="signin"
+    />
   );
 };
 

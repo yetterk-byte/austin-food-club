@@ -10,6 +10,9 @@ const Wishlist = () => {
   const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [availableRestaurants, setAvailableRestaurants] = useState([]);
+  const [loadingRestaurants, setLoadingRestaurants] = useState(false);
 
   useEffect(() => {
     const fetchWishlist = async () => {
@@ -49,6 +52,48 @@ const Wishlist = () => {
 
   const handleRestaurantClick = (restaurantId) => {
     navigate(`/restaurant/${restaurantId}`);
+  };
+
+  const handleAddToWishlist = async (restaurantId) => {
+    try {
+      setError(null);
+      await apiService.addToWishlist(restaurantId);
+      
+      // Refresh wishlist
+      const data = await apiService.getWishlist();
+      setWishlist(data.wishlist || []);
+      
+      // Close modal
+      setShowAddModal(false);
+    } catch (err) {
+      console.error('Error adding to wishlist:', err);
+      setError(`Failed to add to wishlist: ${err.message}`);
+    }
+  };
+
+  const handleShowAddModal = async () => {
+    setShowAddModal(true);
+    if (availableRestaurants.length === 0) {
+      try {
+        setLoadingRestaurants(true);
+        const restaurants = await apiService.getRestaurants();
+        setAvailableRestaurants(restaurants);
+      } catch (err) {
+        console.error('Error fetching restaurants:', err);
+        setError('Failed to load restaurants');
+      } finally {
+        setLoadingRestaurants(false);
+      }
+    }
+  };
+
+  const handleCloseAddModal = () => {
+    setShowAddModal(false);
+  };
+
+  // Check if restaurant is already in wishlist
+  const isInWishlist = (restaurantId) => {
+    return wishlist.some(item => item.restaurant.id === restaurantId);
   };
 
   if (!user) {
@@ -93,8 +138,13 @@ const Wishlist = () => {
   return (
     <div className="wishlist-container">
       <div className="wishlist-header">
-        <h1>Your Wishlist</h1>
-        <p>{wishlist.length} restaurant{wishlist.length !== 1 ? 's' : ''} saved</p>
+        <div className="header-info">
+          <h1>Your Wishlist</h1>
+          <p>{wishlist.length} restaurant{wishlist.length !== 1 ? 's' : ''} saved</p>
+        </div>
+        <button onClick={handleShowAddModal} className="add-restaurant-btn">
+          + Add Restaurant
+        </button>
       </div>
 
       {wishlist.length === 0 ? (
@@ -158,6 +208,52 @@ const Wishlist = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Add Restaurant Modal */}
+      {showAddModal && (
+        <div className="modal-overlay" onClick={handleCloseAddModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Add Restaurant to Wishlist</h2>
+              <button onClick={handleCloseAddModal} className="close-btn">×</button>
+            </div>
+            
+            <div className="modal-body">
+              {loadingRestaurants ? (
+                <div className="loading-container">
+                  <div className="loading-spinner"></div>
+                  <p>Loading restaurants...</p>
+                </div>
+              ) : (
+                <div className="restaurants-list">
+                  {availableRestaurants.map((restaurant) => (
+                    <div key={restaurant.id} className="restaurant-item">
+                      <div className="restaurant-info">
+                        <h3>{restaurant.name}</h3>
+                        <p className="cuisine">{restaurant.cuisine}</p>
+                        <p className="area">{restaurant.area}</p>
+                        <p className="price">{restaurant.priceRange}</p>
+                      </div>
+                      <div className="restaurant-actions">
+                        {isInWishlist(restaurant.id) ? (
+                          <span className="already-added">✓ Added</span>
+                        ) : (
+                          <button
+                            onClick={() => handleAddToWishlist(restaurant.id)}
+                            className="add-btn"
+                          >
+                            Add
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>

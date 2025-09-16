@@ -8,6 +8,13 @@ class ApiService {
   // Get auth token from Supabase
   async getAuthToken() {
     try {
+      // Check for mock session first
+      const storedSession = localStorage.getItem('mock-session');
+      if (storedSession) {
+        const session = JSON.parse(storedSession);
+        return session.access_token || null;
+      }
+
       // Import Supabase client dynamically to avoid circular imports
       const { createClient } = await import('@supabase/supabase-js');
       
@@ -16,7 +23,7 @@ class ApiService {
       
       if (!supabaseUrl || !supabaseAnonKey) {
         console.warn('Supabase not configured, using mock auth');
-        return 'mock-token';
+        return 'mock-token-consistent';
       }
       
       const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -61,6 +68,26 @@ class ApiService {
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        
+        // Handle 401 Unauthorized
+        if (response.status === 401) {
+          // Clear any stored auth state
+          try {
+            const { createClient } = await import('@supabase/supabase-js');
+            const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+            const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+            
+            if (supabaseUrl && supabaseAnonKey) {
+              const supabase = createClient(supabaseUrl, supabaseAnonKey);
+              await supabase.auth.signOut();
+            }
+          } catch (authError) {
+            console.error('Error clearing auth state:', authError);
+          }
+          
+          throw new Error('Authentication required. Please log in again.');
+        }
+        
         throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
       }
 
@@ -76,8 +103,25 @@ class ApiService {
     return this.request('/restaurants/current');
   }
 
+  async getFeaturedRestaurant() {
+    return this.request('/restaurants/featured');
+  }
+
   async getRestaurant(restaurantId) {
     return this.request(`/restaurants/${restaurantId}`);
+  }
+
+  async getRestaurants() {
+    return this.request('/restaurants');
+  }
+
+  // Yelp-specific endpoints
+  async getYelpRestaurant(yelpId) {
+    return this.request(`/restaurants/yelp/${yelpId}`);
+  }
+
+  async getYelpReviews(yelpId) {
+    return this.request(`/restaurants/yelp/${yelpId}/reviews`);
   }
 
   // RSVP endpoints (require authentication)
@@ -103,6 +147,10 @@ class ApiService {
     return this.request(`/rsvp/${rsvpId}`, {
       method: 'DELETE',
     });
+  }
+
+  async getRSVPCounts(restaurantId) {
+    return this.request(`/rsvp/counts?restaurantId=${restaurantId}`);
   }
 
   // Wishlist endpoints (require authentication)

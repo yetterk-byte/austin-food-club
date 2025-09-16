@@ -6,11 +6,16 @@ import Header from './components/Header';
 import BottomNav from './components/BottomNav';
 import ProtectedRoute from './components/ProtectedRoute';
 import AuthTest from './components/AuthTest';
+import AuthOptions from './components/AuthOptions';
+import AuthCallback from './pages/auth/AuthCallback';
+import OAuthTest from './pages/auth/OAuthTest';
 import CurrentPage from './pages/app/CurrentPage';
 import ProfilePage from './pages/app/ProfilePage';
 import RestaurantDetail from './pages/RestaurantDetail';
 import Wishlist from './pages/Wishlist';
+import Discover from './pages/Discover';
 import Login from './pages/Login';
+import StaticMapTest from './components/StaticMapTest';
 
 const AppContent = () => {
   const location = useLocation();
@@ -21,10 +26,15 @@ const AppContent = () => {
   const getPageName = (pathname) => {
     switch (pathname) {
       case '/current': return 'Current';
+      case '/discover': return 'Discover';
       case '/wishlist': return 'Wishlist';
       case '/profile': return 'Profile';
       case '/login': return 'Login';
+      case '/auth': return 'Sign In';
+      case '/auth/callback': return 'Signing In...';
+      case '/oauth-test': return 'OAuth Test';
       case '/test-auth': return 'Auth Test';
+      case '/map-test': return 'Map Test';
       default: return 'Current';
     }
   };
@@ -32,9 +42,14 @@ const AppContent = () => {
   const getPageId = (pathname) => {
     switch (pathname) {
       case '/current': return 'current';
+      case '/discover': return 'discover';
       case '/wishlist': return 'wishlist';
       case '/profile': return 'profile';
       case '/login': return 'login';
+      case '/auth': return 'auth';
+      case '/auth/callback': return 'auth-callback';
+      case '/oauth-test': return 'oauth-test';
+      case '/map-test': return 'map-test';
       default: return 'current';
     }
   };
@@ -60,17 +75,20 @@ const AppContent = () => {
       <Routes>
         {/* Public routes */}
         <Route path="/login" element={<Login />} />
-        <Route path="/test-auth" element={<AuthTest />} />
+        <Route path="/auth" element={<AuthOptions />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
+            <Route path="/oauth-test" element={<OAuthTest />} />
+            <Route path="/test-auth" element={<AuthTest />} />
+            <Route path="/map-test" element={<StaticMapTest />} />
         
-        {/* Protected routes */}
+        {/* Public routes with conditional content */}
         <Route path="/current" element={
-          <ProtectedRoute>
-            <CurrentPage 
-              onDayChange={handleDayChange}
-              onStatusChange={handleStatusChange}
-            />
-          </ProtectedRoute>
+          <CurrentPage 
+            onDayChange={handleDayChange}
+            onStatusChange={handleStatusChange}
+          />
         } />
+        <Route path="/discover" element={<Discover />} />
         <Route path="/wishlist" element={
           <ProtectedRoute>
             <Wishlist />
@@ -93,8 +111,12 @@ const AppContent = () => {
       
       {/* Only show bottom nav on protected routes */}
       {location.pathname !== '/login' && 
-       location.pathname !== '/test-auth' && 
-       !location.pathname.startsWith('/restaurant/') && (
+       location.pathname !== '/auth' && 
+       location.pathname !== '/auth/callback' &&
+           location.pathname !== '/oauth-test' &&
+           location.pathname !== '/test-auth' &&
+           location.pathname !== '/map-test' && 
+           !location.pathname.startsWith('/restaurant/') && (
         <BottomNav 
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}

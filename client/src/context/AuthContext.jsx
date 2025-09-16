@@ -237,6 +237,27 @@ export const AuthProvider = ({ children }) => {
     setError(null);
   };
 
+  // Manually check for stored session (useful for test login)
+  const checkStoredSession = () => {
+    try {
+      console.log('Checking for stored session...');
+      const storedSession = localStorage.getItem('mock-session');
+      console.log('Stored session found:', !!storedSession);
+      if (storedSession) {
+        const session = JSON.parse(storedSession);
+        console.log('Parsed session:', session);
+        setUser(session.user);
+        setLoading(false);
+        console.log('User set to:', session.user);
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.error('Error checking stored session:', err);
+      return false;
+    }
+  };
+
   // Context value
   const value = {
     user,
@@ -249,6 +270,7 @@ export const AuthProvider = ({ children }) => {
     signInWithEmail,
     signUpWithEmail,
     clearError,
+    checkStoredSession,
     isAuthenticated: !!user
   };
 

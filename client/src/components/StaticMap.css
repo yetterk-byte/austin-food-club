@@ -1,0 +1,272 @@
+/* StaticMap Component Styles */
+.static-map-container {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  background: #1f2937;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #374151;
+}
+
+.static-map-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.static-map-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+.static-map-image.loading {
+  opacity: 0.3;
+}
+
+.static-map-image.loaded {
+  opacity: 1;
+}
+
+/* Loading States */
+.static-map-loading,
+.static-map-error,
+.static-map-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 20px;
+  text-align: center;
+  color: #d1d5db;
+}
+
+.static-map-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(31, 41, 55, 0.8);
+  backdrop-filter: blur(2px);
+  color: #f9fafb;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #374151;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error State */
+.static-map-error .error-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+/* Placeholder State */
+.static-map-placeholder .placeholder-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.static-map-placeholder .address {
+  color: #9ca3af;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.location-info {
+  margin-top: 16px;
+  padding: 12px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 6px;
+  color: #93c5fd;
+}
+
+.location-info p {
+  margin: 4px 0;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Interactive Overlay */
+.static-map-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(1px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.static-map-overlay:hover {
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 1;
+}
+
+.overlay-content {
+  text-align: center;
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transform: translateY(10px);
+  transition: transform 0.3s ease;
+}
+
+.static-map-overlay:hover .overlay-content {
+  transform: translateY(0);
+}
+
+.overlay-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.overlay-content p {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Load Interactive Button */
+.load-interactive-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.load-interactive-btn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.load-interactive-btn:active {
+  transform: translateY(0);
+}
+
+/* Map Attribution */
+.static-map-attribution {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #374151;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .static-map-container {
+    height: 300px;
+  }
+
+  .overlay-content {
+    padding: 16px;
+  }
+
+  .overlay-icon {
+    font-size: 24px;
+  }
+
+  .overlay-content p {
+    font-size: 14px;
+  }
+
+  .load-interactive-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+}
+
+/* Dark Mode Adjustments */
+.static-map-container.dark-mode {
+  background: #111827;
+  border-color: #4b5563;
+}
+
+.static-map-container.dark-mode .static-map-loading,
+.static-map-container.dark-mode .static-map-error,
+.static-map-container.dark-mode .static-map-placeholder {
+  color: #e5e7eb;
+}
+
+.static-map-container.dark-mode .static-map-placeholder .address {
+  color: #9ca3af;
+}
+
+/* Loading Animation */
+.static-map-container.loading {
+  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+  background-size: 200% 100%;
+  animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Error State Animation */
+.static-map-container.error {
+  animation: error-shake 0.5s ease-in-out;
+}
+
+@keyframes error-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* High DPI Support */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .static-map-image {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}

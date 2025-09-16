@@ -11,13 +11,16 @@ datasource db {
 }
 
 model User {
-  id          String    @id @default(cuid())
-  supabaseId  String    @unique
-  email       String?   @unique
-  phone       String?   @unique
-  name        String
-  lastLogin   DateTime?
-  createdAt   DateTime  @default(now())
+  id            String    @id @default(cuid())
+  supabaseId    String    @unique
+  email         String?   @unique
+  phone         String?   @unique
+  name          String
+  avatar        String?   // URL for user avatar (from OAuth providers)
+  provider      String?   // "email", "google", "apple", etc.
+  emailVerified Boolean   @default(false)
+  lastLogin     DateTime?
+  createdAt     DateTime  @default(now())
   
   // Relations
   rsvps          RSVP[]
@@ -41,10 +44,25 @@ model Restaurant {
   weekOf      DateTime // The week this restaurant is featured
   createdAt   DateTime @default(now())
   
+  // Yelp integration fields
+  yelpId      String?  @unique
+  rating      Float?
+  reviewCount Int?
+  photos      Json?    // Array of photo URLs as JSON
+  categories  Json?    // Array of category strings as JSON
+  priceRange  String?  // Yelp price range (Budget, Moderate, etc.)
+  coordinates Json?    // { latitude: Float, longitude: Float }
+  hours       Json?    // Business hours object
+  isClaimed   Boolean? @default(false)
+  yelpUrl     String?
+  lastSynced  DateTime? // When this restaurant was last synced with Yelp
+  isCurrentPick Boolean? @default(false) // Is this the current week's featured restaurant
+  
   // Relations
-  rsvps          RSVP[]
-  wishlists      Wishlist[]
-  verifiedVisits VerifiedVisit[]
+  rsvps              RSVP[]
+  wishlists          Wishlist[]
+  verifiedVisits     VerifiedVisit[]
+  featuredRestaurants FeaturedRestaurant[]
   
   @@map("restaurants")
 }
@@ -111,4 +129,22 @@ model Friendship {
   // Ensure unique friendship pairs
   @@unique([userId, friendId])
   @@map("friendships")
+}
+
+model FeaturedRestaurant {
+  id                String    @id @default(cuid())
+  restaurantId      String
+  weekStartDate     DateTime
+  weekEndDate       DateTime
+  customDescription String?   // For special themes or events
+  isActive          Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  // Relations
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  
+  // Ensure one active featured restaurant per week
+  @@unique([weekStartDate, isActive])
+  @@map("featured_restaurants")
 }
