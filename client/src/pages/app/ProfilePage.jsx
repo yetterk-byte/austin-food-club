@@ -344,9 +344,6 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
                   />
                 </div>
                 <p className="visit-date">{formatDate(visit.visitDate)}</p>
-                {visit.review && (
-                  <p className="visit-review">{visit.review}</p>
-                )}
                 <div className="visit-actions">
                   <button className="visit-action-button">Share</button>
                 </div>
