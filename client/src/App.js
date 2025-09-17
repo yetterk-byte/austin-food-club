@@ -13,7 +13,6 @@ import CurrentPage from './pages/app/CurrentPage';
 import ProfilePage from './pages/app/ProfilePage';
 import RestaurantDetail from './pages/RestaurantDetail';
 import Wishlist from './pages/Wishlist';
-import Discover from './pages/Discover';
 import Login from './pages/Login';
 import StaticMapTest from './components/StaticMapTest';
 
@@ -26,7 +25,6 @@ const AppContent = () => {
   const getPageName = (pathname) => {
     switch (pathname) {
       case '/current': return 'Current';
-      case '/discover': return 'Discover';
       case '/wishlist': return 'Wishlist';
       case '/profile': return 'Profile';
       case '/login': return 'Login';
@@ -42,7 +40,6 @@ const AppContent = () => {
   const getPageId = (pathname) => {
     switch (pathname) {
       case '/current': return 'current';
-      case '/discover': return 'discover';
       case '/wishlist': return 'wishlist';
       case '/profile': return 'profile';
       case '/login': return 'login';
@@ -88,7 +85,6 @@ const AppContent = () => {
             onStatusChange={handleStatusChange}
           />
         } />
-        <Route path="/discover" element={<Discover />} />
         <Route path="/wishlist" element={
           <ProtectedRoute>
             <Wishlist />

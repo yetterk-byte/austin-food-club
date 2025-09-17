@@ -9,7 +9,6 @@ const BottomNav = ({ currentPage, setCurrentPage }) => {
   
   const navItems = [
     { id: 'current', label: 'Current', path: '/current' },
-    { id: 'discover', label: 'Discover', path: '/discover' },
     { id: 'wishlist', label: 'Wishlist', path: '/wishlist' },
     { id: 'profile', label: 'Profile', path: '/profile' },
   ];
@@ -45,7 +44,6 @@ const BottomNav = ({ currentPage, setCurrentPage }) => {
         >
           <span className="nav-icon">
             {item.id === 'current' && '●'}
-            {item.id === 'discover' && '🔍'}
             {item.id === 'wishlist' && '○'}
             {item.id === 'profile' && (user ? '👤' : '○')}
           </span>
