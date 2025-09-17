@@ -100,21 +100,18 @@ model Wishlist {
 }
 
 model VerifiedVisit {
-  id           String   @id @default(cuid())
+  id           String   @id @default(uuid())
   userId       String
   restaurantId String
-  photoUrl     String?
-  photo        String?  // Base64 encoded photo data
-  rating       Int?     // 1-5 star rating
-  review       String?  // Optional text review
   visitDate    DateTime
+  photoUrl     String   // URL or base64 of uploaded photo
+  rating       Int      // 1-5 stars
+  review       String?  // Optional text review
   createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
   
-  // Relations
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  
-  @@map("verified_visits")
+  user         User       @relation(fields: [userId], references: [id])
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
 }
 
 model Friendship {

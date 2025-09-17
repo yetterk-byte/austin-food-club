@@ -1514,7 +1514,6 @@ app.get('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, re
         id: visit.id,
         userId: visit.userId,
         restaurantId: visit.restaurantId,
-        photo: visit.photo,
         photoUrl: visit.photoUrl,
         rating: visit.rating,
         review: visit.review,
@@ -1536,7 +1535,7 @@ app.get('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, re
 app.post('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, res) => {
   try {
     const userId = req.user.id;
-    const { restaurantId, photo, rating, review, visitDate } = req.body;
+    const { restaurantId, photoUrl, rating, review, visitDate } = req.body;
     
     // Validation
     if (!restaurantId) {
@@ -1561,10 +1560,10 @@ app.post('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, r
       });
     }
     
-    if (!photo) {
+    if (!photoUrl) {
       return res.status(400).json({
         success: false,
-        error: 'Photo is required'
+        error: 'Photo URL is required'
       });
     }
     
@@ -1599,7 +1598,7 @@ app.post('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, r
       data: {
         userId,
         restaurantId,
-        photo,
+        photoUrl,
         rating: ratingNum,
         review: review?.trim() || null,
         visitDate: parsedVisitDate
@@ -1623,7 +1622,6 @@ app.post('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, r
         id: verifiedVisit.id,
         userId: verifiedVisit.userId,
         restaurantId: verifiedVisit.restaurantId,
-        photo: verifiedVisit.photo,
         photoUrl: verifiedVisit.photoUrl,
         rating: verifiedVisit.rating,
         review: verifiedVisit.review,
@@ -1681,7 +1679,6 @@ app.get('/api/verified-visits/:userId', verifySupabaseToken, requireAuth, async 
         id: visit.id,
         userId: visit.userId,
         restaurantId: visit.restaurantId,
-        photo: visit.photo,
         photoUrl: visit.photoUrl,
         rating: visit.rating,
         review: visit.review,
