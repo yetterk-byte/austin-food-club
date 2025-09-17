@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import photoService from '../services/photoService';
 import './PhotoVerification.css';
 
 const PhotoVerification = ({ 
@@ -35,34 +36,39 @@ const PhotoVerification = ({
     }
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
     
     if (!file) return;
 
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      setError('Please select a valid image file');
+    // Validate the file using photo service
+    const validation = photoService.validateImage(file);
+    if (!validation.isValid) {
+      setError(validation.error);
       return;
     }
 
-    // Validate file size (max 10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      setError('Image size must be less than 10MB');
-      return;
+    try {
+      // Compress the image for better performance
+      const compressedFile = await photoService.compressImage(file, {
+        isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      });
+      
+      setSelectedPhoto(compressedFile);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPhotoPreview(e.target.result);
+      };
+      reader.readAsDataURL(compressedFile);
+      
+      setError(null);
+      setSuccess(null);
+    } catch (err) {
+      setError('Failed to process image. Please try again.');
+      console.error('Image processing error:', err);
     }
-
-    setSelectedPhoto(file);
-    
-    // Create preview
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setPhotoPreview(e.target.result);
-    };
-    reader.readAsDataURL(file);
-    
-    setError(null);
-    setSuccess(null);
   };
 
   const convertToBase64 = (file) => {
@@ -85,16 +91,30 @@ const PhotoVerification = ({
     setSuccess(null);
 
     try {
-      // Convert image to base64
-      const base64Photo = await convertToBase64(selectedPhoto);
+      // Upload photo using photo service
+      const uploadResult = await photoService.uploadPhoto(
+        selectedPhoto,
+        'current-user', // This should be passed as a prop
+        restaurantId,
+        (progress) => {
+          console.log(`Upload progress: ${progress}%`);
+        },
+        {
+          isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+        }
+      );
+
+      if (!uploadResult.success) {
+        throw new Error(uploadResult.error);
+      }
       
       // Prepare photo data
       const photoData = {
         restaurantId,
         restaurantName,
         visitDate,
-        photo: base64Photo,
-        fileName: selectedPhoto.name,
+        photoUrl: uploadResult.photoUrl,
+        fileName: uploadResult.fileName || selectedPhoto.name,
         fileSize: selectedPhoto.size,
         fileType: selectedPhoto.type,
         timestamp: new Date().toISOString()
