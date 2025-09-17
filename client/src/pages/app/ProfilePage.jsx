@@ -283,32 +283,12 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
         </div>
       )}
 
-      {/* RSVP History Section */}
-      <div className="rsvp-history-section">
-        <h2>RSVP History</h2>
-        <div className="rsvp-list">
-          {rsvpHistory.map((rsvp) => (
-            <div key={rsvp.id} className="rsvp-item">
-              <div className="rsvp-info">
-                <h3 className="rsvp-restaurant">{rsvp.restaurantName}</h3>
-                <p className="rsvp-date">{formatDate(rsvp.day)}</p>
-                <p className="rsvp-status">{rsvp.status}</p>
-              </div>
-              <button 
-                className="verify-button"
-                onClick={() => handleVerifyVisit(rsvp)}
-              >
-                Verify Visit
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* Verified Visits Section */}
       <div className="verified-visits-section">
         <h2>Verified Visits</h2>
         <div className="visits-grid">
+          {/* Show actual verified visits */}
           {verifiedVisits.map((visit) => (
             <div key={visit.id} className="visit-card">
               <div 
@@ -334,6 +314,33 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
                 )}
                 <div className="visit-actions">
                   <button className="visit-action-button">Share</button>
+                </div>
+              </div>
+            </div>
+          ))}
+          
+          {/* Show RSVP restaurants as unverified visits */}
+          {rsvpHistory.map((rsvp) => (
+            <div key={`rsvp-${rsvp.id}`} className="visit-card unverified">
+              <div className="visit-background"></div>
+              <div className="visit-content">
+                <div className="visit-header">
+                  <h3 className="visit-restaurant">{rsvp.restaurant.name}</h3>
+                  <div className="unverified-badge">Not Verified</div>
+                </div>
+                <p className="visit-date">{formatDate(rsvp.createdAt)}</p>
+                <p className="visit-status">RSVP: {rsvp.status}</p>
+                <div className="visit-actions">
+                  <button 
+                    className="verify-button"
+                    onClick={() => handleVerifyVisit({
+                      restaurantId: rsvp.restaurantId,
+                      restaurantName: rsvp.restaurant.name,
+                      day: rsvp.day
+                    })}
+                  >
+                    Verify Visit
+                  </button>
                 </div>
               </div>
             </div>

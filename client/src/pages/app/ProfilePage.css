@@ -545,89 +545,6 @@
   background: #45a049;
 }
 
-/* RSVP History Section */
-.rsvp-history-section {
-  margin: 0 20px 30px 20px;
-  background: #333;
-  padding: 24px;
-  border-radius: 8px;
-  border: 1px solid #444;
-}
-
-.rsvp-history-section h2 {
-  font-size: 20px;
-  font-weight: 600;
-  margin: 0 0 20px 0;
-  color: #ffffff;
-}
-
-.rsvp-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.rsvp-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #2a2a2a;
-  padding: 16px;
-  border-radius: 6px;
-  border: 1px solid #444;
-  transition: all 0.3s ease;
-}
-
-.rsvp-item:hover {
-  border-color: #555;
-  background: #3a3a3a;
-}
-
-.rsvp-info {
-  flex: 1;
-}
-
-.rsvp-restaurant {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 0 0 4px 0;
-  color: #ffffff;
-}
-
-.rsvp-date {
-  font-size: 14px;
-  color: #4CAF50;
-  margin: 0 0 4px 0;
-  font-weight: 500;
-}
-
-.rsvp-status {
-  font-size: 12px;
-  color: #999;
-  margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.verify-button {
-  background: #4CAF50;
-  color: #ffffff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.verify-button:hover {
-  background: #45a049;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
-}
 
 /* Success Toast */
 .success-toast {
@@ -703,4 +620,53 @@
     left: 16px;
     text-align: center;
   }
+}
+
+/* Unverified Visit Styles */
+.visit-card.unverified {
+  border-color: #666;
+  background: #2a2a2a;
+}
+
+.visit-card.unverified .visit-background {
+  background: linear-gradient(135deg, #444 0%, #333 100%);
+  opacity: 0.3;
+}
+
+.unverified-badge {
+  background: #ff6b35;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.visit-status {
+  color: #ccc;
+  font-size: 12px;
+  margin: 4px 0;
+  font-style: italic;
+}
+
+.verify-button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.verify-button:hover {
+  background: #45a049;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
 }
