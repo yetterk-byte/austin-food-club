@@ -187,6 +187,19 @@ class ApiService {
   async testConnection() {
     return this.request('/test');
   }
+
+  // Get user's verified visits
+  async getVerifiedVisits() {
+    return this.request('/verified-visits');
+  }
+
+  // Submit verification data
+  async submitVerification(verificationData) {
+    return this.request('/verified-visits', {
+      method: 'POST',
+      body: JSON.stringify(verificationData),
+    });
+  }
 }
 
 // Create and export a singleton instance

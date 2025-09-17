@@ -1,0 +1,265 @@
+/* StarRating Component Styles */
+.star-rating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+}
+
+.stars-container {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.star {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  position: relative;
+}
+
+.star:not(.readonly):hover {
+  transform: scale(1.1);
+}
+
+.star:not(.readonly):active {
+  transform: scale(0.95);
+}
+
+.star-svg {
+  transition: all 0.2s ease;
+  display: block;
+}
+
+/* Size variants */
+.star-rating.small .star {
+  min-width: 24px;
+  min-height: 24px;
+  padding: 2px;
+}
+
+.star-rating.small .star-svg {
+  width: 20px;
+  height: 20px;
+}
+
+.star-rating.medium .star {
+  min-width: 32px;
+  min-height: 32px;
+  padding: 4px;
+}
+
+.star-rating.medium .star-svg {
+  width: 24px;
+  height: 24px;
+}
+
+.star-rating.large .star {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 6px;
+}
+
+.star-rating.large .star-svg {
+  width: 32px;
+  height: 32px;
+}
+
+/* Mobile-friendly touch targets */
+@media (max-width: 768px) {
+  .star-rating.small .star {
+    min-width: 32px;
+    min-height: 32px;
+  }
+  
+  .star-rating.small .star-svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .star-rating.medium .star {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
+  .star-rating.medium .star-svg {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .star-rating.large .star {
+    min-width: 56px;
+    min-height: 56px;
+  }
+  
+  .star-rating.large .star-svg {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Star states */
+.star.filled .star-svg {
+  fill: #FFD700;
+  stroke: #FFD700;
+  filter: drop-shadow(0 0 2px rgba(255, 215, 0, 0.3));
+}
+
+.star.half-filled .star-svg {
+  stroke: #FFD700;
+  filter: drop-shadow(0 0 2px rgba(255, 215, 0, 0.3));
+}
+
+.star:not(.filled):not(.half-filled) .star-svg {
+  fill: none;
+  stroke: #666;
+}
+
+/* Hover effects */
+.star:not(.readonly):hover .star-svg {
+  stroke: #FFD700;
+  filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.5));
+}
+
+.star:not(.readonly):hover:not(.filled):not(.half-filled) .star-svg {
+  fill: rgba(255, 215, 0, 0.2);
+}
+
+/* Readonly state */
+.star.readonly {
+  cursor: default;
+}
+
+.star.readonly:hover {
+  transform: none;
+}
+
+.star.readonly:active {
+  transform: none;
+}
+
+/* Focus states for accessibility */
+.star:focus {
+  outline: 2px solid #4CAF50;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.star:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Rating label */
+.rating-label {
+  font-size: 14px;
+  color: #999;
+  text-align: center;
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.star-rating.small .rating-label {
+  font-size: 12px;
+}
+
+.star-rating.large .rating-label {
+  font-size: 16px;
+}
+
+/* Animation for rating changes */
+@keyframes starGlow {
+  0% {
+    filter: drop-shadow(0 0 2px rgba(255, 215, 0, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+  }
+  100% {
+    filter: drop-shadow(0 0 2px rgba(255, 215, 0, 0.3));
+  }
+}
+
+.star.filled .star-svg {
+  animation: starGlow 0.3s ease-in-out;
+}
+
+/* Smooth transitions for all interactions */
+.star-svg {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.star {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .star:not(.filled):not(.half-filled) .star-svg {
+    stroke: #000;
+  }
+  
+  .star.filled .star-svg,
+  .star.half-filled .star-svg {
+    stroke: #000;
+    fill: #FFD700;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .star,
+  .star-svg {
+    transition: none;
+  }
+  
+  .star.filled .star-svg {
+    animation: none;
+  }
+}
+
+/* Dark theme adjustments */
+@media (prefers-color-scheme: dark) {
+  .rating-label {
+    color: #ccc;
+  }
+  
+  .star:not(.filled):not(.half-filled) .star-svg {
+    stroke: #888;
+  }
+}
+
+/* Container spacing adjustments */
+.star-rating + .star-rating {
+  margin-top: 16px;
+}
+
+/* Inline rating (for use in lists) */
+.star-rating.inline {
+  flex-direction: row;
+  gap: 12px;
+}
+
+.star-rating.inline .rating-label {
+  margin-left: 8px;
+}
+
+/* Compact rating (minimal spacing) */
+.star-rating.compact {
+  gap: 4px;
+}
+
+.star-rating.compact .stars-container {
+  gap: 2px;
+}
+
+.star-rating.compact .rating-label {
+  font-size: 12px;
+  min-height: 16px;
+}

@@ -1,0 +1,366 @@
+/* PhotoVerification Component Styles */
+.photo-verification {
+  background: #1a1a1a;
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  margin: 20px;
+  border: 1px solid #333;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.photo-verification-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.photo-verification-header h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #ffffff;
+}
+
+.restaurant-name {
+  font-size: 18px;
+  font-weight: 500;
+  color: #4CAF50;
+  margin: 0 0 4px 0;
+}
+
+.visit-date {
+  font-size: 14px;
+  color: #999;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.photo-verification-content {
+  min-height: 300px;
+}
+
+/* Upload Section */
+.photo-upload-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.upload-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.camera-button,
+.gallery-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border: 2px solid #4CAF50;
+  border-radius: 8px;
+  background: transparent;
+  color: #4CAF50;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.camera-button:hover,
+.gallery-button:hover {
+  background: #4CAF50;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.camera-button:disabled,
+.gallery-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.button-icon {
+  font-size: 20px;
+}
+
+.button-text {
+  font-size: 16px;
+}
+
+/* Upload Tips */
+.upload-tips {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 20px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.upload-tips h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  color: #ffffff;
+}
+
+.upload-tips ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #ccc;
+}
+
+.upload-tips li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.upload-tips li:last-child {
+  margin-bottom: 0;
+}
+
+/* Photo Preview Section */
+.photo-preview-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.rating-section {
+  text-align: center;
+  width: 100%;
+  max-width: 300px;
+}
+
+.rating-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  color: #ffffff;
+}
+
+.photo-preview {
+  width: 100%;
+  max-width: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #4CAF50;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.photo-preview img {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-height: 300px;
+  object-fit: cover;
+}
+
+.preview-actions {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.retake-button,
+.submit-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+.retake-button {
+  background: #666;
+  color: #ffffff;
+  border: 1px solid #777;
+}
+
+.retake-button:hover {
+  background: #777;
+  transform: translateY(-1px);
+}
+
+.submit-button {
+  background: #4CAF50;
+  color: #ffffff;
+}
+
+.submit-button:hover {
+  background: #45a049;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.retake-button:disabled,
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Messages */
+.error-message,
+.success-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 16px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.error-message {
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid #f44336;
+  color: #f44336;
+}
+
+.success-message {
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid #4CAF50;
+  color: #4CAF50;
+}
+
+.error-icon,
+.success-icon {
+  font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .photo-verification {
+    margin: 16px;
+    padding: 20px;
+  }
+  
+  .photo-verification-header h2 {
+    font-size: 20px;
+  }
+  
+  .restaurant-name {
+    font-size: 16px;
+  }
+  
+  .upload-options {
+    max-width: 100%;
+  }
+  
+  .camera-button,
+  .gallery-button {
+    padding: 14px 20px;
+    font-size: 15px;
+  }
+  
+  .preview-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .retake-button,
+  .submit-button {
+    padding: 14px 20px;
+    font-size: 15px;
+  }
+  
+  .upload-tips {
+    padding: 16px;
+  }
+  
+  .upload-tips h3 {
+    font-size: 15px;
+  }
+  
+  .upload-tips li {
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 768px) {
+  .photo-verification {
+    max-width: 500px;
+    margin: 20px auto;
+  }
+  
+  .upload-options {
+    flex-direction: row;
+    max-width: 400px;
+  }
+  
+  .preview-actions {
+    flex-direction: row;
+    max-width: 400px;
+  }
+}
+
+/* Focus states for accessibility */
+.camera-button:focus,
+.gallery-button:focus,
+.retake-button:focus,
+.submit-button:focus {
+  outline: 2px solid #4CAF50;
+  outline-offset: 2px;
+}
+
+/* Animation for smooth transitions */
+.photo-verification-content {
+  transition: all 0.3s ease;
+}
+
+.photo-upload-section,
+.photo-preview-section {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

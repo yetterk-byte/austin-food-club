@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import FriendsModal from '../../components/FriendsModal';
+import VerificationModal from '../../components/VerificationModal';
+import StarRating from '../../components/StarRating';
+import { apiService as api } from '../../services/api';
 import './ProfilePage.css';
 
 const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
   const { user, signOut } = useAuth();
   const [showFriendsModal, setShowFriendsModal] = useState(false);
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [selectedVisit, setSelectedVisit] = useState(null);
   const [verifiedVisits, setVerifiedVisits] = useState([]);
+  const [rsvpHistory, setRsvpHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
   const [stats, setStats] = useState({
     verifiedVisits: 0,
     thisMonth: 0,
@@ -24,6 +31,57 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
     setShowFriendsModal(false);
   };
 
+  const handleVerifyVisit = (visit) => {
+    setSelectedVisit(visit);
+    setShowVerificationModal(true);
+  };
+
+  const handleCloseVerificationModal = () => {
+    setShowVerificationModal(false);
+    setSelectedVisit(null);
+  };
+
+  const handleVerificationSubmit = async (verificationData) => {
+    try {
+      // Submit verification to backend
+      const response = await api.submitVerification({
+        userId: user.id,
+        restaurantId: verificationData.restaurantId,
+        photo: verificationData.photo,
+        rating: verificationData.rating,
+        review: verificationData.review,
+        visitDate: verificationData.visitDate
+      });
+
+      // Add the verification to verified visits
+      const newVisit = {
+        id: response.id || Date.now(),
+        restaurant: verificationData.restaurantName,
+        visitDate: verificationData.visitDate,
+        rating: verificationData.rating,
+        review: verificationData.review,
+        photo: verificationData.photo,
+        verificationPhoto: verificationData.photo
+      };
+      
+      setVerifiedVisits(prev => [newVisit, ...prev]);
+      
+      // Update stats
+      setStats(prev => ({
+        ...prev,
+        verifiedVisits: prev.verifiedVisits + 1
+      }));
+
+      // Show success message
+      setSuccessMessage('Visit verified successfully!');
+      setTimeout(() => setSuccessMessage(null), 3000);
+      
+    } catch (error) {
+      console.error('Error submitting verification:', error);
+      throw error;
+    }
+  };
+
   const handleChangeRSVP = () => {
     setCurrentPage('current');
   };
@@ -36,7 +94,7 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
     }
   };
 
-  // Fetch user data and verified visits
+  // Fetch user data, RSVP history, and verified visits
   useEffect(() => {
     const fetchUserData = async () => {
       if (!user) {
@@ -48,38 +106,27 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
         setLoading(true);
         setError(null);
 
-        // For now, use mock data since we don't have verified visits API yet
-        // In a real app, you would fetch from API endpoints
-        const mockVisits = [
-          {
-            id: 1,
-            restaurant: 'Uchi',
-            date: '2024-01-15',
-            rating: 5,
-            image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkY2QjZCIi8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iI0ZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlN1c2hpPC90ZXh0Pgo8L3N2Zz4K',
-            verificationPhoto: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkY2QjZCIi8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iI0ZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlN1c2hpPC90ZXh0Pgo8L3N2Zz4K'
-          },
-          {
-            id: 2,
-            restaurant: 'Suerte',
-            date: '2024-01-20',
-            rating: 4,
-            image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjNEVDREM0Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iI0ZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk1leGljYW4gRm9vZDwvdGV4dD4KPC9zdmc+Cg==',
-            verificationPhoto: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjNEVDREM0Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iI0ZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk1leGljYW4gRm9vZDwvdGV4dD4KPC9zdmc+Cg=='
-          }
-        ];
+        // Fetch RSVP history
+        const rsvpResponse = await api.getRSVPs();
+        setRsvpHistory(rsvpResponse?.rsvps || []);
 
-        console.log('Mock visits with images:', mockVisits);
-        setVerifiedVisits(mockVisits);
+        // Fetch verified visits
+        const verifiedResponse = await api.getVerifiedVisits();
+        setVerifiedVisits(verifiedResponse?.verifiedVisits || []);
+
+        // Calculate stats
+        const verifiedCount = verifiedResponse?.verifiedVisits?.length || 0;
+        const thisMonthCount = verifiedResponse?.verifiedVisits?.filter(visit => {
+          const visitDate = new Date(visit.visitDate);
+          const now = new Date();
+          return visitDate.getMonth() === now.getMonth() && 
+                 visitDate.getFullYear() === now.getFullYear();
+        }).length || 0;
+
         setStats({
-          verifiedVisits: mockVisits.length,
-          thisMonth: mockVisits.filter(visit => {
-            const visitDate = new Date(visit.date);
-            const now = new Date();
-            return visitDate.getMonth() === now.getMonth() && 
-                   visitDate.getFullYear() === now.getFullYear();
-          }).length,
-          friends: 24 // Mock data
+          verifiedVisits: verifiedCount,
+          thisMonth: thisMonthCount,
+          friends: 24 // Mock data for now
         });
       } catch (err) {
         console.error('Error fetching user data:', err);
@@ -211,12 +258,16 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
       {/* Conditional RSVP Section */}
       {rsvpStatus !== 'not-going' ? (
         <div className="upload-section">
-          <h2>Been to Franklin?</h2>
+          <h2>Did You Go?</h2>
           <div className="upload-box">
             <div className="upload-icon">📷</div>
             <p className="upload-text">Upload your visit photo</p>
             <p className="upload-subtext">Share your experience and get verified</p>
-            <button className="upload-button">Choose Photo</button>
+            <button className="upload-button" onClick={() => handleVerifyVisit({
+              restaurantId: 'franklin-bbq',
+              restaurantName: 'Franklin Barbecue',
+              day: new Date().toISOString()
+            })}>Verify Visit</button>
           </div>
         </div>
       ) : (
@@ -232,6 +283,28 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
         </div>
       )}
 
+      {/* RSVP History Section */}
+      <div className="rsvp-history-section">
+        <h2>RSVP History</h2>
+        <div className="rsvp-list">
+          {rsvpHistory.map((rsvp) => (
+            <div key={rsvp.id} className="rsvp-item">
+              <div className="rsvp-info">
+                <h3 className="rsvp-restaurant">{rsvp.restaurantName}</h3>
+                <p className="rsvp-date">{formatDate(rsvp.day)}</p>
+                <p className="rsvp-status">{rsvp.status}</p>
+              </div>
+              <button 
+                className="verify-button"
+                onClick={() => handleVerifyVisit(rsvp)}
+              >
+                Verify Visit
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Verified Visits Section */}
       <div className="verified-visits-section">
         <h2>Verified Visits</h2>
@@ -241,16 +314,24 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
               <div 
                 className="visit-background"
                 style={{
-                  backgroundImage: `url(${visit.verificationPhoto || visit.image})`
+                  backgroundImage: `url(${visit.verificationPhoto || visit.photo})`
                 }}
-                title={`Background: ${visit.verificationPhoto || visit.image}`}
+                title={`Background: ${visit.verificationPhoto || visit.photo}`}
               ></div>
               <div className="visit-content">
                 <div className="visit-header">
                   <h3 className="visit-restaurant">{visit.restaurant}</h3>
-                  <div className="visit-rating">{renderStars(visit.rating)}</div>
+                  <StarRating
+                    initialRating={visit.rating}
+                    readonly={true}
+                    size="small"
+                    showLabel={false}
+                  />
                 </div>
-                <p className="visit-date">{formatDate(visit.date)}</p>
+                <p className="visit-date">{formatDate(visit.visitDate)}</p>
+                {visit.review && (
+                  <p className="visit-review">{visit.review}</p>
+                )}
                 <div className="visit-actions">
                   <button className="visit-action-button">Share</button>
                 </div>
@@ -265,6 +346,26 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
         isOpen={showFriendsModal}
         onClose={handleCloseModal}
       />
+
+      {/* Verification Modal */}
+      {selectedVisit && (
+        <VerificationModal
+          isOpen={showVerificationModal}
+          onClose={handleCloseVerificationModal}
+          restaurantId={selectedVisit.restaurantId}
+          restaurantName={selectedVisit.restaurantName}
+          visitDate={formatDate(selectedVisit.day)}
+          onVerificationSubmit={handleVerificationSubmit}
+        />
+      )}
+
+      {/* Success Message */}
+      {successMessage && (
+        <div className="success-toast">
+          <span className="success-icon">✅</span>
+          {successMessage}
+        </div>
+      )}
     </div>
   );
 };
