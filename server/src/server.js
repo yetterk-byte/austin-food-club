@@ -1536,12 +1536,61 @@ app.get('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, re
 app.post('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, res) => {
   try {
     const userId = req.user.id;
-    const { restaurantId, restaurantName, photo, rating, review, visitDate } = req.body;
+    const { restaurantId, photo, rating, review, visitDate } = req.body;
     
-    if (!restaurantId || !rating) {
+    // Validation
+    if (!restaurantId) {
       return res.status(400).json({
         success: false,
-        error: 'Restaurant ID and rating are required'
+        error: 'Restaurant ID is required'
+      });
+    }
+    
+    if (!rating) {
+      return res.status(400).json({
+        success: false,
+        error: 'Rating is required'
+      });
+    }
+    
+    const ratingNum = parseInt(rating);
+    if (isNaN(ratingNum) || ratingNum < 1 || ratingNum > 5) {
+      return res.status(400).json({
+        success: false,
+        error: 'Rating must be a number between 1 and 5'
+      });
+    }
+    
+    if (!photo) {
+      return res.status(400).json({
+        success: false,
+        error: 'Photo is required'
+      });
+    }
+    
+    // Validate visit date
+    let parsedVisitDate;
+    if (visitDate) {
+      parsedVisitDate = new Date(visitDate);
+      if (isNaN(parsedVisitDate.getTime())) {
+        return res.status(400).json({
+          success: false,
+          error: 'Invalid visit date format'
+        });
+      }
+    } else {
+      parsedVisitDate = new Date();
+    }
+    
+    // Check if restaurant exists
+    const restaurant = await prisma.restaurant.findUnique({
+      where: { id: restaurantId }
+    });
+    
+    if (!restaurant) {
+      return res.status(404).json({
+        success: false,
+        error: 'Restaurant not found'
       });
     }
     
@@ -1551,9 +1600,9 @@ app.post('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, r
         userId,
         restaurantId,
         photo,
-        rating: parseInt(rating),
-        review: review || null,
-        visitDate: visitDate ? new Date(visitDate) : new Date()
+        rating: ratingNum,
+        review: review?.trim() || null,
+        visitDate: parsedVisitDate
       },
       include: {
         restaurant: {
@@ -1567,8 +1616,9 @@ app.post('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, r
       }
     });
     
-    res.json({
+    res.status(201).json({
       success: true,
+      message: 'Verified visit created successfully',
       verifiedVisit: {
         id: verifiedVisit.id,
         userId: verifiedVisit.userId,
@@ -1584,6 +1634,109 @@ app.post('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, r
     });
   } catch (error) {
     console.error('Error creating verified visit:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Internal server error' 
+    });
+  }
+});
+
+// GET /api/verified-visits/:userId - Get verified visits for a specific user
+app.get('/api/verified-visits/:userId', verifySupabaseToken, requireAuth, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const requestingUserId = req.user.id;
+    
+    // Users can only view their own verified visits
+    if (userId !== requestingUserId) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied. You can only view your own verified visits.'
+      });
+    }
+    
+    const verifiedVisits = await prisma.verifiedVisit.findMany({
+      where: {
+        userId
+      },
+      include: {
+        restaurant: {
+          select: {
+            id: true,
+            name: true,
+            cuisine: true,
+            area: true
+          }
+        }
+      },
+      orderBy: {
+        visitDate: 'desc'
+      }
+    });
+    
+    res.json({
+      success: true,
+      userId,
+      verifiedVisits: verifiedVisits.map(visit => ({
+        id: visit.id,
+        userId: visit.userId,
+        restaurantId: visit.restaurantId,
+        photo: visit.photo,
+        photoUrl: visit.photoUrl,
+        rating: visit.rating,
+        review: visit.review,
+        visitDate: visit.visitDate,
+        createdAt: visit.createdAt,
+        restaurant: visit.restaurant
+      }))
+    });
+  } catch (error) {
+    console.error('Error fetching verified visits for user:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Internal server error' 
+    });
+  }
+});
+
+// DELETE /api/verified-visits/:visitId - Delete a verified visit
+app.delete('/api/verified-visits/:visitId', verifySupabaseToken, requireAuth, async (req, res) => {
+  try {
+    const { visitId } = req.params;
+    const userId = req.user.id;
+    
+    // First, check if the verified visit exists and belongs to the user
+    const verifiedVisit = await prisma.verifiedVisit.findUnique({
+      where: { id: visitId },
+      select: { id: true, userId: true }
+    });
+    
+    if (!verifiedVisit) {
+      return res.status(404).json({
+        success: false,
+        error: 'Verified visit not found'
+      });
+    }
+    
+    if (verifiedVisit.userId !== userId) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied. You can only delete your own verified visits.'
+      });
+    }
+    
+    // Delete the verified visit
+    await prisma.verifiedVisit.delete({
+      where: { id: visitId }
+    });
+    
+    res.json({
+      success: true,
+      message: 'Verified visit deleted successfully',
+      deletedVisitId: visitId
+    });
+  } catch (error) {
+    console.error('Error deleting verified visit:', error);
     res.status(500).json({ 
       success: false,
       error: 'Internal server error' 
