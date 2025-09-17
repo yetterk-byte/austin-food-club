@@ -70,7 +70,10 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
       // Add the verification to verified visits
       const newVisit = {
         id: response.id || Date.now(),
-        restaurant: verificationData.restaurantName,
+        restaurant: {
+          name: verificationData.restaurantName,
+          id: verificationData.restaurantId
+        },
         visitDate: verificationData.visitDate,
         rating: verificationData.rating,
         review: verificationData.review,
@@ -337,7 +340,7 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
             <div key={visit.id} className="visit-card">
               <LazyImage
                 src={visit.verificationPhoto || visit.photo}
-                alt={`Visit to ${visit.restaurant.name}`}
+                alt={`Visit to ${typeof visit.restaurant === 'string' ? visit.restaurant : visit.restaurant.name}`}
                 className="visit-background"
                 placeholder={
                   <div className="visit-placeholder">
@@ -348,7 +351,9 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
               />
               <div className="visit-content">
                 <div className="visit-header">
-                  <h3 className="visit-restaurant">{visit.restaurant}</h3>
+                  <h3 className="visit-restaurant">
+                    {typeof visit.restaurant === 'string' ? visit.restaurant : visit.restaurant.name}
+                  </h3>
                   <StarRating
                     initialRating={visit.rating}
                     readonly={true}
