@@ -171,19 +171,22 @@
   transform: translateY(-1px);
 }
 
-.submit-button {
+.submit-button,
+.next-button {
   background: #4CAF50;
   color: #ffffff;
 }
 
-.submit-button:hover {
+.submit-button:hover,
+.next-button:hover {
   background: #45a049;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
 }
 
 .retake-button:disabled,
-.submit-button:disabled {
+.submit-button:disabled,
+.next-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
@@ -296,7 +299,8 @@
 .camera-button:focus,
 .gallery-button:focus,
 .retake-button:focus,
-.submit-button:focus {
+.submit-button:focus,
+.next-button:focus {
   outline: 2px solid #4CAF50;
   outline-offset: 2px;
 }

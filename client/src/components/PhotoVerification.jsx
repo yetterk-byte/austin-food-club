@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import StarRating from './StarRating';
 import './PhotoVerification.css';
 
 const PhotoVerification = ({ 
@@ -10,7 +9,6 @@ const PhotoVerification = ({
 }) => {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
-  const [rating, setRating] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -99,14 +97,13 @@ const PhotoVerification = ({
         fileName: selectedPhoto.name,
         fileSize: selectedPhoto.size,
         fileType: selectedPhoto.type,
-        rating: rating,
         timestamp: new Date().toISOString()
       };
 
       // Call the parent component's submit handler
       await onPhotoSubmit(photoData);
       
-      setSuccess('Photo submitted successfully!');
+      setSuccess('Photo uploaded successfully!');
       
       // Reset form after successful submission
       setTimeout(() => {
@@ -126,7 +123,6 @@ const PhotoVerification = ({
   const handleRetake = () => {
     setSelectedPhoto(null);
     setPhotoPreview(null);
-    setRating(0);
     setError(null);
     setSuccess(null);
     
@@ -184,16 +180,6 @@ const PhotoVerification = ({
               <img src={photoPreview} alt="Visit verification" />
             </div>
             
-            <div className="rating-section">
-              <h3>Rate your experience:</h3>
-              <StarRating
-                initialRating={rating}
-                onRatingChange={setRating}
-                size="large"
-                showLabel={true}
-              />
-            </div>
-            
             <div className="preview-actions">
               <button 
                 className="retake-button"
@@ -205,19 +191,19 @@ const PhotoVerification = ({
               </button>
               
               <button 
-                className="submit-button"
+                className="next-button"
                 onClick={handleSubmit}
-                disabled={isUploading || rating === 0}
+                disabled={isUploading}
               >
                 {isUploading ? (
                   <>
                     <span className="loading-spinner"></span>
-                    Submitting...
+                    Processing...
                   </>
                 ) : (
                   <>
-                    <span className="button-icon">✅</span>
-                    Submit Photo
+                    <span className="button-icon">➡️</span>
+                    Next Step
                   </>
                 )}
               </button>
