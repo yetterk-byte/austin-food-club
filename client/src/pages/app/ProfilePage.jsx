@@ -3,8 +3,10 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import FriendsModal from '../../components/FriendsModal';
 import VerificationModal from '../../components/VerificationModal';
+import VerificationSuccess from '../../components/VerificationSuccess';
 import StarRating from '../../components/StarRating';
 import LazyImage from '../../components/LazyImage';
+import Achievements from '../../components/Achievements';
 import { apiService as api } from '../../services/api';
 import './ProfilePage.css';
 
@@ -13,6 +15,7 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
   const location = useLocation();
   const [showFriendsModal, setShowFriendsModal] = useState(false);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [showVerificationSuccess, setShowVerificationSuccess] = useState(false);
   const [selectedVisit, setSelectedVisit] = useState(null);
   const [verifiedVisits, setVerifiedVisits] = useState([]);
   const [rsvpHistory, setRsvpHistory] = useState([]);
@@ -22,8 +25,12 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
   const [stats, setStats] = useState({
     verifiedVisits: 0,
     thisMonth: 0,
-    friends: 0
+    friends: 0,
+    averageRating: 0,
+    currentStreak: 0,
+    rank: null
   });
+  const [verificationData, setVerificationData] = useState(null);
 
   // Get RSVP data from navigation state
   const currentRsvp = location.state?.currentRsvp;
@@ -73,15 +80,24 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
       
       setVerifiedVisits(prev => [newVisit, ...prev]);
       
+      // Calculate updated stats
+      const updatedVisits = [newVisit, ...verifiedVisits];
+      const averageRating = updatedVisits.reduce((sum, visit) => sum + visit.rating, 0) / updatedVisits.length;
+      
       // Update stats
       setStats(prev => ({
         ...prev,
-        verifiedVisits: prev.verifiedVisits + 1
+        verifiedVisits: prev.verifiedVisits + 1,
+        averageRating: averageRating,
+        currentStreak: prev.currentStreak + 1 // Simple streak calculation
       }));
 
-      // Show success message
-      setSuccessMessage('Visit verified successfully!');
-      setTimeout(() => setSuccessMessage(null), 3000);
+      // Store verification data for success modal
+      setVerificationData(verificationData);
+      
+      // Close verification modal and show success modal
+      setShowVerificationModal(false);
+      setShowVerificationSuccess(true);
       
     } catch (error) {
       console.error('Error submitting verification:', error);
@@ -277,6 +293,12 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
         </div>
       </div>
 
+      {/* Achievements Section */}
+      <Achievements 
+        userStats={stats} 
+        verifiedVisits={verifiedVisits} 
+      />
+
       {/* Conditional RSVP Section */}
       {rsvpStatus !== 'not-going' ? (
         <div className="upload-section">
@@ -413,6 +435,18 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
           onVerificationSubmit={handleVerificationSubmit}
         />
       )}
+
+      {/* Verification Success Modal */}
+      <VerificationSuccess
+        isOpen={showVerificationSuccess}
+        onClose={() => setShowVerificationSuccess(false)}
+        verificationData={verificationData}
+        userStats={stats}
+        onShare={(content) => {
+          // Handle sharing logic here
+          console.log('Sharing content:', content);
+        }}
+      />
 
       {/* Success Message */}
       {successMessage && (
