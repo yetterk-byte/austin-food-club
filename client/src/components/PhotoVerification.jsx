@@ -177,15 +177,6 @@ const PhotoVerification = ({
               </div>
             )}
 
-            <div className="upload-tips">
-              <h3>Photo Tips:</h3>
-              <ul>
-                <li>Make sure your food is clearly visible</li>
-                <li>Good lighting helps with verification</li>
-                <li>Include the restaurant name or menu if possible</li>
-                <li>Keep the image under 10MB</li>
-              </ul>
-            </div>
           </div>
         ) : (
           <div className="photo-preview-section">
