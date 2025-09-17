@@ -1484,6 +1484,113 @@ app.get('/api/rsvp/counts', async (req, res) => {
   }
 });
 
+// GET /api/verified-visits - Get user's verified visits
+app.get('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    const verifiedVisits = await prisma.verifiedVisit.findMany({
+      where: {
+        userId
+      },
+      include: {
+        restaurant: {
+          select: {
+            id: true,
+            name: true,
+            cuisine: true,
+            area: true
+          }
+        }
+      },
+      orderBy: {
+        visitDate: 'desc'
+      }
+    });
+    
+    res.json({
+      success: true,
+      verifiedVisits: verifiedVisits.map(visit => ({
+        id: visit.id,
+        userId: visit.userId,
+        restaurantId: visit.restaurantId,
+        photo: visit.photo,
+        photoUrl: visit.photoUrl,
+        rating: visit.rating,
+        review: visit.review,
+        visitDate: visit.visitDate,
+        createdAt: visit.createdAt,
+        restaurant: visit.restaurant
+      }))
+    });
+  } catch (error) {
+    console.error('Error fetching verified visits:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Internal server error' 
+    });
+  }
+});
+
+// POST /api/verified-visits - Submit a new verified visit
+app.post('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { restaurantId, restaurantName, photo, rating, review, visitDate } = req.body;
+    
+    if (!restaurantId || !rating) {
+      return res.status(400).json({
+        success: false,
+        error: 'Restaurant ID and rating are required'
+      });
+    }
+    
+    // Create the verified visit
+    const verifiedVisit = await prisma.verifiedVisit.create({
+      data: {
+        userId,
+        restaurantId,
+        photo,
+        rating: parseInt(rating),
+        review: review || null,
+        visitDate: visitDate ? new Date(visitDate) : new Date()
+      },
+      include: {
+        restaurant: {
+          select: {
+            id: true,
+            name: true,
+            cuisine: true,
+            area: true
+          }
+        }
+      }
+    });
+    
+    res.json({
+      success: true,
+      verifiedVisit: {
+        id: verifiedVisit.id,
+        userId: verifiedVisit.userId,
+        restaurantId: verifiedVisit.restaurantId,
+        photo: verifiedVisit.photo,
+        photoUrl: verifiedVisit.photoUrl,
+        rating: verifiedVisit.rating,
+        review: verifiedVisit.review,
+        visitDate: verifiedVisit.visitDate,
+        createdAt: verifiedVisit.createdAt,
+        restaurant: verifiedVisit.restaurant
+      }
+    });
+  } catch (error) {
+    console.error('Error creating verified visit:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Internal server error' 
+    });
+  }
+});
+
 // Wishlist endpoints
 app.get('/api/wishlist', verifySupabaseToken, requireAuth, async (req, res) => {
   try {

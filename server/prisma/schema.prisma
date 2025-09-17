@@ -104,7 +104,9 @@ model VerifiedVisit {
   userId       String
   restaurantId String
   photoUrl     String?
+  photo        String?  // Base64 encoded photo data
   rating       Int?     // 1-5 star rating
+  review       String?  // Optional text review
   visitDate    DateTime
   createdAt    DateTime @default(now())
   
