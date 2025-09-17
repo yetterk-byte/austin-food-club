@@ -15,15 +15,9 @@ const PhotoVerification = ({
   const [success, setSuccess] = useState(null);
   const [cameraError, setCameraError] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [zoom, setZoom] = useState(1);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const [lastTouchDistance, setLastTouchDistance] = useState(0);
   
   const fileInputRef = useRef(null);
   const cameraInputRef = useRef(null);
-  const previewRef = useRef(null);
   const canvasRef = useRef(null);
 
   // Auto-rotate correction for mobile photos
@@ -188,9 +182,6 @@ const PhotoVerification = ({
       const reader = new FileReader();
       reader.onload = (e) => {
         setPhotoPreview(e.target.result);
-        // Reset zoom and position for new image
-        setZoom(1);
-        setPosition({ x: 0, y: 0 });
       };
       reader.readAsDataURL(compressedFile);
       
@@ -211,95 +202,6 @@ const PhotoVerification = ({
     });
   };
 
-  // Touch gesture handlers for pinch-to-zoom and drag
-  const handleTouchStart = (e) => {
-    e.preventDefault();
-    
-    if (e.touches.length === 1) {
-      // Single touch - start drag
-      setIsDragging(true);
-      setDragStart({
-        x: e.touches[0].clientX - position.x,
-        y: e.touches[0].clientY - position.y
-      });
-    } else if (e.touches.length === 2) {
-      // Two touches - start pinch
-      const distance = Math.sqrt(
-        Math.pow(e.touches[0].clientX - e.touches[1].clientX, 2) +
-        Math.pow(e.touches[0].clientY - e.touches[1].clientY, 2)
-      );
-      setLastTouchDistance(distance);
-    }
-  };
-
-  const handleTouchMove = (e) => {
-    e.preventDefault();
-    
-    if (e.touches.length === 1 && isDragging) {
-      // Single touch - drag
-      setPosition({
-        x: e.touches[0].clientX - dragStart.x,
-        y: e.touches[0].clientY - dragStart.y
-      });
-    } else if (e.touches.length === 2) {
-      // Two touches - pinch to zoom
-      const distance = Math.sqrt(
-        Math.pow(e.touches[0].clientX - e.touches[1].clientX, 2) +
-        Math.pow(e.touches[0].clientY - e.touches[1].clientY, 2)
-      );
-      
-      if (lastTouchDistance > 0) {
-        const scale = distance / lastTouchDistance;
-        const newZoom = Math.min(Math.max(zoom * scale, 0.5), 3);
-        setZoom(newZoom);
-      }
-      setLastTouchDistance(distance);
-    }
-  };
-
-  const handleTouchEnd = (e) => {
-    e.preventDefault();
-    setIsDragging(false);
-    setLastTouchDistance(0);
-  };
-
-  // Mouse handlers for desktop
-  const handleMouseDown = (e) => {
-    if (e.button === 0) { // Left mouse button
-      setIsDragging(true);
-      setDragStart({
-        x: e.clientX - position.x,
-        y: e.clientY - position.y
-      });
-    }
-  };
-
-  const handleMouseMove = (e) => {
-    if (isDragging) {
-      setPosition({
-        x: e.clientX - dragStart.x,
-        y: e.clientY - dragStart.y
-      });
-    }
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  // Wheel zoom for desktop
-  const handleWheel = (e) => {
-    e.preventDefault();
-    const delta = e.deltaY > 0 ? 0.9 : 1.1;
-    const newZoom = Math.min(Math.max(zoom * delta, 0.5), 3);
-    setZoom(newZoom);
-  };
-
-  // Reset zoom and position
-  const resetView = () => {
-    setZoom(1);
-    setPosition({ x: 0, y: 0 });
-  };
 
   const handleSubmit = async () => {
     if (!selectedPhoto) {
@@ -366,9 +268,6 @@ const PhotoVerification = ({
     setPhotoPreview(null);
     setError(null);
     setSuccess(null);
-    setZoom(1);
-    setPosition({ x: 0, y: 0 });
-    setIsDragging(false);
     
     // Clear file inputs
     if (fileInputRef.current) fileInputRef.current.value = '';
@@ -434,58 +333,12 @@ const PhotoVerification = ({
               </div>
             ) : (
               <>
-                <div className="photo-preview-container">
-                  <div 
-                    className="photo-preview"
-                    ref={previewRef}
-                    onTouchStart={handleTouchStart}
-                    onTouchMove={handleTouchMove}
-                    onTouchEnd={handleTouchEnd}
-                    onMouseDown={handleMouseDown}
-                    onMouseMove={handleMouseMove}
-                    onMouseUp={handleMouseUp}
-                    onMouseLeave={handleMouseUp}
-                    onWheel={handleWheel}
-                    style={{
-                      transform: `scale(${zoom}) translate(${position.x}px, ${position.y}px)`,
-                      cursor: isDragging ? 'grabbing' : 'grab'
-                    }}
-                  >
-                    <img 
-                      src={photoPreview} 
-                      alt="Visit verification" 
-                      draggable={false}
-                      style={{
-                        transform: 'scale(1)',
-                        transition: isDragging ? 'none' : 'transform 0.1s ease-out'
-                      }}
-                    />
-                  </div>
-                  
-                  {/* Zoom controls */}
-                  <div className="zoom-controls">
-                    <button 
-                      className="zoom-btn"
-                      onClick={() => setZoom(Math.max(zoom - 0.2, 0.5))}
-                      disabled={zoom <= 0.5}
-                    >
-                      −
-                    </button>
-                    <span className="zoom-level">{Math.round(zoom * 100)}%</span>
-                    <button 
-                      className="zoom-btn"
-                      onClick={() => setZoom(Math.min(zoom + 0.2, 3))}
-                      disabled={zoom >= 3}
-                    >
-                      +
-                    </button>
-                    <button 
-                      className="reset-zoom-btn"
-                      onClick={resetView}
-                    >
-                      Reset
-                    </button>
-                  </div>
+                <div className="photo-preview">
+                  <img 
+                    src={photoPreview} 
+                    alt="Visit verification" 
+                    draggable={false}
+                  />
                 </div>
                 
                 <div className="preview-actions">
