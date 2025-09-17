@@ -22,7 +22,7 @@ const VerificationModal = ({
   const modalRef = useRef(null);
   const firstInputRef = useRef(null);
 
-  // Reset modal state when opened and handle body scroll
+  // Reset modal state when opened
   useEffect(() => {
     if (isOpen) {
       setCurrentStep(1);
@@ -32,18 +32,7 @@ const VerificationModal = ({
       setError(null);
       setSuccess(null);
       setIsSubmitting(false);
-      
-      // Prevent body scroll when modal is open
-      document.body.style.overflow = 'hidden';
-    } else {
-      // Restore body scroll when modal is closed
-      document.body.style.overflow = 'unset';
     }
-    
-    // Cleanup function to restore scroll when component unmounts
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, [isOpen]);
 
   // Focus management
