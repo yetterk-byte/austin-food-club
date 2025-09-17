@@ -670,3 +670,106 @@
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
 }
+
+/* Status Badge Styles */
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.status-badge.ready-to-verify {
+  background: #4f46e5;
+  color: white;
+  animation: pulse 2s infinite;
+}
+
+.status-badge.pending-verification {
+  background: #fbbf24;
+  color: #1f2937;
+}
+
+.status-badge.not-verified {
+  background: #6b7280;
+  color: white;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Visit Day Styles */
+.visit-day {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 2px 0;
+  font-style: italic;
+}
+
+/* Pending Message Styles */
+.pending-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #374151;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #d1d5db;
+  border: 1px solid #4b5563;
+}
+
+.pending-icon {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* No Verify Message Styles */
+.no-verify-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #1f2937;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #9ca3af;
+  border: 1px solid #374151;
+}
+
+.no-verify-icon {
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+/* Mobile adjustments for new elements */
+@media (max-width: 768px) {
+  .status-badge {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+  
+  .visit-day {
+    font-size: 11px;
+  }
+  
+  .pending-message,
+  .no-verify-message {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+  
+  .pending-icon,
+  .no-verify-icon {
+    font-size: 12px;
+  }
+}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { apiService } from '../../services/api';
 import RestaurantCard from '../../components/RestaurantCard';
@@ -7,6 +8,7 @@ import './CurrentPage.css';
 
 const CurrentPage = ({ onDayChange, onStatusChange }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [selectedDay, setSelectedDay] = useState(null);
   const [rsvpStatus, setRsvpStatus] = useState('pending');
   const [restaurant, setRestaurant] = useState(null);
@@ -16,6 +18,19 @@ const CurrentPage = ({ onDayChange, onStatusChange }) => {
   const [countdown, setCountdown] = useState('');
   const [message, setMessage] = useState('');
   const [rsvpCounts, setRsvpCounts] = useState({});
+  const [currentRsvp, setCurrentRsvp] = useState(null);
+
+  // Check if an RSVP can be verified (past date and user was going)
+  const isRsvpVerifiable = (rsvpDay, rsvpStatus) => {
+    if (rsvpStatus !== 'going') return false;
+    
+    const now = new Date();
+    const austinTime = new Date(now.toLocaleString("en-US", {timeZone: "America/Chicago"}));
+    const today = austinTime.toISOString().split('T')[0];
+    
+    // Check if the RSVP day has passed
+    return rsvpDay < today;
+  };
 
   // Calculate countdown to next Tuesday at 9:00 AM CT
   const calculateCountdown = () => {
@@ -123,6 +138,11 @@ const CurrentPage = ({ onDayChange, onStatusChange }) => {
             if (userRsvp) {
               setRsvpStatus(userRsvp.status);
               setSelectedDay(userRsvp.day);
+              setCurrentRsvp({
+                ...userRsvp,
+                restaurant: restaurant,
+                canVerify: isRsvpVerifiable(userRsvp.day, userRsvp.status)
+              });
             }
           }
         }
@@ -230,6 +250,15 @@ const CurrentPage = ({ onDayChange, onStatusChange }) => {
       await saveRsvp(selectedDay, 'going');
       setRsvpStatus('going');
       
+      // Update current RSVP state
+      setCurrentRsvp({
+        restaurantId: restaurant.id,
+        day: selectedDay,
+        status: 'going',
+        restaurant: restaurant,
+        canVerify: isRsvpVerifiable(selectedDay, 'going')
+      });
+      
       // Refresh RSVP counts
       if (restaurant?.id) {
         const response = await apiService.getRSVPCounts(restaurant.id);
@@ -259,7 +288,16 @@ const CurrentPage = ({ onDayChange, onStatusChange }) => {
     
     try {
       await saveRsvp(selectedDay, 'not_going');
-      setRsvpStatus('not-going');
+      setRsvpStatus('not_going');
+      
+      // Update current RSVP state
+      setCurrentRsvp({
+        restaurantId: restaurant.id,
+        day: selectedDay,
+        status: 'not_going',
+        restaurant: restaurant,
+        canVerify: false // Can't verify if not going
+      });
       
       // Refresh RSVP counts
       if (restaurant?.id) {
@@ -274,11 +312,21 @@ const CurrentPage = ({ onDayChange, onStatusChange }) => {
       setMessage('See you next time!');
       
       if (onStatusChange) {
-        onStatusChange('not-going');
+        onStatusChange('not_going');
       }
     } catch (err) {
       // Error already handled in saveRsvp
     }
+  };
+
+  // Navigate to ProfilePage with RSVP data
+  const navigateToProfile = () => {
+    navigate('/profile', { 
+      state: { 
+        currentRsvp: currentRsvp,
+        restaurant: restaurant 
+      } 
+    });
   };
 
   if (loading) {
@@ -433,6 +481,35 @@ const CurrentPage = ({ onDayChange, onStatusChange }) => {
             {message && (
               <div className="success-message">
                 <p>{message}</p>
+              </div>
+            )}
+
+            {/* Verification Status */}
+            {currentRsvp && (
+              <div className="verification-status">
+                {currentRsvp.canVerify ? (
+                  <div className="verification-prompt">
+                    <div className="verification-icon">📸</div>
+                    <div className="verification-content">
+                      <h4>Ready to Verify Your Visit?</h4>
+                      <p>Your visit date has passed. Head to your profile to verify your visit and share your experience!</p>
+                      <button 
+                        className="verify-visit-btn"
+                        onClick={navigateToProfile}
+                      >
+                        Verify Visit
+                      </button>
+                    </div>
+                  </div>
+                ) : currentRsvp.status === 'going' ? (
+                  <div className="pending-verification">
+                    <div className="pending-icon">⏳</div>
+                    <div className="pending-content">
+                      <h4>Pending Verification</h4>
+                      <p>Your visit is scheduled. After your visit, you can verify it in your profile.</p>
+                    </div>
+                  </div>
+                ) : null}
               </div>
             )}
           </>

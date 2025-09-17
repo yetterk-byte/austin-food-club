@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import FriendsModal from '../../components/FriendsModal';
 import VerificationModal from '../../components/VerificationModal';
@@ -8,6 +9,7 @@ import './ProfilePage.css';
 
 const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
   const { user, signOut } = useAuth();
+  const location = useLocation();
   const [showFriendsModal, setShowFriendsModal] = useState(false);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const [selectedVisit, setSelectedVisit] = useState(null);
@@ -21,6 +23,10 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
     thisMonth: 0,
     friends: 0
   });
+
+  // Get RSVP data from navigation state
+  const currentRsvp = location.state?.currentRsvp;
+  const currentRestaurant = location.state?.restaurant;
 
 
   const handleFriendsClick = () => {
@@ -108,7 +114,22 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
 
         // Fetch RSVP history
         const rsvpResponse = await api.getRSVPs();
-        setRsvpHistory(rsvpResponse?.rsvps || []);
+        let rsvpData = rsvpResponse?.rsvps || [];
+        
+        // Add current RSVP to history if it exists and is verifiable
+        if (currentRsvp && currentRsvp.canVerify) {
+          // Check if it's not already in the history
+          const existingRsvp = rsvpData.find(rsvp => 
+            rsvp.restaurantId === currentRsvp.restaurantId && 
+            rsvp.day === currentRsvp.day
+          );
+          
+          if (!existingRsvp) {
+            rsvpData = [currentRsvp, ...rsvpData];
+          }
+        }
+        
+        setRsvpHistory(rsvpData);
 
         // Fetch verified visits
         const verifiedResponse = await api.getVerifiedVisits();
@@ -137,7 +158,7 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
     };
 
     fetchUserData();
-  }, [user]);
+  }, [user, currentRsvp]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -320,31 +341,53 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
           ))}
           
           {/* Show RSVP restaurants as unverified visits */}
-          {rsvpHistory.map((rsvp) => (
-            <div key={`rsvp-${rsvp.id}`} className="visit-card unverified">
-              <div className="visit-background"></div>
-              <div className="visit-content">
-                <div className="visit-header">
-                  <h3 className="visit-restaurant">{rsvp.restaurant.name}</h3>
-                  <div className="unverified-badge">Not Verified</div>
-                </div>
-                <p className="visit-date">{formatDate(rsvp.createdAt)}</p>
-                <p className="visit-status">RSVP: {rsvp.status}</p>
-                <div className="visit-actions">
-                  <button 
-                    className="verify-button"
-                    onClick={() => handleVerifyVisit({
-                      restaurantId: rsvp.restaurantId,
-                      restaurantName: rsvp.restaurant.name,
-                      day: rsvp.day
-                    })}
-                  >
-                    Verify Visit
-                  </button>
+          {rsvpHistory.map((rsvp) => {
+            const canVerify = rsvp.canVerify || false;
+            const isPending = rsvp.status === 'going' && !canVerify;
+            
+            return (
+              <div key={`rsvp-${rsvp.id}`} className="visit-card unverified">
+                <div className="visit-background"></div>
+                <div className="visit-content">
+                  <div className="visit-header">
+                    <h3 className="visit-restaurant">{rsvp.restaurant.name}</h3>
+                    <div className={`status-badge ${canVerify ? 'ready-to-verify' : isPending ? 'pending-verification' : 'not-verified'}`}>
+                      {canVerify ? 'Ready to Verify' : isPending ? 'Pending Verification' : 'Not Verified'}
+                    </div>
+                  </div>
+                  <p className="visit-date">{formatDate(rsvp.createdAt)}</p>
+                  <p className="visit-status">RSVP: {rsvp.status}</p>
+                  {rsvp.day && (
+                    <p className="visit-day">Scheduled: {rsvp.day}</p>
+                  )}
+                  <div className="visit-actions">
+                    {canVerify ? (
+                      <button 
+                        className="verify-button"
+                        onClick={() => handleVerifyVisit({
+                          restaurantId: rsvp.restaurantId,
+                          restaurantName: rsvp.restaurant.name,
+                          day: rsvp.day
+                        })}
+                      >
+                        Verify Visit
+                      </button>
+                    ) : isPending ? (
+                      <div className="pending-message">
+                        <span className="pending-icon">⏳</span>
+                        <span>Visit scheduled - verify after your visit</span>
+                      </div>
+                    ) : (
+                      <div className="no-verify-message">
+                        <span className="no-verify-icon">❌</span>
+                        <span>Not going - no verification needed</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

@@ -647,3 +647,131 @@
     margin-bottom: 15px;
   }
 }
+
+/* Verification Status Styles */
+.verification-status {
+  margin-top: 20px;
+  padding: 16px;
+  background: #2a2a2a;
+  border-radius: 12px;
+  border: 1px solid #444;
+}
+
+.verification-prompt {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  border-radius: 8px;
+  color: white;
+}
+
+.verification-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.verification-content {
+  flex: 1;
+}
+
+.verification-content h4 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+}
+
+.verification-content p {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+.verify-visit-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.verify-visit-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.pending-verification {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: #374151;
+  border-radius: 8px;
+  border: 1px solid #4b5563;
+}
+
+.pending-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.pending-content {
+  flex: 1;
+}
+
+.pending-content h4 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fbbf24;
+}
+
+.pending-content p {
+  margin: 0;
+  font-size: 14px;
+  color: #d1d5db;
+  line-height: 1.4;
+}
+
+/* Mobile adjustments for verification status */
+@media (max-width: 768px) {
+  .verification-status {
+    margin-top: 15px;
+    padding: 12px;
+  }
+  
+  .verification-prompt,
+  .pending-verification {
+    padding: 12px;
+    gap: 10px;
+  }
+  
+  .verification-icon,
+  .pending-icon {
+    font-size: 20px;
+  }
+  
+  .verification-content h4,
+  .pending-content h4 {
+    font-size: 15px;
+  }
+  
+  .verification-content p,
+  .pending-content p {
+    font-size: 13px;
+  }
+  
+  .verify-visit-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}
