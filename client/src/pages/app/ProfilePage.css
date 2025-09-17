@@ -751,6 +751,43 @@
   opacity: 0.6;
 }
 
+/* Visit placeholder styles */
+.visit-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: #2a2a2a;
+  color: #999;
+  gap: 8px;
+}
+
+.visit-placeholder .placeholder-icon {
+  font-size: 24px;
+  opacity: 0.6;
+}
+
+.visit-placeholder .placeholder-text {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+/* LazyImage integration */
+.visit-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.8;
+  z-index: 1;
+}
+
 /* Mobile adjustments for new elements */
 @media (max-width: 768px) {
   .status-badge {
@@ -771,5 +808,13 @@
   .pending-icon,
   .no-verify-icon {
     font-size: 12px;
+  }
+  
+  .visit-placeholder .placeholder-icon {
+    font-size: 20px;
+  }
+  
+  .visit-placeholder .placeholder-text {
+    font-size: 10px;
   }
 }

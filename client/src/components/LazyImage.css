@@ -1,0 +1,110 @@
+/* LazyImage Component Styles */
+.lazy-image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.lazy-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+
+.lazy-image.loaded {
+  opacity: 1;
+}
+
+.lazy-image.loading {
+  opacity: 0;
+}
+
+.lazy-image-placeholder,
+.lazy-image-loading,
+.lazy-image-error {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #2a2a2a;
+  color: #999;
+}
+
+.default-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.placeholder-icon {
+  font-size: 24px;
+  opacity: 0.6;
+}
+
+.placeholder-text {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(76, 175, 80, 0.3);
+  border-top: 2px solid #4CAF50;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.lazy-image-error {
+  background: #1a1a1a;
+  color: #f44336;
+}
+
+.error-icon {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.error-text {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .placeholder-icon {
+    font-size: 20px;
+  }
+  
+  .placeholder-text,
+  .error-text {
+    font-size: 10px;
+  }
+  
+  .spinner {
+    width: 16px;
+    height: 16px;
+  }
+}

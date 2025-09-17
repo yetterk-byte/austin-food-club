@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import FriendsModal from '../../components/FriendsModal';
 import VerificationModal from '../../components/VerificationModal';
 import StarRating from '../../components/StarRating';
+import LazyImage from '../../components/LazyImage';
 import { apiService as api } from '../../services/api';
 import './ProfilePage.css';
 
@@ -312,13 +313,17 @@ const ProfilePage = ({ rsvpStatus, setCurrentPage }) => {
           {/* Show actual verified visits */}
           {verifiedVisits.map((visit) => (
             <div key={visit.id} className="visit-card">
-              <div 
+              <LazyImage
+                src={visit.verificationPhoto || visit.photo}
+                alt={`Visit to ${visit.restaurant.name}`}
                 className="visit-background"
-                style={{
-                  backgroundImage: `url(${visit.verificationPhoto || visit.photo})`
-                }}
-                title={`Background: ${visit.verificationPhoto || visit.photo}`}
-              ></div>
+                placeholder={
+                  <div className="visit-placeholder">
+                    <div className="placeholder-icon">📸</div>
+                    <div className="placeholder-text">Loading photo...</div>
+                  </div>
+                }
+              />
               <div className="visit-content">
                 <div className="visit-header">
                   <h3 className="visit-restaurant">{visit.restaurant}</h3>
