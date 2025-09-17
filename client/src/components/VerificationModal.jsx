@@ -294,7 +294,7 @@ const VerificationModal = ({
                 </button>
               )}
 
-              {currentStep < 3 ? (
+              {currentStep === 1 ? null : currentStep < 3 ? (
                 <button
                   className="next-button"
                   onClick={handleNext}
@@ -324,13 +324,15 @@ const VerificationModal = ({
               )}
             </div>
 
-            <button
-              className="cancel-button"
-              onClick={handleClose}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </button>
+            {currentStep > 1 && (
+              <button
+                className="cancel-button"
+                onClick={handleClose}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </button>
+            )}
           </div>
         </div>
       </div>
