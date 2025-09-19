@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App name -->
+    <string name="app_name">Austin Food Club</string>
+    <string name="app_name_debug">Austin Food Club (Debug)</string>
+    <string name="app_name_staging">Austin Food Club (Staging)</string>
+    
+    <!-- Permission rationales -->
+    <string name="camera_permission_rationale">Austin Food Club needs camera access to take photos of your restaurant visits for verification.</string>
+    <string name="gallery_permission_rationale">Austin Food Club needs photo library access to select photos of your restaurant visits.</string>
+    <string name="location_permission_rationale">Austin Food Club uses your location to find nearby restaurants and provide directions.</string>
+    <string name="notification_permission_rationale">Austin Food Club sends notifications about new restaurants, RSVP reminders, and friend activities.</string>
+    <string name="biometric_permission_rationale">Austin Food Club uses biometric authentication for secure and convenient access.</string>
+    
+    <!-- Notification channels -->
+    <string name="restaurant_channel_name">Restaurant Updates</string>
+    <string name="restaurant_channel_description">Notifications about new restaurants and updates</string>
+    <string name="rsvp_channel_name">RSVP Reminders</string>
+    <string name="rsvp_channel_description">Reminders about your RSVPs and visits</string>
+    <string name="social_channel_name">Social Updates</string>
+    <string name="social_channel_description">Notifications about friends and social activities</string>
+    <string name="verification_channel_name">Visit Verification</string>
+    <string name="verification_channel_description">Reminders to verify your restaurant visits</string>
+    
+    <!-- Error messages -->
+    <string name="network_error">No internet connection. Please check your network and try again.</string>
+    <string name="server_error">Server error. Please try again later.</string>
+    <string name="auth_error">Authentication failed. Please sign in again.</string>
+    <string name="camera_error">Camera not available. Please try again.</string>
+    <string name="gallery_error">Gallery not available. Please try again.</string>
+    <string name="location_error">Location not available. Please enable location services.</string>
+    
+    <!-- Success messages -->
+    <string name="rsvp_success">RSVP confirmed!</string>
+    <string name="verification_success">Visit verified successfully!</string>
+    <string name="friend_request_sent">Friend request sent!</string>
+    <string name="photo_uploaded">Photo uploaded successfully!</string>
+    
+    <!-- General UI text -->
+    <string name="loading">Loading...</string>
+    <string name="retry">Try Again</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="share">Share</string>
+    <string name="edit">Edit</string>
+    
+    <!-- Offline messages -->
+    <string name="offline_mode">You\'re offline. Some features may not be available.</string>
+    <string name="syncing">Syncing your data...</string>
+    <string name="sync_complete">All data synced!</string>
+    <string name="sync_failed">Sync failed. Will retry when online.</string>
+    
+    <!-- Deep link messages -->
+    <string name="deep_link_restaurant">Opening restaurant details...</string>
+    <string name="deep_link_verification">Opening visit verification...</string>
+    <string name="deep_link_invalid">Invalid link. Redirecting to home.</string>
+    
+    <!-- File provider authority -->
+    <string name="file_provider_authority">com.austinfoodclub.app.fileprovider</string>
+</resources>
+

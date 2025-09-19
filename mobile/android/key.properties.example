@@ -1,0 +1,28 @@
+# Android Signing Configuration
+# Copy this file to key.properties and update with your actual keystore information
+
+storePassword=your_store_password
+keyPassword=your_key_password
+keyAlias=your_key_alias
+storeFile=../keystore/austin_food_club_release.jks
+
+# Instructions:
+# 1. Generate a keystore:
+#    keytool -genkey -v -keystore austin_food_club_release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias austin_food_club
+#
+# 2. Create keystore directory:
+#    mkdir android/keystore
+#    mv austin_food_club_release.jks android/keystore/
+#
+# 3. Copy this file to key.properties and update the values above
+#
+# 4. Keep your keystore and passwords secure!
+#    - Never commit key.properties to version control
+#    - Store keystore in a secure location
+#    - Use environment variables for CI/CD
+
+# Environment-specific keystores (optional)
+# debug.storeFile=../keystore/austin_food_club_debug.jks
+# staging.storeFile=../keystore/austin_food_club_staging.jks
+# release.storeFile=../keystore/austin_food_club_release.jks
+

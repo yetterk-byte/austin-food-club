@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Google Maps API Key</title>
+</head>
+<body>
+    <h1>Testing Google Maps API Key</h1>
+    
+    <h2>Static Maps API Test</h2>
+    <p>If your API key is working, you should see a map below:</p>
+    
+    <img src="https://maps.googleapis.com/maps/api/staticmap?center=30.2672,-97.7431&zoom=15&size=400x200&maptype=roadmap&markers=color:orange%7Csize:mid%7C30.2672,-97.7431&key=AIzaSyA6pcXA40sTWfiNL5lWA-pZZJsFJv0f5xQ" 
+         alt="Google Maps Test" 
+         style="border: 2px solid orange; border-radius: 8px;" />
+    
+    <h2>What to Check:</h2>
+    <ul>
+        <li><strong>If you see a map</strong>: Your API key is working! ✅</li>
+        <li><strong>If you see "For development purposes only" watermark</strong>: API key works but needs billing enabled</li>
+        <li><strong>If you see an error image</strong>: Check the APIs enabled in Google Cloud Console</li>
+        <li><strong>If image doesn't load</strong>: API key restrictions or not enabled</li>
+    </ul>
+    
+    <h2>Required APIs to Enable:</h2>
+    <ol>
+        <li>Maps Static API</li>
+        <li>Maps Embed API</li>
+        <li>Maps JavaScript API (for web)</li>
+    </ol>
+    
+    <h2>API Key Restrictions:</h2>
+    <p>Make sure your API key allows:</p>
+    <ul>
+        <li><strong>HTTP referrers</strong>: localhost:*, 127.0.0.1:*</li>
+        <li><strong>API restrictions</strong>: Only the Maps APIs listed above</li>
+    </ul>
+    
+    <p><a href="https://console.cloud.google.com/apis/credentials" target="_blank">Go to Google Cloud Console</a></p>
+</body>
+</html>

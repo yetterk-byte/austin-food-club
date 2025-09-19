@@ -1,0 +1,40 @@
+name: austin_food_club_flutter
+description: Austin Food Club mobile app
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Essential dependencies for Austin Food Club
+  cupertino_icons: ^1.0.2
+  provider: ^6.1.1
+  go_router: ^12.1.3
+  http: ^1.1.0
+  intl: ^0.19.0
+  cached_network_image: ^3.3.0
+  
+  # Minimal dependencies for now
+  # image_picker: ^1.0.4
+  # image_picker_web: ^3.1.1
+  # image: ^4.1.3
+  # path_provider: ^2.1.1
+  
+  # Authentication and storage
+  shared_preferences: ^2.2.2
+  crypto: ^3.0.3
+  
+  # Maps and location (simplified)
+  url_launcher: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+flutter:
+  uses-material-design: true

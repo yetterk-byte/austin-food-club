@@ -1,0 +1,205 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services"
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+// Keystore properties
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+android {
+    namespace "com.austinfoodclub.app"
+    compileSdk 34
+    ndkVersion flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        applicationId "com.austinfoodclub.app"
+        minSdkVersion 21
+        targetSdkVersion 34
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        
+        // Multidex support for large apps
+        multiDexEnabled true
+        
+        // Vector drawable support
+        vectorDrawables.useSupportLibrary true
+        
+        // Test instrumentation runner
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+        
+        release {
+            if (keystoreProperties['storeFile'] != null) {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+            debuggable true
+            minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.debug
+            
+            // Debug build configuration
+            buildConfigField "String", "API_BASE_URL", '"https://dev-api.austinfoodclub.com"'
+            buildConfigField "String", "SUPABASE_URL", '"https://dev.supabase.co"'
+            buildConfigField "boolean", "ENABLE_LOGGING", "true"
+            
+            manifestPlaceholders = [
+                appName: "Austin Food Club (Debug)",
+                usesCleartextTraffic: "true"
+            ]
+        }
+        
+        staging {
+            applicationIdSuffix ".staging"
+            versionNameSuffix "-staging"
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            
+            // Staging build configuration
+            buildConfigField "String", "API_BASE_URL", '"https://staging-api.austinfoodclub.com"'
+            buildConfigField "String", "SUPABASE_URL", '"https://staging.supabase.co"'
+            buildConfigField "boolean", "ENABLE_LOGGING", "true"
+            
+            manifestPlaceholders = [
+                appName: "Austin Food Club (Staging)",
+                usesCleartextTraffic: "false"
+            ]
+        }
+
+        release {
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            
+            // Production build configuration
+            buildConfigField "String", "API_BASE_URL", '"https://api.austinfoodclub.com"'
+            buildConfigField "String", "SUPABASE_URL", '"https://prod.supabase.co"'
+            buildConfigField "boolean", "ENABLE_LOGGING", "false"
+            
+            manifestPlaceholders = [
+                appName: "Austin Food Club",
+                usesCleartextTraffic: "false"
+            ]
+        }
+    }
+
+    // Bundle configuration
+    bundle {
+        language {
+            enableSplit = false
+        }
+        density {
+            enableSplit = true
+        }
+        abi {
+            enableSplit = true
+        }
+    }
+
+    // Lint configuration
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+        disable 'InvalidPackage'
+        disable 'MissingTranslation'
+    }
+
+    // Packaging options
+    packagingOptions {
+        pickFirst '**/libc++_shared.so'
+        pickFirst '**/libjsc.so'
+    }
+
+    // Test options
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.multidex:multidex:2.0.1'
+    
+    // Firebase
+    implementation platform('com.google.firebase:firebase-bom:32.7.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-crashlytics'
+    
+    // AndroidX libraries
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+    implementation 'androidx.work:work-runtime-ktx:2.9.0'
+    
+    // Testing dependencies
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
+}

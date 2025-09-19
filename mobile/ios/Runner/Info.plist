@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Austin Food Club</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>austin_food_club_flutter</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	
+	<!-- Camera and Photo Library Permissions -->
+	<key>NSCameraUsageDescription</key>
+	<string>Austin Food Club needs camera access to take photos of your restaurant visits for verification.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Austin Food Club needs photo library access to select photos of your restaurant visits.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Austin Food Club needs permission to save photos to your photo library.</string>
+	
+	<!-- Location Permissions -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Austin Food Club uses your location to find nearby restaurants and provide directions.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Austin Food Club uses your location to find nearby restaurants and provide directions.</string>
+	
+	<!-- Microphone Permission (for video recording if needed) -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Austin Food Club may use the microphone for video recording of restaurant visits.</string>
+	
+	<!-- Contacts Permission (for friend finding) -->
+	<key>NSContactsUsageDescription</key>
+	<string>Austin Food Club can access your contacts to help you find friends who are also using the app.</string>
+	
+	<!-- Face ID / Touch ID Permission -->
+	<key>NSFaceIDUsageDescription</key>
+	<string>Austin Food Club uses Face ID for secure and convenient app access.</string>
+	
+	<!-- Calendar Permission (for RSVP reminders) -->
+	<key>NSCalendarsUsageDescription</key>
+	<string>Austin Food Club can add your restaurant RSVPs to your calendar for reminders.</string>
+	
+	<!-- Notifications -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>background-fetch</string>
+		<string>background-processing</string>
+		<string>remote-notification</string>
+	</array>
+	
+	<!-- Firebase Configuration -->
+	<key>FirebaseMessagingAutoInitEnabled</key>
+	<true/>
+	<key>FirebaseAutomaticScreenReportingEnabled</key>
+	<false/>
+	
+	<!-- URL Schemes -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>austinfoodclub.com</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>https</string>
+				<string>austinfoodclub</string>
+			</array>
+		</dict>
+	</array>
+	
+	<!-- App Transport Security -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<false/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>austinfoodclub.com</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<false/>
+				<key>NSExceptionMinimumTLSVersion</key>
+				<string>TLSv1.2</string>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+			<key>supabase.co</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<false/>
+				<key>NSExceptionMinimumTLSVersion</key>
+				<string>TLSv1.2</string>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+	
+	<!-- Supported file types -->
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Image</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.image</string>
+				<string>public.jpeg</string>
+				<string>public.png</string>
+			</array>
+		</dict>
+	</array>
+	
+	<!-- App capabilities -->
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>arm64</string>
+	</array>
+	
+	<!-- Status bar configuration -->
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	
+	<!-- Launch screen configuration -->
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	
+	<!-- Prevent screenshots in app switcher (optional security) -->
+	<key>UIApplicationSupportsMultipleScenes</key>
+	<false/>
+	
+	<!-- App icon configuration -->
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>Icon-App-20x20@1x</string>
+				<string>Icon-App-20x20@2x</string>
+				<string>Icon-App-20x20@3x</string>
+				<string>Icon-App-29x29@1x</string>
+				<string>Icon-App-29x29@2x</string>
+				<string>Icon-App-29x29@3x</string>
+				<string>Icon-App-40x40@1x</string>
+				<string>Icon-App-40x40@2x</string>
+				<string>Icon-App-40x40@3x</string>
+				<string>Icon-App-60x60@2x</string>
+				<string>Icon-App-60x60@3x</string>
+				<string>Icon-App-76x76@1x</string>
+				<string>Icon-App-76x76@2x</string>
+				<string>Icon-App-83.5x83.5@2x</string>
+				<string>Icon-App-1024x1024@1x</string>
+			</array>
+		</dict>
+	</dict>
+</dict>
+</plist>
+

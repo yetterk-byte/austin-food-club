@@ -1,0 +1,2882 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red180\green36\blue25;}
+{\*\expandedcolortbl;;\csgray\c0;\cssrgb\c76411\c21697\c12527;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs22 \cf2 \CocoaLigature0 Launching lib/main.dart on Chrome in debug mode...\
+\cf3 Error: unable to find directory entry in pubspec.yaml:\cf2 \
+\cf3 /Users/kennyyetter/Desktop/austin_food_club_flutter/assets/images/\cf2 \
+\cf3 Error: Couldn't resolve the package 'provider' in\cf2 \
+\cf3 'package:provider/provider.dart'.\cf2 \
+\cf3 Error: Couldn't resolve the package 'supabase_flutter' in\cf2 \
+\cf3 'package:supabase_flutter/supabase_flutter.dart'.\cf2 \
+\cf3 Error: Couldn't resolve the package 'flutter_dotenv' in\cf2 \
+\cf3 'package:flutter_dotenv/flutter_dotenv.dart'.\cf2 \
+\cf3 lib/main.dart:2:8: Error: Not found: 'package:provider/provider.dart'\cf2 \
+\cf3 import 'package:provider/provider.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/main.dart:3:8: Error: Not found:\cf2 \
+\cf3 'package:supabase_flutter/supabase_flutter.dart'\cf2 \
+\cf3 import 'package:supabase_flutter/supabase_flutter.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/main.dart:4:8: Error: Not found:\cf2 \
+\cf3 'package:flutter_dotenv/flutter_dotenv.dart'\cf2 \
+\cf3 import 'package:flutter_dotenv/flutter_dotenv.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 Error: Couldn't resolve the package 'go_router' in\cf2 \
+\cf3 'package:go_router/go_router.dart'.\cf2 \
+\cf3 lib/config/routes.dart:3:8: Error: Not found: 'package:provider/provider.dart'\cf2 \
+\cf3 import 'package:provider/provider.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 Error: Couldn't resolve the package 'firebase_core' in\cf2 \
+\cf3 'package:firebase_core/firebase_core.dart'.\cf2 \
+\cf3 Error: Couldn't resolve the package 'firebase_messaging' in\cf2 \
+\cf3 'package:firebase_messaging/firebase_messaging.dart'.\cf2 \
+\cf3 Error: Couldn't resolve the package 'flutter_local_notifications' in\cf2 \
+\cf3 'package:flutter_local_notifications/flutter_local_notifications.dart'.\cf2 \
+\cf3 Error: Couldn't resolve the package 'permission_handler' in\cf2 \
+\cf3 'package:permission_handler/permission_handler.dart'.\cf2 \
+\cf3 Error: Couldn't resolve the package 'shared_preferences' in\cf2 \
+\cf3 'package:shared_preferences/shared_preferences.dart'.\cf2 \
+\cf3 lib/config/routes.dart:2:8: Error: Not found: 'package:go_router/go_router.dart'\cf2 \
+\cf3 import 'package:go_router/go_router.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/screens/splash/splash_screen.dart:2:8: Error: Not found:\cf2 \
+\cf3 'package:provider/provider.dart'\cf2 \
+\cf3 import 'package:provider/provider.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/screens/auth/login_screen.dart:2:8: Error: Not found:\cf2 \
+\cf3 'package:provider/provider.dart'\cf2 \
+\cf3 import 'package:provider/provider.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/screens/auth/login_screen.dart:3:8: Error: Not found:\cf2 \
+\cf3 'package:go_router/go_router.dart'\cf2 \
+\cf3 import 'package:go_router/go_router.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/screens/auth/otp_screen.dart:3:8: Error: Not found:\cf2 \
+\cf3 'package:provider/provider.dart'\cf2 \
+\cf3 import 'package:provider/provider.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/screens/main/main_shell.dart:2:8: Error: Not found:\cf2 \
+\cf3 'package:go_router/go_router.dart'\cf2 \
+\cf3 import 'package:go_router/go_router.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/screens/main/main_shell.dart:3:8: Error: Not found:\cf2 \
+\cf3 'package:provider/provider.dart'\cf2 \
+\cf3 import 'package:provider/provider.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/screens/main/current_screen.dart:3:8: Error: Not found:\cf2 \
+\cf3 'package:provider/provider.dart'\cf2 \
+\cf3 import 'package:provider/provider.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 Error: Couldn't resolve the package 'shimmer' in 'package:shimmer/shimmer.dart'.\cf2 \
+\cf3 Error: Couldn't resolve the package 'url_launcher' in\cf2 \
+\cf3 'package:url_launcher/url_launcher.dart'.\cf2 \
+\cf3 Error: Couldn't resolve the package 'intl' in 'package:intl/intl.dart'.\cf2 \
+\cf3 lib/screens/discover/discover_screen.dart:2:8: Error: Not found:\cf2 \
+\cf3 'package:provider/provider.dart'\cf2 \
+\cf3 import 'package:provider/provider.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/screens/wishlist/wishlist_screen.dart:2:8: Error: Not found:\cf2 \
+\cf3 'package:provider/provider.dart'\cf2 \
+\cf3 import 'package:provider/provider.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/screens/profile/profile_screen.dart:3:8: Error: Not found:\cf2 \
+\cf3 'package:provider/provider.dart'\cf2 \
+\cf3 import 'package:provider/provider.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 Error: Couldn't resolve the package 'cached_network_image' in\cf2 \
+\cf3 'package:cached_network_image/cached_network_image.dart'.\cf2 \
+\cf3 lib/screens/restaurant/restaurant_details_screen.dart:2:8: Error: Not found:\cf2 \
+\cf3 'package:provider/provider.dart'\cf2 \
+\cf3 import 'package:provider/provider.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/screens/profile/verify_visit_screen.dart:3:8: Error: Not found:\cf2 \
+\cf3 'package:provider/provider.dart'\cf2 \
+\cf3 import 'package:provider/provider.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 Error: Couldn't resolve the package 'image_picker' in\cf2 \
+\cf3 'package:image_picker/image_picker.dart'.\cf2 \
+\cf3 Error: Couldn't resolve the package 'image_cropper' in\cf2 \
+\cf3 'package:image_cropper/image_cropper.dart'.\cf2 \
+\cf3 Error: Couldn't resolve the package 'lottie' in 'package:lottie/lottie.dart'.\cf2 \
+\cf3 lib/services/navigation_service.dart:2:8: Error: Not found:\cf2 \
+\cf3 'package:go_router/go_router.dart'\cf2 \
+\cf3 import 'package:go_router/go_router.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/services/notification_service.dart:4:8: Error: Not found:\cf2 \
+\cf3 'package:firebase_core/firebase_core.dart'\cf2 \
+\cf3 import 'package:firebase_core/firebase_core.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/services/notification_service.dart:5:8: Error: Not found:\cf2 \
+\cf3 'package:firebase_messaging/firebase_messaging.dart'\cf2 \
+\cf3 import 'package:firebase_messaging/firebase_messaging.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/services/notification_service.dart:8:8: Error: Not found:\cf2 \
+\cf3 'package:flutter_local_notifications/flutter_local_notifications.dart'\cf2 \
+\cf3 import 'package:flutter_local_notifications/flutter_local_notifications.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/services/notification_service.dart:9:8: Error: Not found:\cf2 \
+\cf3 'package:permission_handler/permission_handler.dart'\cf2 \
+\cf3 import 'package:permission_handler/permission_handler.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/services/notification_service.dart:10:8: Error: Not found:\cf2 \
+\cf3 'package:shared_preferences/shared_preferences.dart'\cf2 \
+\cf3 import 'package:shared_preferences/shared_preferences.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/screens/main/main_shell.dart:6:8: Error: Error when reading\cf2 \
+\cf3 'lib/widgets/common/custom_bottom_navigation.dart': No such file or directory\cf2 \
+\cf3 import '../../widgets/common/custom_bottom_navigation.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/screens/main/current_screen.dart:4:8: Error: Not found:\cf2 \
+\cf3 'package:shimmer/shimmer.dart'\cf2 \
+\cf3 import 'package:shimmer/shimmer.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/screens/main/current_screen.dart:5:8: Error: Not found:\cf2 \
+\cf3 'package:url_launcher/url_launcher.dart'\cf2 \
+\cf3 import 'package:url_launcher/url_launcher.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/screens/main/current_screen.dart:6:8: Error: Not found:\cf2 \
+\cf3 'package:intl/intl.dart'\cf2 \
+\cf3 import 'package:intl/intl.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/screens/profile/profile_screen.dart:5:8: Error: Not found:\cf2 \
+\cf3 'package:intl/intl.dart'\cf2 \
+\cf3 import 'package:intl/intl.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/widgets/restaurant/rsvp_section.dart:2:8: Error: Not found:\cf2 \
+\cf3 'package:provider/provider.dart'\cf2 \
+\cf3 import 'package:provider/provider.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/widgets/restaurant/rsvp_bottom_sheet.dart:2:8: Error: Not found:\cf2 \
+\cf3 'package:intl/intl.dart'\cf2 \
+\cf3 import 'package:intl/intl.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/screens/profile/profile_screen.dart:4:8: Error: Not found:\cf2 \
+\cf3 'package:cached_network_image/cached_network_image.dart'\cf2 \
+\cf3 import 'package:cached_network_image/cached_network_image.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/widgets/restaurant/restaurant_hero.dart:2:8: Error: Not found:\cf2 \
+\cf3 'package:cached_network_image/cached_network_image.dart'\cf2 \
+\cf3 import 'package:cached_network_image/cached_network_image.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/widgets/profile/user_header.dart:2:8: Error: Not found:\cf2 \
+\cf3 'package:cached_network_image/cached_network_image.dart'\cf2 \
+\cf3 import 'package:cached_network_image/cached_network_image.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/widgets/profile/user_header.dart:3:8: Error: Not found:\cf2 \
+\cf3 'package:intl/intl.dart'\cf2 \
+\cf3 import 'package:intl/intl.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/widgets/profile/upcoming_rsvps.dart:2:8: Error: Not found:\cf2 \
+\cf3 'package:intl/intl.dart'\cf2 \
+\cf3 import 'package:intl/intl.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/widgets/profile/verified_visits.dart:2:8: Error: Not found:\cf2 \
+\cf3 'package:cached_network_image/cached_network_image.dart'\cf2 \
+\cf3 import 'package:cached_network_image/cached_network_image.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/widgets/profile/verified_visits.dart:3:8: Error: Not found:\cf2 \
+\cf3 'package:intl/intl.dart'\cf2 \
+\cf3 import 'package:intl/intl.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/screens/profile/verify_visit_screen.dart:4:8: Error: Not found:\cf2 \
+\cf3 'package:image_picker/image_picker.dart'\cf2 \
+\cf3 import 'package:image_picker/image_picker.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/screens/profile/verify_visit_screen.dart:5:8: Error: Not found:\cf2 \
+\cf3 'package:image_cropper/image_cropper.dart'\cf2 \
+\cf3 import 'package:image_cropper/image_cropper.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/screens/profile/verify_visit_screen.dart:6:8: Error: Not found:\cf2 \
+\cf3 'package:lottie/lottie.dart'\cf2 \
+\cf3 import 'package:lottie/lottie.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/widgets/verification/photo_capture_step.dart:3:8: Error: Not found:\cf2 \
+\cf3 'package:image_picker/image_picker.dart'\cf2 \
+\cf3 import 'package:image_picker/image_picker.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/widgets/verification/photo_editing_step.dart:2:8: Error: Not found:\cf2 \
+\cf3 'package:image_cropper/image_cropper.dart'\cf2 \
+\cf3 import 'package:image_cropper/image_cropper.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/widgets/verification/confirmation_step.dart:2:8: Error: Not found:\cf2 \
+\cf3 'package:lottie/lottie.dart'\cf2 \
+\cf3 import 'package:lottie/lottie.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/widgets/verification/confirmation_step.dart:3:8: Error: Not found:\cf2 \
+\cf3 'package:intl/intl.dart'\cf2 \
+\cf3 import 'package:intl/intl.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/services/auth_service.dart:1:8: Error: Not found:\cf2 \
+\cf3 'package:supabase_flutter/supabase_flutter.dart'\cf2 \
+\cf3 import 'package:supabase_flutter/supabase_flutter.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/services/auth_service.dart:2:8: Error: Not found:\cf2 \
+\cf3 'package:shared_preferences/shared_preferences.dart'\cf2 \
+\cf3 import 'package:shared_preferences/shared_preferences.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 Error: Couldn't resolve the package 'local_auth' in\cf2 \
+\cf3 'package:local_auth/local_auth.dart'.\cf2 \
+\cf3 lib/services/auth_service.dart:4:8: Error: Not found:\cf2 \
+\cf3 'package:image_picker/image_picker.dart'\cf2 \
+\cf3 import 'package:image_picker/image_picker.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/services/auth_service.dart:364:16: Error: 'signUpWithEmail' is already\cf2 \
+\cf3 declared in this scope.\cf2 \
+\cf3   Future<User> signUpWithEmail(\{\cf2 \
+\cf3                ^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:176:24: Context: Previous declaration of\cf2 \
+\cf3 'signUpWithEmail'.\cf2 \
+\cf3   Future<AuthResponse> signUpWithEmail(String email, String password) async \{\cf2 \
+\cf3                        ^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:402:16: Error: 'signInWithEmail' is already\cf2 \
+\cf3 declared in this scope.\cf2 \
+\cf3   Future<User> signInWithEmail(\{\cf2 \
+\cf3                ^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:150:24: Context: Previous declaration of\cf2 \
+\cf3 'signInWithEmail'.\cf2 \
+\cf3   Future<AuthResponse> signInWithEmail(String email, String password) async \{\cf2 \
+\cf3                        ^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:435:16: Error: 'signInWithPhone' is already\cf2 \
+\cf3 declared in this scope.\cf2 \
+\cf3   Future<void> signInWithPhone(\{\cf2 \
+\cf3                ^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:109:16: Context: Previous declaration of\cf2 \
+\cf3 'signInWithPhone'.\cf2 \
+\cf3   Future<void> signInWithPhone(String phoneNumber) async \{\cf2 \
+\cf3                ^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:569:16: Error: 'updateProfile' is already\cf2 \
+\cf3 declared in this scope.\cf2 \
+\cf3   Future<User> updateProfile(\{\cf2 \
+\cf3                ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:242:16: Context: Previous declaration of\cf2 \
+\cf3 'updateProfile'.\cf2 \
+\cf3   Future<void> updateProfile(Map<String, dynamic> updates) async \{\cf2 \
+\cf3                ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:620:16: Error: 'signOut' is already declared in\cf2 \
+\cf3 this scope.\cf2 \
+\cf3   Future<void> signOut() async \{\cf2 \
+\cf3                ^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:212:16: Context: Previous declaration of\cf2 \
+\cf3 'signOut'.\cf2 \
+\cf3   Future<void> signOut() async \{\cf2 \
+\cf3                ^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:650:16: Error: 'refreshSession' is already\cf2 \
+\cf3 declared in this scope.\cf2 \
+\cf3   Future<void> refreshSession() async \{\cf2 \
+\cf3                ^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:351:16: Context: Previous declaration of\cf2 \
+\cf3 'refreshSession'.\cf2 \
+\cf3   Future<void> refreshSession() async \{\cf2 \
+\cf3                ^^^^^^^^^^^^^^\cf2 \
+\cf3 Error: Couldn't resolve the package 'dio' in 'package:dio/dio.dart'.\cf2 \
+\cf3 lib/services/api_service.dart:3:8: Error: Not found:\cf2 \
+\cf3 'package:flutter_dotenv/flutter_dotenv.dart'\cf2 \
+\cf3 import 'package:flutter_dotenv/flutter_dotenv.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/services/api_service.dart:495:22: Error: 'getUserRSVPs' is already declared\cf2 \
+\cf3 in this scope.\cf2 \
+\cf3   Future<List<RSVP>> getUserRSVPs() async \{\cf2 \
+\cf3                      ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:299:22: Context: Previous declaration of\cf2 \
+\cf3 'getUserRSVPs'.\cf2 \
+\cf3   Future<List<RSVP>> getUserRSVPs(String userId) async \{\cf2 \
+\cf3                      ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:506:31: Error: 'getVerifiedVisits' is already\cf2 \
+\cf3 declared in this scope.\cf2 \
+\cf3   Future<List<VerifiedVisit>> getVerifiedVisits() async \{\cf2 \
+\cf3                               ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:430:31: Context: Previous declaration of\cf2 \
+\cf3 'getVerifiedVisits'.\cf2 \
+\cf3   Future<List<VerifiedVisit>> getVerifiedVisits(String userId) async \{\cf2 \
+\cf3                               ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:546:30: Error: 'getWishlist' is already declared\cf2 \
+\cf3 in this scope.\cf2 \
+\cf3   Future<List<WishlistItem>> getWishlist() async \{\cf2 \
+\cf3                              ^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:350:28: Context: Previous declaration of\cf2 \
+\cf3 'getWishlist'.\cf2 \
+\cf3   Future<List<Restaurant>> getWishlist(String userId) async \{\cf2 \
+\cf3                            ^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:556:24: Error: 'addToWishlist' is already declared\cf2 \
+\cf3 in this scope.\cf2 \
+\cf3   Future<WishlistItem> addToWishlist(String restaurantId) async \{\cf2 \
+\cf3                        ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:374:16: Context: Previous declaration of\cf2 \
+\cf3 'addToWishlist'.\cf2 \
+\cf3   Future<void> addToWishlist(String restaurantId) async \{\cf2 \
+\cf3                ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:567:16: Error: 'removeFromWishlist' is already\cf2 \
+\cf3 declared in this scope.\cf2 \
+\cf3   Future<void> removeFromWishlist(String wishlistId) async \{\cf2 \
+\cf3                ^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:387:16: Context: Previous declaration of\cf2 \
+\cf3 'removeFromWishlist'.\cf2 \
+\cf3   Future<void> removeFromWishlist(String restaurantId) async \{\cf2 \
+\cf3                ^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 Error: Couldn't resolve the package 'connectivity_plus' in\cf2 \
+\cf3 'package:connectivity_plus/connectivity_plus.dart'.\cf2 \
+\cf3 Error: Couldn't resolve the package 'hive_flutter' in\cf2 \
+\cf3 'package:hive_flutter/hive_flutter.dart'.\cf2 \
+\cf3 lib/services/auth_service.dart:3:8: Error: Not found:\cf2 \
+\cf3 'package:local_auth/local_auth.dart'\cf2 \
+\cf3 import 'package:local_auth/local_auth.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/services/api_service.dart:2:8: Error: Not found: 'package:dio/dio.dart'\cf2 \
+\cf3 import 'package:dio/dio.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/services/offline_service.dart:4:8: Error: Not found:\cf2 \
+\cf3 'package:connectivity_plus/connectivity_plus.dart'\cf2 \
+\cf3 import 'package:connectivity_plus/connectivity_plus.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/services/offline_service.dart:5:8: Error: Not found:\cf2 \
+\cf3 'package:hive_flutter/hive_flutter.dart'\cf2 \
+\cf3 import 'package:hive_flutter/hive_flutter.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 Error: Couldn't resolve the package 'sqflite' in 'package:sqflite/sqflite.dart'.\cf2 \
+\cf3 lib/services/database_service.dart:4:8: Error: Not found:\cf2 \
+\cf3 'package:sqflite/sqflite.dart'\cf2 \
+\cf3 import 'package:sqflite/sqflite.dart';\cf2 \
+\cf3        ^\cf2 \
+\cf3 lib/config/routes.dart:31:16: Error: Type 'GoRouter' not found.\cf2 \
+\cf3   static final GoRouter router = GoRouter(\cf2 \
+\cf3                ^^^^^^^^\cf2 \
+\cf3 lib/config/routes.dart:142:50: Error: Type 'GoRouterState' not found.\cf2 \
+\cf3   static String? _redirect(BuildContext context, GoRouterState state) \{\cf2 \
+\cf3                                                  ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/config/routes.dart:173:5: Error: Type 'GoRouterState' not found.\cf2 \
+\cf3     GoRouterState state,\cf2 \
+\cf3     ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:15:49: Error: Type 'RemoteMessage' not\cf2 \
+\cf3 found.\cf2 \
+\cf3 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async \{\cf2 \
+\cf3                                                 ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:28:3: Error: Type 'FirebaseMessaging' not\cf2 \
+\cf3 found.\cf2 \
+\cf3   FirebaseMessaging? _firebaseMessaging;\cf2 \
+\cf3   ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:29:3: Error: Type\cf2 \
+\cf3 'FlutterLocalNotificationsPlugin' not found.\cf2 \
+\cf3   FlutterLocalNotificationsPlugin? _localNotifications;\cf2 \
+\cf3   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:34:16: Error: Type\cf2 \
+\cf3 'AndroidNotificationChannel' not found.\cf2 \
+\cf3   static const AndroidNotificationChannel _restaurantChannel =\cf2 \
+\cf3   AndroidNotificationChannel(\cf2 \
+\cf3                ^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:42:16: Error: Type\cf2 \
+\cf3 'AndroidNotificationChannel' not found.\cf2 \
+\cf3   static const AndroidNotificationChannel _rsvpChannel =\cf2 \
+\cf3   AndroidNotificationChannel(\cf2 \
+\cf3                ^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:50:16: Error: Type\cf2 \
+\cf3 'AndroidNotificationChannel' not found.\cf2 \
+\cf3   static const AndroidNotificationChannel _socialChannel =\cf2 \
+\cf3   AndroidNotificationChannel(\cf2 \
+\cf3                ^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:58:16: Error: Type\cf2 \
+\cf3 'AndroidNotificationChannel' not found.\cf2 \
+\cf3   static const AndroidNotificationChannel _verificationChannel =\cf2 \
+\cf3   AndroidNotificationChannel(\cf2 \
+\cf3                ^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:198:41: Error: Type 'RemoteMessage' not\cf2 \
+\cf3 found.\cf2 \
+\cf3   Future<void> _handleForegroundMessage(RemoteMessage message) async \{\cf2 \
+\cf3                                         ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:208:48: Error: Type 'RemoteMessage' not\cf2 \
+\cf3 found.\cf2 \
+\cf3   static Future<void> _handleBackgroundMessage(RemoteMessage message) async \{\cf2 \
+\cf3                                                ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:214:39: Error: Type 'RemoteMessage' not\cf2 \
+\cf3 found.\cf2 \
+\cf3   Future<void> _handleNotificationTap(RemoteMessage message) async \{\cf2 \
+\cf3                                       ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:228:27: Error: Type\cf2 \
+\cf3 'NotificationResponse' not found.\cf2 \
+\cf3   void _onNotificationTap(NotificationResponse response) \{\cf2 \
+\cf3                           ^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:236:39: Error: Type 'RemoteMessage' not\cf2 \
+\cf3 found.\cf2 \
+\cf3   Future<void> _showLocalNotification(RemoteMessage message) async \{\cf2 \
+\cf3                                       ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:382:32: Error: Type 'RemoteMessage' not\cf2 \
+\cf3 found.\cf2 \
+\cf3   bool _shouldShowNotification(RemoteMessage message, NotificationPreferences\cf2 \
+\cf3   preferences) \{\cf2 \
+\cf3                                ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/navigation_service.dart:8:10: Error: Type 'GoRouter' not found.\cf2 \
+\cf3   static GoRouter get router => GoRouter.of(context!);\cf2 \
+\cf3          ^^^^^^^^\cf2 \
+\cf3 lib/providers/offline_provider.dart:190:3: Error: Type 'Color' not found.\cf2 \
+\cf3   Color getConnectionStatusColor() \{\cf2 \
+\cf3   ^^^^^\cf2 \
+\cf3 lib/providers/offline_provider.dart:200:3: Error: Type 'IconData' not found.\cf2 \
+\cf3   IconData getConnectionStatusIcon() \{\cf2 \
+\cf3   ^^^^^^^^\cf2 \
+\cf3 lib/widgets/verification/photo_capture_step.dart:22:9: Error: Type 'ImagePicker'\cf2 \
+\cf3 not found.\cf2 \
+\cf3   final ImagePicker _imagePicker = ImagePicker();\cf2 \
+\cf3         ^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:16:9: Error: Type 'SupabaseClient' not found.\cf2 \
+\cf3   final SupabaseClient _supabase = Supabase.instance.client;\cf2 \
+\cf3         ^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:17:9: Error: Type 'LocalAuthentication' not\cf2 \
+\cf3 found.\cf2 \
+\cf3   final LocalAuthentication _localAuth = LocalAuthentication();\cf2 \
+\cf3         ^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:20:10: Error: Type 'AuthState' not found.\cf2 \
+\cf3   Stream<AuthState>? _authStateStream;\cf2 \
+\cf3          ^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:47:27: Error: Type 'AuthState' not found.\cf2 \
+\cf3   void _onAuthStateChange(AuthState data) \{\cf2 \
+\cf3                           ^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:76:37: Error: Type 'Session' not found.\cf2 \
+\cf3   Future<void> _loadUserFromSession(Session session) async \{\cf2 \
+\cf3                                     ^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:122:10: Error: Type 'AuthResponse' not found.\cf2 \
+\cf3   Future<AuthResponse> verifyPhoneOTP(String phone, String token) async \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:150:10: Error: Type 'AuthResponse' not found.\cf2 \
+\cf3   Future<AuthResponse> signInWithEmail(String email, String password) async \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:176:10: Error: Type 'AuthResponse' not found.\cf2 \
+\cf3   Future<AuthResponse> signUpWithEmail(String email, String password) async \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:208:10: Error: Type 'AuthState' not found.\cf2 \
+\cf3   Stream<AuthState> authStateChanges() \{\cf2 \
+\cf3          ^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:47:8: Error: Type 'Dio' not found.\cf2 \
+\cf3   late Dio _dio;\cf2 \
+\cf3        ^^^\cf2 \
+\cf3 lib/services/api_service.dart:117:21: Error: Type 'DioException' not found.\cf2 \
+\cf3   bool _shouldRetry(DioException error) \{\cf2 \
+\cf3                     ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:616:26: Error: Type 'DioException' not found.\cf2 \
+\cf3   Exception _handleError(DioException error) \{\cf2 \
+\cf3                          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/offline_service.dart:21:9: Error: Type 'Connectivity' not found.\cf2 \
+\cf3   final Connectivity _connectivity = Connectivity();\cf2 \
+\cf3         ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/offline_service.dart:23:8: Error: Type 'Box' not found.\cf2 \
+\cf3   late Box _cacheBox;\cf2 \
+\cf3        ^^^\cf2 \
+\cf3 lib/services/offline_service.dart:24:8: Error: Type 'Box' not found.\cf2 \
+\cf3   late Box _settingsBox;\cf2 \
+\cf3        ^^^\cf2 \
+\cf3 lib/services/offline_service.dart:28:22: Error: Type 'ConnectivityResult' not\cf2 \
+\cf3 found.\cf2 \
+\cf3   StreamSubscription<ConnectivityResult>? _connectivitySubscription;\cf2 \
+\cf3                      ^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/offline_service.dart:81:31: Error: Type 'ConnectivityResult' not\cf2 \
+\cf3 found.\cf2 \
+\cf3   void _onConnectivityChanged(ConnectivityResult result) \{\cf2 \
+\cf3                               ^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:16:10: Error: Type 'Database' not found.\cf2 \
+\cf3   static Database? _database;\cf2 \
+\cf3          ^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:28:10: Error: Type 'Database' not found.\cf2 \
+\cf3   Future<Database> get database async \{\cf2 \
+\cf3          ^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:33:10: Error: Type 'Database' not found.\cf2 \
+\cf3   Future<Database> _initDatabase() async \{\cf2 \
+\cf3          ^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:45:26: Error: Type 'Database' not found.\cf2 \
+\cf3   Future<void> _onCreate(Database db, int version) async \{\cf2 \
+\cf3                          ^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:148:27: Error: Type 'Database' not found.\cf2 \
+\cf3   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async \{\cf2 \
+\cf3                           ^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:38:17: Error: Undefined name\cf2 \
+\cf3 'Importance'.\cf2 \
+\cf3     importance: Importance.high,\cf2 \
+\cf3                 ^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:34:64: Error: Method not found:\cf2 \
+\cf3 'AndroidNotificationChannel'.\cf2 \
+\cf3   static const AndroidNotificationChannel _restaurantChannel =\cf2 \
+\cf3   AndroidNotificationChannel(\cf2 \
+\cf3                                                                ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3                                                                ^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:46:17: Error: Undefined name\cf2 \
+\cf3 'Importance'.\cf2 \
+\cf3     importance: Importance.high,\cf2 \
+\cf3                 ^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:42:58: Error: Method not found:\cf2 \
+\cf3 'AndroidNotificationChannel'.\cf2 \
+\cf3   static const AndroidNotificationChannel _rsvpChannel =\cf2 \
+\cf3   AndroidNotificationChannel(\cf2 \
+\cf3                                                          ^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3                                                          ^^^\cf2 \
+\cf3 lib/services/notification_service.dart:54:17: Error: Undefined name\cf2 \
+\cf3 'Importance'.\cf2 \
+\cf3     importance: Importance.defaultImportance,\cf2 \
+\cf3                 ^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:50:60: Error: Method not found:\cf2 \
+\cf3 'AndroidNotificationChannel'.\cf2 \
+\cf3   static const AndroidNotificationChannel _socialChannel =\cf2 \
+\cf3   AndroidNotificationChannel(\cf2 \
+\cf3                                                            ^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3                                                            ^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:62:17: Error: Undefined name\cf2 \
+\cf3 'Importance'.\cf2 \
+\cf3     importance: Importance.high,\cf2 \
+\cf3                 ^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:58:66: Error: Method not found:\cf2 \
+\cf3 'AndroidNotificationChannel'.\cf2 \
+\cf3   static const AndroidNotificationChannel _verificationChannel =\cf2 \
+\cf3   AndroidNotificationChannel(\cf2 \
+\cf3                                                                  ^^^^^^^^^^^^^^^\cf2 \
+\cf3                                                                  ^^^^^^^^^^^\cf2 \
+\cf3 lib/main.dart:15:9: Error: Undefined name 'dotenv'.\cf2 \
+\cf3   await dotenv.load(fileName: ".env");\cf2 \
+\cf3         ^^^^^^\cf2 \
+\cf3 lib/main.dart:19:10: Error: Undefined name 'dotenv'.\cf2 \
+\cf3     url: dotenv.env['SUPABASE_URL'] ?? '',\cf2 \
+\cf3          ^^^^^^\cf2 \
+\cf3 lib/main.dart:20:14: Error: Undefined name 'dotenv'.\cf2 \
+\cf3     anonKey: dotenv.env['SUPABASE_ANON_KEY'] ?? '',\cf2 \
+\cf3              ^^^^^^\cf2 \
+\cf3 lib/main.dart:18:9: Error: Undefined name 'Supabase'.\cf2 \
+\cf3   await Supabase.initialize(\cf2 \
+\cf3         ^^^^^^^^\cf2 \
+\cf3 lib/main.dart:34:12: Error: The method 'ChangeNotifierProvider' isn't defined\cf2 \
+\cf3 for the class 'AustinFoodClubApp'.\cf2 \
+\cf3  - 'AustinFoodClubApp' is from 'package:austin_food_club_flutter/main.dart'\cf2 \
+\cf3  ('lib/main.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'ChangeNotifierProvider'.\cf2 \
+\cf3     return ChangeNotifierProvider(\cf2 \
+\cf3            ^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/main.dart:36:14: Error: The method 'Consumer' isn't defined for the class\cf2 \
+\cf3 'AustinFoodClubApp'.\cf2 \
+\cf3  - 'AustinFoodClubApp' is from 'package:austin_food_club_flutter/main.dart'\cf2 \
+\cf3  ('lib/main.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'Consumer'.\cf2 \
+\cf3       child: Consumer<AppProvider>(\cf2 \
+\cf3              ^^^^^^^^\cf2 \
+\cf3 lib/config/routes.dart:31:16: Error: 'GoRouter' isn't a type.\cf2 \
+\cf3   static final GoRouter router = GoRouter(\cf2 \
+\cf3                ^^^^^^^^\cf2 \
+\cf3 lib/config/routes.dart:38:7: Error: Method not found: 'GoRoute'.\cf2 \
+\cf3       GoRoute(\cf2 \
+\cf3       ^^^^^^^\cf2 \
+\cf3 lib/config/routes.dart:50:11: Error: Method not found: 'GoRoute'.\cf2 \
+\cf3           GoRoute(\cf2 \
+\cf3           ^^^^^^^\cf2 \
+\cf3 lib/config/routes.dart:45:7: Error: Method not found: 'GoRoute'.\cf2 \
+\cf3       GoRoute(\cf2 \
+\cf3       ^^^^^^^\cf2 \
+\cf3 lib/config/routes.dart:64:11: Error: Method not found: 'GoRoute'.\cf2 \
+\cf3           GoRoute(\cf2 \
+\cf3           ^^^^^^^\cf2 \
+\cf3 lib/config/routes.dart:73:11: Error: Method not found: 'GoRoute'.\cf2 \
+\cf3           GoRoute(\cf2 \
+\cf3           ^^^^^^^\cf2 \
+\cf3 lib/config/routes.dart:82:11: Error: Method not found: 'GoRoute'.\cf2 \
+\cf3           GoRoute(\cf2 \
+\cf3           ^^^^^^^\cf2 \
+\cf3 lib/config/routes.dart:91:11: Error: Method not found: 'GoRoute'.\cf2 \
+\cf3           GoRoute(\cf2 \
+\cf3           ^^^^^^^\cf2 \
+\cf3 lib/config/routes.dart:61:7: Error: Method not found: 'ShellRoute'.\cf2 \
+\cf3       ShellRoute(\cf2 \
+\cf3       ^^^^^^^^^^\cf2 \
+\cf3 lib/config/routes.dart:104:7: Error: Method not found: 'GoRoute'.\cf2 \
+\cf3       GoRoute(\cf2 \
+\cf3       ^^^^^^^\cf2 \
+\cf3 lib/config/routes.dart:118:7: Error: Method not found: 'GoRoute'.\cf2 \
+\cf3       GoRoute(\cf2 \
+\cf3       ^^^^^^^\cf2 \
+\cf3 lib/config/routes.dart:31:34: Error: Method not found: 'GoRouter'.\cf2 \
+\cf3   static final GoRouter router = GoRouter(\cf2 \
+\cf3                                  ^^^^^^^^\cf2 \
+\cf3 lib/config/routes.dart:142:50: Error: 'GoRouterState' isn't a type.\cf2 \
+\cf3   static String? _redirect(BuildContext context, GoRouterState state) \{\cf2 \
+\cf3                                                  ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/config/routes.dart:143:26: Error: Undefined name 'Provider'.\cf2 \
+\cf3     final authProvider = Provider.of<AuthProvider>(context, listen: false);\cf2 \
+\cf3                          ^^^^^^^^\cf2 \
+\cf3 lib/config/routes.dart:173:5: Error: 'GoRouterState' isn't a type.\cf2 \
+\cf3     GoRouterState state,\cf2 \
+\cf3     ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/providers/app_provider.dart:38:7: Error: The method '_clearGlobalError'\cf2 \
+\cf3 isn't defined for the class 'AppProvider'.\cf2 \
+\cf3  - 'AppProvider' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/providers/app_provider.dart'\cf2 \
+\cf3  ('lib/providers/app_provider.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named '_clearGlobalError'.\cf2 \
+\cf3       _clearGlobalError();\cf2 \
+\cf3       ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/providers/app_provider.dart:68:7: Error: The method '_clearGlobalError'\cf2 \
+\cf3 isn't defined for the class 'AppProvider'.\cf2 \
+\cf3  - 'AppProvider' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/providers/app_provider.dart'\cf2 \
+\cf3  ('lib/providers/app_provider.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named '_clearGlobalError'.\cf2 \
+\cf3       _clearGlobalError();\cf2 \
+\cf3       ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:15:49: Error: 'RemoteMessage' isn't a\cf2 \
+\cf3 type.\cf2 \
+\cf3 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async \{\cf2 \
+\cf3                                                 ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:16:9: Error: Undefined name 'Firebase'.\cf2 \
+\cf3   await Firebase.initializeApp();\cf2 \
+\cf3         ^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:28:3: Error: 'FirebaseMessaging' isn't a\cf2 \
+\cf3 type.\cf2 \
+\cf3   FirebaseMessaging? _firebaseMessaging;\cf2 \
+\cf3   ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:29:3: Error:\cf2 \
+\cf3 'FlutterLocalNotificationsPlugin' isn't a type.\cf2 \
+\cf3   FlutterLocalNotificationsPlugin? _localNotifications;\cf2 \
+\cf3   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:34:16: Error:\cf2 \
+\cf3 'AndroidNotificationChannel' isn't a type.\cf2 \
+\cf3   static const AndroidNotificationChannel _restaurantChannel =\cf2 \
+\cf3   AndroidNotificationChannel(\cf2 \
+\cf3                ^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:42:16: Error:\cf2 \
+\cf3 'AndroidNotificationChannel' isn't a type.\cf2 \
+\cf3   static const AndroidNotificationChannel _rsvpChannel =\cf2 \
+\cf3   AndroidNotificationChannel(\cf2 \
+\cf3                ^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:50:16: Error:\cf2 \
+\cf3 'AndroidNotificationChannel' isn't a type.\cf2 \
+\cf3   static const AndroidNotificationChannel _socialChannel =\cf2 \
+\cf3   AndroidNotificationChannel(\cf2 \
+\cf3                ^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:58:16: Error:\cf2 \
+\cf3 'AndroidNotificationChannel' isn't a type.\cf2 \
+\cf3   static const AndroidNotificationChannel _verificationChannel =\cf2 \
+\cf3   AndroidNotificationChannel(\cf2 \
+\cf3                ^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:76:13: Error: The getter 'Firebase' isn't\cf2 \
+\cf3 defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Firebase'.\cf2 \
+\cf3       await Firebase.initializeApp();\cf2 \
+\cf3             ^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:77:28: Error: The getter\cf2 \
+\cf3 'FirebaseMessaging' isn't defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'FirebaseMessaging'.\cf2 \
+\cf3       _firebaseMessaging = FirebaseMessaging.instance;\cf2 \
+\cf3                            ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:80:29: Error: The method\cf2 \
+\cf3 'FlutterLocalNotificationsPlugin' isn't defined for the class\cf2 \
+\cf3 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'FlutterLocalNotificationsPlugin'.\cf2 \
+\cf3       _localNotifications = FlutterLocalNotificationsPlugin();\cf2 \
+\cf3                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:104:29: Error: Method not found:\cf2 \
+\cf3 'AndroidInitializationSettings'.\cf2 \
+\cf3     const androidSettings =\cf2 \
+\cf3     AndroidInitializationSettings('@mipmap/ic_launcher');\cf2 \
+\cf3                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:105:25: Error: Method not found:\cf2 \
+\cf3 'DarwinInitializationSettings'.\cf2 \
+\cf3     const iosSettings = DarwinInitializationSettings(\cf2 \
+\cf3                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:111:22: Error: Method not found:\cf2 \
+\cf3 'InitializationSettings'.\cf2 \
+\cf3     const settings = InitializationSettings(\cf2 \
+\cf3                      ^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:134:28: Error: The getter 'Permission'\cf2 \
+\cf3 isn't defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Permission'.\cf2 \
+\cf3       final status = await Permission.notification.request();\cf2 \
+\cf3                            ^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:135:75: Error: The getter\cf2 \
+\cf3 'AuthorizationStatus' isn't defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'AuthorizationStatus'.\cf2 \
+\cf3       return status.isGranted && messagingSettings.authorizationStatus ==\cf2 \
+\cf3       AuthorizationStatus.authorized;\cf2 \
+\cf3                                                                       ^^^^^^^^^^\cf2 \
+\cf3                                                                       ^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:138:53: Error: The getter\cf2 \
+\cf3 'AuthorizationStatus' isn't defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'AuthorizationStatus'.\cf2 \
+\cf3     return messagingSettings.authorizationStatus ==\cf2 \
+\cf3     AuthorizationStatus.authorized;\cf2 \
+\cf3                                                     ^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:164:5: Error: The getter\cf2 \
+\cf3 'FirebaseMessaging' isn't defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'FirebaseMessaging'.\cf2 \
+\cf3     FirebaseMessaging.onMessage.listen(_handleForegroundMessage);\cf2 \
+\cf3     ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:167:5: Error: The getter\cf2 \
+\cf3 'FirebaseMessaging' isn't defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'FirebaseMessaging'.\cf2 \
+\cf3     FirebaseMessaging.onMessageOpenedApp.listen(_handleNotificationTap);\cf2 \
+\cf3     ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:173:5: Error: The getter\cf2 \
+\cf3 'FirebaseMessaging' isn't defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'FirebaseMessaging'.\cf2 \
+\cf3     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);\cf2 \
+\cf3     ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:180:50: Error:\cf2 \
+\cf3 'AndroidFlutterLocalNotificationsPlugin' isn't a type.\cf2 \
+\cf3           .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotification\cf2 \
+\cf3           sPlugin>()\cf2 \
+\cf3                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3                                                  ^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:184:50: Error:\cf2 \
+\cf3 'AndroidFlutterLocalNotificationsPlugin' isn't a type.\cf2 \
+\cf3           .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotification\cf2 \
+\cf3           sPlugin>()\cf2 \
+\cf3                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3                                                  ^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:188:50: Error:\cf2 \
+\cf3 'AndroidFlutterLocalNotificationsPlugin' isn't a type.\cf2 \
+\cf3           .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotification\cf2 \
+\cf3           sPlugin>()\cf2 \
+\cf3                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3                                                  ^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:192:50: Error:\cf2 \
+\cf3 'AndroidFlutterLocalNotificationsPlugin' isn't a type.\cf2 \
+\cf3           .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotification\cf2 \
+\cf3           sPlugin>()\cf2 \
+\cf3                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3                                                  ^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:198:41: Error: 'RemoteMessage' isn't a\cf2 \
+\cf3 type.\cf2 \
+\cf3   Future<void> _handleForegroundMessage(RemoteMessage message) async \{\cf2 \
+\cf3                                         ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:208:48: Error: 'RemoteMessage' isn't a\cf2 \
+\cf3 type.\cf2 \
+\cf3   static Future<void> _handleBackgroundMessage(RemoteMessage message) async \{\cf2 \
+\cf3                                                ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:214:39: Error: 'RemoteMessage' isn't a\cf2 \
+\cf3 type.\cf2 \
+\cf3   Future<void> _handleNotificationTap(RemoteMessage message) async \{\cf2 \
+\cf3                                       ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:228:27: Error: 'NotificationResponse'\cf2 \
+\cf3 isn't a type.\cf2 \
+\cf3   void _onNotificationTap(NotificationResponse response) \{\cf2 \
+\cf3                           ^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:236:39: Error: 'RemoteMessage' isn't a\cf2 \
+\cf3 type.\cf2 \
+\cf3   Future<void> _showLocalNotification(RemoteMessage message) async \{\cf2 \
+\cf3                                       ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:250:24: Error: Method not found:\cf2 \
+\cf3 'DarwinNotificationDetails'.\cf2 \
+\cf3     const iosDetails = DarwinNotificationDetails(\cf2 \
+\cf3                        ^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:240:28: Error: The method\cf2 \
+\cf3 'AndroidNotificationDetails' isn't defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'AndroidNotificationDetails'.\cf2 \
+\cf3     final androidDetails = AndroidNotificationDetails(\cf2 \
+\cf3                            ^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:244:19: Error: The getter 'Importance'\cf2 \
+\cf3 isn't defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Importance'.\cf2 \
+\cf3       importance: Importance.high,\cf2 \
+\cf3                   ^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:245:17: Error: The getter 'Priority'\cf2 \
+\cf3 isn't defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Priority'.\cf2 \
+\cf3       priority: Priority.high,\cf2 \
+\cf3                 ^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:256:21: Error: The method\cf2 \
+\cf3 'NotificationDetails' isn't defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'NotificationDetails'.\cf2 \
+\cf3     final details = NotificationDetails(\cf2 \
+\cf3                     ^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:316:24: Error: Method not found:\cf2 \
+\cf3 'DarwinNotificationDetails'.\cf2 \
+\cf3     const iosDetails = DarwinNotificationDetails();\cf2 \
+\cf3                        ^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:308:28: Error: The method\cf2 \
+\cf3 'AndroidNotificationDetails' isn't defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'AndroidNotificationDetails'.\cf2 \
+\cf3     final androidDetails = AndroidNotificationDetails(\cf2 \
+\cf3                            ^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:312:19: Error: The getter 'Importance'\cf2 \
+\cf3 isn't defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Importance'.\cf2 \
+\cf3       importance: Importance.high,\cf2 \
+\cf3                   ^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:313:17: Error: The getter 'Priority'\cf2 \
+\cf3 isn't defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Priority'.\cf2 \
+\cf3       priority: Priority.high,\cf2 \
+\cf3                 ^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:318:21: Error: The method\cf2 \
+\cf3 'NotificationDetails' isn't defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'NotificationDetails'.\cf2 \
+\cf3     final details = NotificationDetails(\cf2 \
+\cf3                     ^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:329:28: Error: The getter\cf2 \
+\cf3 'AndroidScheduleMode' isn't defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'AndroidScheduleMode'.\cf2 \
+\cf3       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,\cf2 \
+\cf3                            ^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:330:46: Error: The getter\cf2 \
+\cf3 'UILocalNotificationDateInterpretation' isn't defined for the class\cf2 \
+\cf3 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'UILocalNotificationDateInterpretation'.\cf2 \
+\cf3       uiLocalNotificationDateInterpretation:\cf2 \
+\cf3       UILocalNotificationDateInterpretation.absoluteTime,\cf2 \
+\cf3                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3                                              ^^\cf2 \
+\cf3 lib/services/notification_service.dart:347:25: Error: The getter\cf2 \
+\cf3 'SharedPreferences' isn't defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'SharedPreferences'.\cf2 \
+\cf3     final prefs = await SharedPreferences.getInstance();\cf2 \
+\cf3                         ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:360:25: Error: The getter\cf2 \
+\cf3 'SharedPreferences' isn't defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'SharedPreferences'.\cf2 \
+\cf3     final prefs = await SharedPreferences.getInstance();\cf2 \
+\cf3                         ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:377:25: Error: The getter\cf2 \
+\cf3 'SharedPreferences' isn't defined for the class 'NotificationService'.\cf2 \
+\cf3  - 'NotificationService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/notification_service.dart'\cf2 \
+\cf3  ('lib/services/notification_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'SharedPreferences'.\cf2 \
+\cf3     final prefs = await SharedPreferences.getInstance();\cf2 \
+\cf3                         ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/notification_service.dart:382:32: Error: 'RemoteMessage' isn't a\cf2 \
+\cf3 type.\cf2 \
+\cf3   bool _shouldShowNotification(RemoteMessage message, NotificationPreferences\cf2 \
+\cf3   preferences) \{\cf2 \
+\cf3                                ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/screens/splash/splash_screen.dart:54:28: Error: The getter 'Provider' isn't\cf2 \
+\cf3 defined for the class '_SplashScreenState'.\cf2 \
+\cf3  - '_SplashScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/splash/splash_screen.dart'\cf2 \
+\cf3  ('lib/screens/splash/splash_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Provider'.\cf2 \
+\cf3       final authProvider = Provider.of<AuthProvider>(context, listen: false);\cf2 \
+\cf3                            ^^^^^^^^\cf2 \
+\cf3 lib/screens/auth/login_screen.dart:37:26: Error: The getter 'Provider' isn't\cf2 \
+\cf3 defined for the class '_LoginScreenState'.\cf2 \
+\cf3  - '_LoginScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/auth/login_screen.dart'\cf2 \
+\cf3  ('lib/screens/auth/login_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Provider'.\cf2 \
+\cf3     final authProvider = Provider.of<AuthProvider>(context, listen: false);\cf2 \
+\cf3                          ^^^^^^^^\cf2 \
+\cf3 lib/screens/auth/login_screen.dart:45:15: Error: The method 'go' isn't defined\cf2 \
+\cf3 for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'go'.\cf2 \
+\cf3       context.go('/current');\cf2 \
+\cf3               ^^\cf2 \
+\cf3 lib/screens/auth/login_screen.dart:50:26: Error: The getter 'Provider' isn't\cf2 \
+\cf3 defined for the class '_LoginScreenState'.\cf2 \
+\cf3  - '_LoginScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/auth/login_screen.dart'\cf2 \
+\cf3  ('lib/screens/auth/login_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Provider'.\cf2 \
+\cf3     final authProvider = Provider.of<AuthProvider>(context, listen: false);\cf2 \
+\cf3                          ^^^^^^^^\cf2 \
+\cf3 lib/screens/auth/login_screen.dart:55:15: Error: The method 'go' isn't defined\cf2 \
+\cf3 for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'go'.\cf2 \
+\cf3       context.go('/current');\cf2 \
+\cf3               ^^\cf2 \
+\cf3 lib/screens/auth/login_screen.dart:60:26: Error: The getter 'Provider' isn't\cf2 \
+\cf3 defined for the class '_LoginScreenState'.\cf2 \
+\cf3  - '_LoginScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/auth/login_screen.dart'\cf2 \
+\cf3  ('lib/screens/auth/login_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Provider'.\cf2 \
+\cf3     final authProvider = Provider.of<AuthProvider>(context, listen: false);\cf2 \
+\cf3                          ^^^^^^^^\cf2 \
+\cf3 lib/screens/auth/login_screen.dart:65:15: Error: The method 'go' isn't defined\cf2 \
+\cf3 for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'go'.\cf2 \
+\cf3       context.go('/current');\cf2 \
+\cf3               ^^\cf2 \
+\cf3 lib/screens/auth/login_screen.dart:70:13: Error: The method 'go' isn't defined\cf2 \
+\cf3 for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'go'.\cf2 \
+\cf3     context.go('/signup');\cf2 \
+\cf3             ^^\cf2 \
+\cf3 lib/screens/auth/login_screen.dart:135:25: Error: No named parameter with the\cf2 \
+\cf3 name 'labelText'.\cf2 \
+\cf3                         labelText: 'Email',\cf2 \
+\cf3                         ^^^^^^^^^\cf2 \
+\cf3 lib/widgets/common/custom_text_field.dart:49:9: Context: Found this candidate,\cf2 \
+\cf3 but the arguments don't match.\cf2 \
+\cf3   const CustomTextField(\{\cf2 \
+\cf3         ^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/screens/auth/login_screen.dart:146:25: Error: No named parameter with the\cf2 \
+\cf3 name 'labelText'.\cf2 \
+\cf3                         labelText: 'Password',\cf2 \
+\cf3                         ^^^^^^^^^\cf2 \
+\cf3 lib/widgets/common/custom_text_field.dart:49:9: Context: Found this candidate,\cf2 \
+\cf3 but the arguments don't match.\cf2 \
+\cf3   const CustomTextField(\{\cf2 \
+\cf3         ^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/screens/auth/login_screen.dart:83:13: Error: The method 'Consumer' isn't\cf2 \
+\cf3 defined for the class '_LoginScreenState'.\cf2 \
+\cf3  - '_LoginScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/auth/login_screen.dart'\cf2 \
+\cf3  ('lib/screens/auth/login_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'Consumer'.\cf2 \
+\cf3       body: Consumer<AuthProvider>(\cf2 \
+\cf3             ^^^^^^^^\cf2 \
+\cf3 lib/screens/auth/otp_screen.dart:240:12: Error: The method 'Consumer' isn't\cf2 \
+\cf3 defined for the class '_OTPScreenState'.\cf2 \
+\cf3  - '_OTPScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/auth/otp_screen.dart'\cf2 \
+\cf3  ('lib/screens/auth/otp_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'Consumer'.\cf2 \
+\cf3     return Consumer<AuthProvider>(\cf2 \
+\cf3            ^^^^^^^^\cf2 \
+\cf3 lib/screens/auth/otp_screen.dart:367:28: Error: The getter 'Provider' isn't\cf2 \
+\cf3 defined for the class '_OTPScreenState'.\cf2 \
+\cf3  - '_OTPScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/auth/otp_screen.dart'\cf2 \
+\cf3  ('lib/screens/auth/otp_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Provider'.\cf2 \
+\cf3       final authProvider = Provider.of<AuthProvider>(context, listen: false);\cf2 \
+\cf3                            ^^^^^^^^\cf2 \
+\cf3 lib/screens/auth/otp_screen.dart:392:28: Error: The getter 'Provider' isn't\cf2 \
+\cf3 defined for the class '_OTPScreenState'.\cf2 \
+\cf3  - '_OTPScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/auth/otp_screen.dart'\cf2 \
+\cf3  ('lib/screens/auth/otp_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Provider'.\cf2 \
+\cf3       final authProvider = Provider.of<AuthProvider>(context, listen: false);\cf2 \
+\cf3                            ^^^^^^^^\cf2 \
+\cf3 lib/screens/main/main_shell.dart:35:22: Error: The getter 'GoRouterState' isn't\cf2 \
+\cf3 defined for the class 'CustomBottomNavigation'.\cf2 \
+\cf3  - 'CustomBottomNavigation' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/main/main_shell.dart'\cf2 \
+\cf3  ('lib/screens/main/main_shell.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'GoRouterState'.\cf2 \
+\cf3     final location = GoRouterState.of(context).location;\cf2 \
+\cf3                      ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/screens/main/main_shell.dart:38:12: Error: The method 'Consumer' isn't\cf2 \
+\cf3 defined for the class 'CustomBottomNavigation'.\cf2 \
+\cf3  - 'CustomBottomNavigation' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/main/main_shell.dart'\cf2 \
+\cf3  ('lib/screens/main/main_shell.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'Consumer'.\cf2 \
+\cf3     return Consumer<AppProvider>(\cf2 \
+\cf3            ^^^^^^^^\cf2 \
+\cf3 lib/screens/main/current_screen.dart:90:13: Error: The method 'Consumer3' isn't\cf2 \
+\cf3 defined for the class '_CurrentScreenState'.\cf2 \
+\cf3  - '_CurrentScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/main/current_screen.dart'\cf2 \
+\cf3  ('lib/screens/main/current_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'Consumer3'.\cf2 \
+\cf3       body: Consumer3<AppProvider, RestaurantProvider, RSVPProvider>(\cf2 \
+\cf3             ^^^^^^^^^\cf2 \
+\cf3 lib/screens/main/current_screen.dart:230:27: Error: The argument type 'void\cf2 \
+\cf3 Function(String)' can't be assigned to the parameter type 'void Function()?'.\cf2 \
+\cf3               onReadMore: _showDescriptionBottomSheet,\cf2 \
+\cf3                           ^\cf2 \
+\cf3 lib/screens/main/current_screen.dart:455:25: Error: The getter 'Provider' isn't\cf2 \
+\cf3 defined for the class '_CurrentScreenState'.\cf2 \
+\cf3  - '_CurrentScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/main/current_screen.dart'\cf2 \
+\cf3  ('lib/screens/main/current_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Provider'.\cf2 \
+\cf3     final appProvider = Provider.of<AppProvider>(context, listen: false);\cf2 \
+\cf3                         ^^^^^^^^\cf2 \
+\cf3 lib/screens/main/current_screen.dart:460:26: Error: The getter 'Provider' isn't\cf2 \
+\cf3 defined for the class '_CurrentScreenState'.\cf2 \
+\cf3  - '_CurrentScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/main/current_screen.dart'\cf2 \
+\cf3  ('lib/screens/main/current_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Provider'.\cf2 \
+\cf3     final rsvpProvider = Provider.of<RSVPProvider>(context, listen: false);\cf2 \
+\cf3                          ^^^^^^^^\cf2 \
+\cf3 lib/screens/main/current_screen.dart:461:32: Error: The getter 'Provider' isn't\cf2 \
+\cf3 defined for the class '_CurrentScreenState'.\cf2 \
+\cf3  - '_CurrentScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/main/current_screen.dart'\cf2 \
+\cf3  ('lib/screens/main/current_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Provider'.\cf2 \
+\cf3     final restaurantProvider = Provider.of<RestaurantProvider>(context, listen:\cf2 \
+\cf3     false);\cf2 \
+\cf3                                ^^^^^^^^\cf2 \
+\cf3 lib/screens/main/current_screen.dart:485:26: Error: The getter 'Provider' isn't\cf2 \
+\cf3 defined for the class '_CurrentScreenState'.\cf2 \
+\cf3  - '_CurrentScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/main/current_screen.dart'\cf2 \
+\cf3  ('lib/screens/main/current_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Provider'.\cf2 \
+\cf3     final rsvpProvider = Provider.of<RSVPProvider>(context, listen: false);\cf2 \
+\cf3                          ^^^^^^^^\cf2 \
+\cf3 lib/screens/main/current_screen.dart:486:32: Error: The getter 'Provider' isn't\cf2 \
+\cf3 defined for the class '_CurrentScreenState'.\cf2 \
+\cf3  - '_CurrentScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/main/current_screen.dart'\cf2 \
+\cf3  ('lib/screens/main/current_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Provider'.\cf2 \
+\cf3     final restaurantProvider = Provider.of<RestaurantProvider>(context, listen:\cf2 \
+\cf3     false);\cf2 \
+\cf3                                ^^^^^^^^\cf2 \
+\cf3 lib/screens/main/current_screen.dart:560:15: Error: The method 'canLaunchUrl'\cf2 \
+\cf3 isn't defined for the class '_CurrentScreenState'.\cf2 \
+\cf3  - '_CurrentScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/main/current_screen.dart'\cf2 \
+\cf3  ('lib/screens/main/current_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'canLaunchUrl'.\cf2 \
+\cf3     if (await canLaunchUrl(url)) \{\cf2 \
+\cf3               ^^^^^^^^^^^^\cf2 \
+\cf3 lib/screens/main/current_screen.dart:561:13: Error: The method 'launchUrl' isn't\cf2 \
+\cf3 defined for the class '_CurrentScreenState'.\cf2 \
+\cf3  - '_CurrentScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/main/current_screen.dart'\cf2 \
+\cf3  ('lib/screens/main/current_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'launchUrl'.\cf2 \
+\cf3       await launchUrl(url);\cf2 \
+\cf3             ^^^^^^^^^\cf2 \
+\cf3 lib/screens/main/current_screen.dart:569:15: Error: The method 'canLaunchUrl'\cf2 \
+\cf3 isn't defined for the class '_CurrentScreenState'.\cf2 \
+\cf3  - '_CurrentScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/main/current_screen.dart'\cf2 \
+\cf3  ('lib/screens/main/current_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'canLaunchUrl'.\cf2 \
+\cf3     if (await canLaunchUrl(url)) \{\cf2 \
+\cf3               ^^^^^^^^^^^^\cf2 \
+\cf3 lib/screens/main/current_screen.dart:570:13: Error: The method 'launchUrl' isn't\cf2 \
+\cf3 defined for the class '_CurrentScreenState'.\cf2 \
+\cf3  - '_CurrentScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/main/current_screen.dart'\cf2 \
+\cf3  ('lib/screens/main/current_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'launchUrl'.\cf2 \
+\cf3       await launchUrl(url);\cf2 \
+\cf3             ^^^^^^^^^\cf2 \
+\cf3 lib/screens/main/current_screen.dart:576:15: Error: The method 'canLaunchUrl'\cf2 \
+\cf3 isn't defined for the class '_CurrentScreenState'.\cf2 \
+\cf3  - '_CurrentScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/main/current_screen.dart'\cf2 \
+\cf3  ('lib/screens/main/current_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'canLaunchUrl'.\cf2 \
+\cf3     if (await canLaunchUrl(url)) \{\cf2 \
+\cf3               ^^^^^^^^^^^^\cf2 \
+\cf3 lib/screens/main/current_screen.dart:577:13: Error: The method 'launchUrl' isn't\cf2 \
+\cf3 defined for the class '_CurrentScreenState'.\cf2 \
+\cf3  - '_CurrentScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/main/current_screen.dart'\cf2 \
+\cf3  ('lib/screens/main/current_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'launchUrl'.\cf2 \
+\cf3       await launchUrl(url);\cf2 \
+\cf3             ^^^^^^^^^\cf2 \
+\cf3 lib/screens/main/current_screen.dart:583:15: Error: The method 'canLaunchUrl'\cf2 \
+\cf3 isn't defined for the class '_CurrentScreenState'.\cf2 \
+\cf3  - '_CurrentScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/main/current_screen.dart'\cf2 \
+\cf3  ('lib/screens/main/current_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'canLaunchUrl'.\cf2 \
+\cf3     if (await canLaunchUrl(url)) \{\cf2 \
+\cf3               ^^^^^^^^^^^^\cf2 \
+\cf3 lib/screens/main/current_screen.dart:584:13: Error: The method 'launchUrl' isn't\cf2 \
+\cf3 defined for the class '_CurrentScreenState'.\cf2 \
+\cf3  - '_CurrentScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/main/current_screen.dart'\cf2 \
+\cf3  ('lib/screens/main/current_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'launchUrl'.\cf2 \
+\cf3       await launchUrl(url);\cf2 \
+\cf3             ^^^^^^^^^\cf2 \
+\cf3 lib/screens/discover/discover_screen.dart:33:15: Error: The method 'read' isn't\cf2 \
+\cf3 defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'read'.\cf2 \
+\cf3       context.read<RestaurantProvider>().fetchAllRestaurants();\cf2 \
+\cf3               ^^^^\cf2 \
+\cf3 lib/screens/discover/discover_screen.dart:172:12: Error: The method 'Consumer'\cf2 \
+\cf3 isn't defined for the class '_DiscoverScreenState'.\cf2 \
+\cf3  - '_DiscoverScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/discover/discover_screen.dart'\cf2 \
+\cf3  ('lib/screens/discover/discover_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'Consumer'.\cf2 \
+\cf3     return Consumer<RestaurantProvider>(\cf2 \
+\cf3            ^^^^^^^^\cf2 \
+\cf3 lib/screens/discover/discover_screen.dart:212:17: Error: The method 'read' isn't\cf2 \
+\cf3 defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'read'.\cf2 \
+\cf3         context.read<RestaurantProvider>().fetchAllRestaurants();\cf2 \
+\cf3                 ^^^^\cf2 \
+\cf3 lib/screens/discover/discover_screen.dart:325:13: Error: The method 'read' isn't\cf2 \
+\cf3 defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'read'.\cf2 \
+\cf3     context.read<RestaurantProvider>().toggleWishlist(restaurantId);\cf2 \
+\cf3             ^^^^\cf2 \
+\cf3 lib/screens/discover/discover_screen.dart:329:20: Error: The method 'read' isn't\cf2 \
+\cf3 defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'read'.\cf2 \
+\cf3     return context.read<RestaurantProvider>().isInWishlist(restaurantId);\cf2 \
+\cf3                    ^^^^\cf2 \
+\cf3 lib/screens/wishlist/wishlist_screen.dart:27:15: Error: The method 'read' isn't\cf2 \
+\cf3 defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'read'.\cf2 \
+\cf3       context.read<RestaurantProvider>().fetchWishlist();\cf2 \
+\cf3               ^^^^\cf2 \
+\cf3 lib/screens/wishlist/wishlist_screen.dart:70:17: Error: The method 'Consumer'\cf2 \
+\cf3 isn't defined for the class '_WishlistScreenState'.\cf2 \
+\cf3  - '_WishlistScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/wishlist/wishlist_screen.dart'\cf2 \
+\cf3  ('lib/screens/wishlist/wishlist_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'Consumer'.\cf2 \
+\cf3                 Consumer<RestaurantProvider>(\cf2 \
+\cf3                 ^^^^^^^^\cf2 \
+\cf3 lib/screens/wishlist/wishlist_screen.dart:97:12: Error: The method 'Consumer'\cf2 \
+\cf3 isn't defined for the class '_WishlistScreenState'.\cf2 \
+\cf3  - '_WishlistScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/wishlist/wishlist_screen.dart'\cf2 \
+\cf3  ('lib/screens/wishlist/wishlist_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'Consumer'.\cf2 \
+\cf3     return Consumer<RestaurantProvider>(\cf2 \
+\cf3            ^^^^^^^^\cf2 \
+\cf3 lib/screens/wishlist/wishlist_screen.dart:135:17: Error: The method 'read' isn't\cf2 \
+\cf3 defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'read'.\cf2 \
+\cf3         context.read<RestaurantProvider>().fetchWishlist();\cf2 \
+\cf3                 ^^^^\cf2 \
+\cf3 lib/screens/wishlist/wishlist_screen.dart:281:13: Error: The method 'read' isn't\cf2 \
+\cf3 defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'read'.\cf2 \
+\cf3     context.read<RestaurantProvider>().toggleWishlist(restaurantId);\cf2 \
+\cf3             ^^^^\cf2 \
+\cf3 lib/screens/profile/profile_screen.dart:89:13: Error: The method 'Consumer4'\cf2 \
+\cf3 isn't defined for the class '_ProfileScreenState'.\cf2 \
+\cf3  - '_ProfileScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/profile/profile_screen.dart'\cf2 \
+\cf3  ('lib/screens/profile/profile_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'Consumer4'.\cf2 \
+\cf3       body: Consumer4<AppProvider, AuthProvider, UserProvider, RSVPProvider>(\cf2 \
+\cf3             ^^^^^^^^^\cf2 \
+\cf3 lib/screens/profile/profile_screen.dart:386:25: Error: The getter 'Provider'\cf2 \
+\cf3 isn't defined for the class '_ProfileScreenState'.\cf2 \
+\cf3  - '_ProfileScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/profile/profile_screen.dart'\cf2 \
+\cf3  ('lib/screens/profile/profile_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Provider'.\cf2 \
+\cf3     final appProvider = Provider.of<AppProvider>(context, listen: false);\cf2 \
+\cf3                         ^^^^^^^^\cf2 \
+\cf3 lib/screens/profile/profile_screen.dart:447:26: Error: The getter 'Provider'\cf2 \
+\cf3 isn't defined for the class '_ProfileScreenState'.\cf2 \
+\cf3  - '_ProfileScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/profile/profile_screen.dart'\cf2 \
+\cf3  ('lib/screens/profile/profile_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Provider'.\cf2 \
+\cf3     final userProvider = Provider.of<UserProvider>(context, listen: false);\cf2 \
+\cf3                          ^^^^^^^^\cf2 \
+\cf3 lib/screens/profile/profile_screen.dart:466:26: Error: The getter 'Provider'\cf2 \
+\cf3 isn't defined for the class '_ProfileScreenState'.\cf2 \
+\cf3  - '_ProfileScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/profile/profile_screen.dart'\cf2 \
+\cf3  ('lib/screens/profile/profile_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Provider'.\cf2 \
+\cf3     final userProvider = Provider.of<UserProvider>(context, listen: false);\cf2 \
+\cf3                          ^^^^^^^^\cf2 \
+\cf3 lib/screens/profile/profile_screen.dart:504:36: Error: The getter 'Provider'\cf2 \
+\cf3 isn't defined for the class '_ProfileScreenState'.\cf2 \
+\cf3  - '_ProfileScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/profile/profile_screen.dart'\cf2 \
+\cf3  ('lib/screens/profile/profile_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Provider'.\cf2 \
+\cf3               final authProvider = Provider.of<AuthProvider>(context, listen:\cf2 \
+\cf3               false);\cf2 \
+\cf3                                    ^^^^^^^^\cf2 \
+\cf3 lib/screens/restaurant/restaurant_details_screen.dart:27:15: Error: The method\cf2 \
+\cf3 'read' isn't defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'read'.\cf2 \
+\cf3       context.read<RestaurantProvider>().fetchRestaurantDetails(widget.restauran\cf2 \
+\cf3       tId);\cf2 \
+\cf3               ^^^^\cf2 \
+\cf3 lib/screens/restaurant/restaurant_details_screen.dart:35:13: Error: The method\cf2 \
+\cf3 'Consumer' isn't defined for the class '_RestaurantDetailsScreenState'.\cf2 \
+\cf3  - '_RestaurantDetailsScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/restaurant/restaurant_details_screen.\cf2 \
+\cf3  dart' ('lib/screens/restaurant/restaurant_details_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'Consumer'.\cf2 \
+\cf3       body: Consumer<RestaurantProvider>(\cf2 \
+\cf3             ^^^^^^^^\cf2 \
+\cf3 lib/screens/restaurant/restaurant_details_screen.dart:94:19: Error: The method\cf2 \
+\cf3 'read' isn't defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'read'.\cf2 \
+\cf3           context.read<RestaurantProvider>().fetchRestaurantDetails(widget.resta\cf2 \
+\cf3           urantId);\cf2 \
+\cf3                   ^^^^\cf2 \
+\cf3 lib/screens/restaurant/restaurant_details_screen.dart:142:20: Error: The method\cf2 \
+\cf3 'Consumer' isn't defined for the class '_RestaurantDetailsScreenState'.\cf2 \
+\cf3  - '_RestaurantDetailsScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/restaurant/restaurant_details_screen.\cf2 \
+\cf3  dart' ('lib/screens/restaurant/restaurant_details_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'Consumer'.\cf2 \
+\cf3             child: Consumer<RestaurantProvider>(\cf2 \
+\cf3                    ^^^^^^^^\cf2 \
+\cf3 lib/screens/restaurant/restaurant_details_screen.dart:475:13: Error: The method\cf2 \
+\cf3 'read' isn't defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'read'.\cf2 \
+\cf3     context.read<RestaurantProvider>().toggleWishlist(restaurantId);\cf2 \
+\cf3             ^^^^\cf2 \
+\cf3 lib/screens/profile/verify_visit_screen.dart:122:40: Error: The getter\cf2 \
+\cf3 'restaurant' isn't defined for the class 'VerifyVisitScreen'.\cf2 \
+\cf3  - 'VerifyVisitScreen' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/profile/verify_visit_screen.dart'\cf2 \
+\cf3  ('lib/screens/profile/verify_visit_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'restaurant'.\cf2 \
+\cf3                     restaurant: widget.restaurant,\cf2 \
+\cf3                                        ^^^^^^^^^^\cf2 \
+\cf3 lib/screens/profile/verify_visit_screen.dart:131:40: Error: The getter\cf2 \
+\cf3 'restaurant' isn't defined for the class 'VerifyVisitScreen'.\cf2 \
+\cf3  - 'VerifyVisitScreen' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/profile/verify_visit_screen.dart'\cf2 \
+\cf3  ('lib/screens/profile/verify_visit_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'restaurant'.\cf2 \
+\cf3                     restaurant: widget.restaurant,\cf2 \
+\cf3                                        ^^^^^^^^^^\cf2 \
+\cf3 lib/screens/profile/verify_visit_screen.dart:264:28: Error: The getter\cf2 \
+\cf3 'Provider' isn't defined for the class '_VerifyVisitScreenState'.\cf2 \
+\cf3  - '_VerifyVisitScreenState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/profile/verify_visit_screen.dart'\cf2 \
+\cf3  ('lib/screens/profile/verify_visit_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Provider'.\cf2 \
+\cf3       final userProvider = Provider.of<UserProvider>(context, listen: false);\cf2 \
+\cf3                            ^^^^^^^^\cf2 \
+\cf3 lib/screens/profile/verify_visit_screen.dart:268:30: Error: The getter\cf2 \
+\cf3 'restaurant' isn't defined for the class 'VerifyVisitScreen'.\cf2 \
+\cf3  - 'VerifyVisitScreen' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/screens/profile/verify_visit_screen.dart'\cf2 \
+\cf3  ('lib/screens/profile/verify_visit_screen.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'restaurant'.\cf2 \
+\cf3         restaurantId: widget.restaurant.id,\cf2 \
+\cf3                              ^^^^^^^^^^\cf2 \
+\cf3 lib/providers/auth_provider.dart:254:18: Error: The method 'dispose' isn't\cf2 \
+\cf3 defined for the class 'AuthService'.\cf2 \
+\cf3  - 'AuthService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/auth_service.dart'\cf2 \
+\cf3  ('lib/services/auth_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'dispose'.\cf2 \
+\cf3     _authService.dispose();\cf2 \
+\cf3                  ^^^^^^^\cf2 \
+\cf3 lib/services/navigation_service.dart:8:33: Error: Undefined name 'GoRouter'.\cf2 \
+\cf3   static GoRouter get router => GoRouter.of(context!);\cf2 \
+\cf3                                 ^^^^^^^^\cf2 \
+\cf3 lib/services/navigation_service.dart:13:16: Error: The method 'go' isn't defined\cf2 \
+\cf3 for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'go'.\cf2 \
+\cf3       context!.go(path, extra: extra);\cf2 \
+\cf3                ^^\cf2 \
+\cf3 lib/services/navigation_service.dart:24:16: Error: The method 'goNamed' isn't\cf2 \
+\cf3 defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'goNamed'.\cf2 \
+\cf3       context!.goNamed(\cf2 \
+\cf3                ^^^^^^^\cf2 \
+\cf3 lib/services/navigation_service.dart:35:16: Error: The method 'push' isn't\cf2 \
+\cf3 defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'push'.\cf2 \
+\cf3       context!.push(path, extra: extra);\cf2 \
+\cf3                ^^^^\cf2 \
+\cf3 lib/services/navigation_service.dart:46:23: Error: The method 'pushNamed' isn't\cf2 \
+\cf3 defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'pushNamed'.\cf2 \
+\cf3       return context!.pushNamed<T>(\cf2 \
+\cf3                       ^^^^^^^^^\cf2 \
+\cf3 lib/services/navigation_service.dart:58:16: Error: The method 'pop' isn't\cf2 \
+\cf3 defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'pop'.\cf2 \
+\cf3       context!.pop(result);\cf2 \
+\cf3                ^^^\cf2 \
+\cf3 lib/services/navigation_service.dart:64:35: Error: Undefined name\cf2 \
+\cf3 'GoRouterState'.\cf2 \
+\cf3       while (context!.canPop() && GoRouterState.of(context!).location != path) \{\cf2 \
+\cf3                                   ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/navigation_service.dart:64:23: Error: The method 'canPop' isn't\cf2 \
+\cf3 defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'canPop'.\cf2 \
+\cf3       while (context!.canPop() && GoRouterState.of(context!).location != path) \{\cf2 \
+\cf3                       ^^^^^^\cf2 \
+\cf3 lib/services/navigation_service.dart:65:18: Error: The method 'pop' isn't\cf2 \
+\cf3 defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'pop'.\cf2 \
+\cf3         context!.pop();\cf2 \
+\cf3                  ^^^\cf2 \
+\cf3 lib/services/navigation_service.dart:71:21: Error: The method 'canPop' isn't\cf2 \
+\cf3 defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'canPop'.\cf2 \
+\cf3     return context?.canPop() ?? false;\cf2 \
+\cf3                     ^^^^^^\cf2 \
+\cf3 lib/services/navigation_service.dart:228:7: Error: No named parameter with the\cf2 \
+\cf3 name 'reverseTransitionDuration'.\cf2 \
+\cf3       reverseTransitionDuration: const Duration(milliseconds: 200),\cf2 \
+\cf3       ^^^^^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 ../../development/flutter/packages/flutter/lib/src/widgets/routes.dart:2238:12:\cf2 \
+\cf3 Context: Found this candidate, but the arguments don't match.\cf2 \
+\cf3 Future<T?> showGeneralDialog<T extends Object?>(\{\cf2 \
+\cf3            ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/navigation_service.dart:234:12: Error: Undefined name\cf2 \
+\cf3 'GoRouterState'.\cf2 \
+\cf3     return GoRouterState.of(context!).location;\cf2 \
+\cf3            ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/navigation_service.dart:238:12: Error: Undefined name\cf2 \
+\cf3 'GoRouterState'.\cf2 \
+\cf3     return GoRouterState.of(context!).pathParameters;\cf2 \
+\cf3            ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/navigation_service.dart:242:12: Error: Undefined name\cf2 \
+\cf3 'GoRouterState'.\cf2 \
+\cf3     return GoRouterState.of(context!).queryParameters;\cf2 \
+\cf3            ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/navigation_service.dart:247:23: Error: The method 'canPop' isn't\cf2 \
+\cf3 defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'canPop'.\cf2 \
+\cf3       while (context!.canPop()) \{\cf2 \
+\cf3                       ^^^^^^\cf2 \
+\cf3 lib/services/navigation_service.dart:248:18: Error: The method 'pop' isn't\cf2 \
+\cf3 defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'pop'.\cf2 \
+\cf3         context!.pop();\cf2 \
+\cf3                  ^^^\cf2 \
+\cf3 lib/services/navigation_service.dart:250:16: Error: The method 'go' isn't\cf2 \
+\cf3 defined for the class 'BuildContext'.\cf2 \
+\cf3  - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'go'.\cf2 \
+\cf3       context!.go(path);\cf2 \
+\cf3                ^^\cf2 \
+\cf3 lib/providers/restaurant_provider.dart:76:53: Error: Too few positional\cf2 \
+\cf3 arguments: 1 required, 0 given.\cf2 \
+\cf3       final wishlist = await _apiService.getWishlist();\cf2 \
+\cf3                                                     ^\cf2 \
+\cf3 lib/providers/restaurant_provider.dart:105:13: Error: No named parameter with\cf2 \
+\cf3 the name 'area'.\cf2 \
+\cf3             area: '',\cf2 \
+\cf3             ^^^^\cf2 \
+\cf3 lib/models/restaurant.dart:15:9: Context: Found this candidate, but the\cf2 \
+\cf3 arguments don't match.\cf2 \
+\cf3   const Restaurant(\{\cf2 \
+\cf3         ^^^^^^^^^^\cf2 \
+\cf3 lib/providers/restaurant_provider.dart:91:28: Error: The method '_isInWishlist'\cf2 \
+\cf3 isn't defined for the class 'RestaurantProvider'.\cf2 \
+\cf3  - 'RestaurantProvider' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/providers/restaurant_provider.dart'\cf2 \
+\cf3  ('lib/providers/restaurant_provider.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named '_isInWishlist'.\cf2 \
+\cf3       final isInWishlist = _isInWishlist(restaurantId);\cf2 \
+\cf3                            ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/providers/restaurant_provider.dart:142:25: Error: The getter 'area' isn't\cf2 \
+\cf3 defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'area'.\cf2 \
+\cf3              restaurant.area.toLowerCase().contains(lowercaseQuery) ||\cf2 \
+\cf3                         ^^^^\cf2 \
+\cf3 lib/providers/restaurant_provider.dart:149:61: Error: The getter 'area' isn't\cf2 \
+\cf3 defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'area'.\cf2 \
+\cf3     return _allRestaurants.where((restaurant) => restaurant.area ==\cf2 \
+\cf3     area).toList();\cf2 \
+\cf3                                                             ^^^^\cf2 \
+\cf3 lib/providers/restaurant_provider.dart:155:25: Error: The getter 'price' isn't\cf2 \
+\cf3 defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'price'.\cf2 \
+\cf3       return restaurant.price >= minPrice && restaurant.price <= maxPrice;\cf2 \
+\cf3                         ^^^^^\cf2 \
+\cf3 lib/providers/restaurant_provider.dart:155:57: Error: The getter 'price' isn't\cf2 \
+\cf3 defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'price'.\cf2 \
+\cf3       return restaurant.price >= minPrice && restaurant.price <= maxPrice;\cf2 \
+\cf3                                                         ^^^^^\cf2 \
+\cf3 lib/providers/restaurant_provider.dart:161:59: Error: The getter 'area' isn't\cf2 \
+\cf3 defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'area'.\cf2 \
+\cf3     return _allRestaurants.map((restaurant) =>\cf2 \
+\cf3     restaurant.area).toSet().toList()..sort();\cf2 \
+\cf3                                                           ^^^^\cf2 \
+\cf3 lib/providers/restaurant_provider.dart:161:73: Error: A value of type\cf2 \
+\cf3 'List<dynamic>' can't be returned from a function with return type\cf2 \
+\cf3 'List<String>'.\cf2 \
+\cf3  - 'List' is from 'dart:core'.\cf2 \
+\cf3     return _allRestaurants.map((restaurant) =>\cf2 \
+\cf3     restaurant.area).toSet().toList()..sort();\cf2 \
+\cf3                                                                       ^\cf2 \
+\cf3 lib/providers/restaurant_provider.dart:203:53: Error: Too few positional\cf2 \
+\cf3 arguments: 1 required, 0 given.\cf2 \
+\cf3       final wishlist = await _apiService.getWishlist();\cf2 \
+\cf3                                                     ^\cf2 \
+\cf3 lib/providers/rsvp_provider.dart:77:32: Error: The getter 'day' isn't defined\cf2 \
+\cf3 for the class 'RSVP'.\cf2 \
+\cf3  - 'RSVP' is from 'package:austin_food_club_flutter/models/rsvp.dart'\cf2 \
+\cf3  ('lib/models/rsvp.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'day'.\cf2 \
+\cf3       if (_selectedDay == rsvp.day) \{\cf2 \
+\cf3                                ^^^\cf2 \
+\cf3 lib/providers/rsvp_provider.dart:93:51: Error: Too few positional arguments: 1\cf2 \
+\cf3 required, 0 given.\cf2 \
+\cf3       final rsvps = await _apiService.getUserRSVPs();\cf2 \
+\cf3                                                   ^\cf2 \
+\cf3 lib/providers/rsvp_provider.dart:121:12: Error: The getter 'day' isn't defined\cf2 \
+\cf3 for the class 'RSVP'.\cf2 \
+\cf3  - 'RSVP' is from 'package:austin_food_club_flutter/models/rsvp.dart'\cf2 \
+\cf3  ('lib/models/rsvp.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'day'.\cf2 \
+\cf3       rsvp.day == day && \cf2 \
+\cf3            ^^^\cf2 \
+\cf3 lib/providers/rsvp_provider.dart:131:14: Error: The getter 'day' isn't defined\cf2 \
+\cf3 for the class 'RSVP'.\cf2 \
+\cf3  - 'RSVP' is from 'package:austin_food_club_flutter/models/rsvp.dart'\cf2 \
+\cf3  ('lib/models/rsvp.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'day'.\cf2 \
+\cf3         rsvp.day == day\cf2 \
+\cf3              ^^^\cf2 \
+\cf3 lib/providers/rsvp_provider.dart:196:51: Error: Too few positional arguments: 1\cf2 \
+\cf3 required, 0 given.\cf2 \
+\cf3       final rsvps = await _apiService.getUserRSVPs();\cf2 \
+\cf3                                                   ^\cf2 \
+\cf3 lib/providers/user_provider.dart:44:38: Error: The method 'getUserProfile' isn't\cf2 \
+\cf3 defined for the class 'ApiService'.\cf2 \
+\cf3  - 'ApiService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/api_service.dart'\cf2 \
+\cf3  ('lib/services/api_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'getUserProfile'.\cf2 \
+\cf3       final user = await _apiService.getUserProfile();\cf2 \
+\cf3                                      ^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/providers/user_provider.dart:59:57: Error: Too few positional arguments: 1\cf2 \
+\cf3 required, 0 given.\cf2 \
+\cf3       final visits = await _apiService.getVerifiedVisits();\cf2 \
+\cf3                                                         ^\cf2 \
+\cf3 lib/providers/user_provider.dart:80:46: Error: The method 'submitVerification'\cf2 \
+\cf3 isn't defined for the class 'ApiService'.\cf2 \
+\cf3  - 'ApiService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/api_service.dart'\cf2 \
+\cf3  ('lib/services/api_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'submitVerification'.\cf2 \
+\cf3       final verification = await _apiService.submitVerification(\cf2 \
+\cf3                                              ^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/providers/user_provider.dart:106:25: Error: The method 'deleteVerification'\cf2 \
+\cf3 isn't defined for the class 'ApiService'.\cf2 \
+\cf3  - 'ApiService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/api_service.dart'\cf2 \
+\cf3  ('lib/services/api_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'deleteVerification'.\cf2 \
+\cf3       await _apiService.deleteVerification(visitId);\cf2 \
+\cf3                         ^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/providers/user_provider.dart:166:41: Error: The getter 'cuisineType' isn't\cf2 \
+\cf3 defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'cuisineType'.\cf2 \
+\cf3       final cuisine = visit.restaurant?.cuisineType ?? 'Unknown';\cf2 \
+\cf3                                         ^^^^^^^^^^^\cf2 \
+\cf3 lib/providers/user_provider.dart:224:38: Error: The method 'getUserProfile'\cf2 \
+\cf3 isn't defined for the class 'ApiService'.\cf2 \
+\cf3  - 'ApiService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/api_service.dart'\cf2 \
+\cf3  ('lib/services/api_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'getUserProfile'.\cf2 \
+\cf3       final user = await _apiService.getUserProfile();\cf2 \
+\cf3                                      ^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/providers/user_provider.dart:233:57: Error: Too few positional arguments: 1\cf2 \
+\cf3 required, 0 given.\cf2 \
+\cf3       final visits = await _apiService.getVerifiedVisits();\cf2 \
+\cf3                                                         ^\cf2 \
+\cf3 lib/providers/offline_provider.dart:192:20: Error: Couldn't find constructor\cf2 \
+\cf3 'Color'.\cf2 \
+\cf3       return const Color(0xFF2196F3); // Blue\cf2 \
+\cf3                    ^^^^^\cf2 \
+\cf3 lib/providers/offline_provider.dart:194:20: Error: Couldn't find constructor\cf2 \
+\cf3 'Color'.\cf2 \
+\cf3       return const Color(0xFF4CAF50); // Green\cf2 \
+\cf3                    ^^^^^\cf2 \
+\cf3 lib/providers/offline_provider.dart:196:20: Error: Couldn't find constructor\cf2 \
+\cf3 'Color'.\cf2 \
+\cf3       return const Color(0xFFFF9800); // Orange\cf2 \
+\cf3                    ^^^^^\cf2 \
+\cf3 lib/providers/offline_provider.dart:202:14: Error: The getter 'Icons' isn't\cf2 \
+\cf3 defined for the class 'OfflineProvider'.\cf2 \
+\cf3  - 'OfflineProvider' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/providers/offline_provider.dart'\cf2 \
+\cf3  ('lib/providers/offline_provider.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Icons'.\cf2 \
+\cf3       return Icons.sync;\cf2 \
+\cf3              ^^^^^\cf2 \
+\cf3 lib/providers/offline_provider.dart:204:14: Error: The getter 'Icons' isn't\cf2 \
+\cf3 defined for the class 'OfflineProvider'.\cf2 \
+\cf3  - 'OfflineProvider' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/providers/offline_provider.dart'\cf2 \
+\cf3  ('lib/providers/offline_provider.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Icons'.\cf2 \
+\cf3       return Icons.wifi;\cf2 \
+\cf3              ^^^^^\cf2 \
+\cf3 lib/providers/offline_provider.dart:206:14: Error: The getter 'Icons' isn't\cf2 \
+\cf3 defined for the class 'OfflineProvider'.\cf2 \
+\cf3  - 'OfflineProvider' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/providers/offline_provider.dart'\cf2 \
+\cf3  ('lib/providers/offline_provider.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Icons'.\cf2 \
+\cf3       return Icons.wifi_off;\cf2 \
+\cf3              ^^^^^\cf2 \
+\cf3 lib/widgets/common/custom_text_field.dart:265:12: Error: The value 'null' can't\cf2 \
+\cf3 be returned from a function with return type 'Widget' because 'Widget' is not\cf2 \
+\cf3 nullable.\cf2 \
+\cf3  - 'Widget' is from 'package:flutter/src/widgets/framework.dart'\cf2 \
+\cf3  ('../../development/flutter/packages/flutter/lib/src/widgets/framework.dart').\cf2 \
+\cf3     return null;\cf2 \
+\cf3            ^\cf2 \
+\cf3 lib/widgets/restaurant/restaurant_hero.dart:32:22: Error: The method\cf2 \
+\cf3 'CachedNetworkImage' isn't defined for the class 'RestaurantHero'.\cf2 \
+\cf3  - 'RestaurantHero' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/widgets/restaurant/restaurant_hero.dart'\cf2 \
+\cf3  ('lib/widgets/restaurant/restaurant_hero.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'CachedNetworkImage'.\cf2 \
+\cf3               child: CachedNetworkImage(\cf2 \
+\cf3                      ^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/restaurant/restaurant_hero.dart:95:34: Error: The getter\cf2 \
+\cf3 'cuisineType' isn't defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'cuisineType'.\cf2 \
+\cf3                   if (restaurant.cuisineType != null)\cf2 \
+\cf3                                  ^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/restaurant/restaurant_hero.dart:97:34: Error: The getter\cf2 \
+\cf3 'cuisineType' isn't defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'cuisineType'.\cf2 \
+\cf3                       restaurant.cuisineType!,\cf2 \
+\cf3                                  ^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/restaurant/restaurant_hero.dart:162:49: Error: The getter 'price'\cf2 \
+\cf3 isn't defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'price'.\cf2 \
+\cf3                               '\\$' * restaurant.price,\cf2 \
+\cf3                                                 ^^^^^\cf2 \
+\cf3 lib/widgets/restaurant/rsvp_section.dart:145:9: Error: The method 'Consumer'\cf2 \
+\cf3 isn't defined for the class '_RSVPSectionState'.\cf2 \
+\cf3  - '_RSVPSectionState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/widgets/restaurant/rsvp_section.dart'\cf2 \
+\cf3  ('lib/widgets/restaurant/rsvp_section.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'Consumer'.\cf2 \
+\cf3         Consumer<RSVPProvider>(\cf2 \
+\cf3         ^^^^^^^^\cf2 \
+\cf3 lib/widgets/restaurant/restaurant_details.dart:82:36: Error: The getter\cf2 \
+\cf3 'specialties' isn't defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'specialties'.\cf2 \
+\cf3     final specialties = restaurant.specialties ?? [\cf2 \
+\cf3                                    ^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/restaurant/restaurant_details.dart:147:36: Error: The getter 'price'\cf2 \
+\cf3 isn't defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'price'.\cf2 \
+\cf3           value: '\\$' * restaurant.price,\cf2 \
+\cf3                                    ^^^^^\cf2 \
+\cf3 lib/widgets/restaurant/restaurant_details.dart:157:29: Error: The getter 'area'\cf2 \
+\cf3 isn't defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'area'.\cf2 \
+\cf3           value: restaurant.area,\cf2 \
+\cf3                             ^^^^\cf2 \
+\cf3 lib/widgets/restaurant/restaurant_details.dart:163:24: Error: The getter\cf2 \
+\cf3 'cuisineType' isn't defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'cuisineType'.\cf2 \
+\cf3         if (restaurant.cuisineType != null)\cf2 \
+\cf3                        ^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/restaurant/restaurant_details.dart:168:31: Error: The getter\cf2 \
+\cf3 'cuisineType' isn't defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'cuisineType'.\cf2 \
+\cf3             value: restaurant.cuisineType!,\cf2 \
+\cf3                               ^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/common/restaurant_card.dart:210:33: Error: The getter 'area' isn't\cf2 \
+\cf3 defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'area'.\cf2 \
+\cf3               widget.restaurant.area,\cf2 \
+\cf3                                 ^^^^\cf2 \
+\cf3 lib/widgets/common/restaurant_card.dart:241:34: Error: The getter 'price' isn't\cf2 \
+\cf3 defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'price'.\cf2 \
+\cf3         '\\$' * widget.restaurant.price,\cf2 \
+\cf3                                  ^^^^^\cf2 \
+\cf3 lib/widgets/profile/user_header.dart:81:42: Error: The method\cf2 \
+\cf3 'CachedNetworkImage' isn't defined for the class 'UserHeader'.\cf2 \
+\cf3  - 'UserHeader' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/widgets/profile/user_header.dart'\cf2 \
+\cf3  ('lib/widgets/profile/user_header.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'CachedNetworkImage'.\cf2 \
+\cf3                                   child: CachedNetworkImage(\cf2 \
+\cf3                                          ^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/profile/user_header.dart:358:12: Error: The method 'DateFormat'\cf2 \
+\cf3 isn't defined for the class 'UserHeader'.\cf2 \
+\cf3  - 'UserHeader' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/widgets/profile/user_header.dart'\cf2 \
+\cf3  ('lib/widgets/profile/user_header.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'DateFormat'.\cf2 \
+\cf3     return DateFormat('MMM yyyy').format(date);\cf2 \
+\cf3            ^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/profile/upcoming_rsvps.dart:277:17: Error: The getter 'createdAt'\cf2 \
+\cf3 isn't defined for the class 'RSVP'.\cf2 \
+\cf3  - 'RSVP' is from 'package:austin_food_club_flutter/models/rsvp.dart'\cf2 \
+\cf3  ('lib/models/rsvp.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'createdAt'.\cf2 \
+\cf3     return rsvp.createdAt.isAfter(DateTime.now().subtract(const Duration(days:\cf2 \
+\cf3     1)));\cf2 \
+\cf3                 ^^^^^^^^^\cf2 \
+\cf3 lib/widgets/profile/upcoming_rsvps.dart:283:17: Error: The getter 'createdAt'\cf2 \
+\cf3 isn't defined for the class 'RSVP'.\cf2 \
+\cf3  - 'RSVP' is from 'package:austin_food_club_flutter/models/rsvp.dart'\cf2 \
+\cf3  ('lib/models/rsvp.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'createdAt'.\cf2 \
+\cf3     return rsvp.createdAt.isBefore(DateTime.now());\cf2 \
+\cf3                 ^^^^^^^^^\cf2 \
+\cf3 lib/widgets/profile/upcoming_rsvps.dart:314:12: Error: The method 'DateFormat'\cf2 \
+\cf3 isn't defined for the class 'UpcomingRSVPs'.\cf2 \
+\cf3  - 'UpcomingRSVPs' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/widgets/profile/upcoming_rsvps.dart'\cf2 \
+\cf3  ('lib/widgets/profile/upcoming_rsvps.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'DateFormat'.\cf2 \
+\cf3     return DateFormat('EEEE, MMM d').format(rsvp.createdAt);\cf2 \
+\cf3            ^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/profile/upcoming_rsvps.dart:314:50: Error: The getter 'createdAt'\cf2 \
+\cf3 isn't defined for the class 'RSVP'.\cf2 \
+\cf3  - 'RSVP' is from 'package:austin_food_club_flutter/models/rsvp.dart'\cf2 \
+\cf3  ('lib/models/rsvp.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'createdAt'.\cf2 \
+\cf3     return DateFormat('EEEE, MMM d').format(rsvp.createdAt);\cf2 \
+\cf3                                                  ^^^^^^^^^\cf2 \
+\cf3 lib/widgets/profile/verified_visits.dart:260:24: Error: The method\cf2 \
+\cf3 'CachedNetworkImage' isn't defined for the class '_VerifiedVisitsState'.\cf2 \
+\cf3  - '_VerifiedVisitsState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/widgets/profile/verified_visits.dart'\cf2 \
+\cf3  ('lib/widgets/profile/verified_visits.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'CachedNetworkImage'.\cf2 \
+\cf3                 child: CachedNetworkImage(\cf2 \
+\cf3                        ^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/profile/verified_visits.dart:366:26: Error: The method\cf2 \
+\cf3 'CachedNetworkImage' isn't defined for the class '_VerifiedVisitsState'.\cf2 \
+\cf3  - '_VerifiedVisitsState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/widgets/profile/verified_visits.dart'\cf2 \
+\cf3  ('lib/widgets/profile/verified_visits.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'CachedNetworkImage'.\cf2 \
+\cf3                   child: CachedNetworkImage(\cf2 \
+\cf3                          ^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/profile/verified_visits.dart:513:12: Error: The method 'DateFormat'\cf2 \
+\cf3 isn't defined for the class '_VerifiedVisitsState'.\cf2 \
+\cf3  - '_VerifiedVisitsState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/widgets/profile/verified_visits.dart'\cf2 \
+\cf3  ('lib/widgets/profile/verified_visits.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'DateFormat'.\cf2 \
+\cf3     return DateFormat('MMM d, yyyy').format(date);\cf2 \
+\cf3            ^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/verification/photo_capture_step.dart:22:9: Error: 'ImagePicker'\cf2 \
+\cf3 isn't a type.\cf2 \
+\cf3   final ImagePicker _imagePicker = ImagePicker();\cf2 \
+\cf3         ^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/verification/photo_capture_step.dart:22:36: Error: Method not found:\cf2 \
+\cf3 'ImagePicker'.\cf2 \
+\cf3   final ImagePicker _imagePicker = ImagePicker();\cf2 \
+\cf3                                    ^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/verification/photo_capture_step.dart:384:13: Error: 'XFile' isn't a\cf2 \
+\cf3 type.\cf2 \
+\cf3       final XFile? image = await _imagePicker.pickImage(\cf2 \
+\cf3             ^^^^^\cf2 \
+\cf3 lib/widgets/verification/photo_capture_step.dart:385:17: Error: The getter\cf2 \
+\cf3 'ImageSource' isn't defined for the class '_PhotoCaptureStepState'.\cf2 \
+\cf3  - '_PhotoCaptureStepState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/widgets/verification/photo_capture_step.dart'\cf2 \
+\cf3  ('lib/widgets/verification/photo_capture_step.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'ImageSource'.\cf2 \
+\cf3         source: ImageSource.camera,\cf2 \
+\cf3                 ^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/verification/photo_capture_step.dart:387:15: Error: The getter\cf2 \
+\cf3 'CameraDevice' isn't defined for the class '_PhotoCaptureStepState'.\cf2 \
+\cf3  - '_PhotoCaptureStepState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/widgets/verification/photo_capture_step.dart'\cf2 \
+\cf3  ('lib/widgets/verification/photo_capture_step.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'CameraDevice'.\cf2 \
+\cf3             ? CameraDevice.front \cf2 \
+\cf3               ^^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/verification/photo_capture_step.dart:388:15: Error: The getter\cf2 \
+\cf3 'CameraDevice' isn't defined for the class '_PhotoCaptureStepState'.\cf2 \
+\cf3  - '_PhotoCaptureStepState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/widgets/verification/photo_capture_step.dart'\cf2 \
+\cf3  ('lib/widgets/verification/photo_capture_step.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'CameraDevice'.\cf2 \
+\cf3             : CameraDevice.rear,\cf2 \
+\cf3               ^^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/verification/photo_capture_step.dart:410:13: Error: 'XFile' isn't a\cf2 \
+\cf3 type.\cf2 \
+\cf3       final XFile? image = await _imagePicker.pickImage(\cf2 \
+\cf3             ^^^^^\cf2 \
+\cf3 lib/widgets/verification/photo_capture_step.dart:411:17: Error: The getter\cf2 \
+\cf3 'ImageSource' isn't defined for the class '_PhotoCaptureStepState'.\cf2 \
+\cf3  - '_PhotoCaptureStepState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/widgets/verification/photo_capture_step.dart'\cf2 \
+\cf3  ('lib/widgets/verification/photo_capture_step.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'ImageSource'.\cf2 \
+\cf3         source: ImageSource.gallery,\cf2 \
+\cf3                 ^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/verification/photo_editing_step.dart:370:28: Error: Couldn't find\cf2 \
+\cf3 constructor 'CropAspectRatio'.\cf2 \
+\cf3         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),\cf2 \
+\cf3                            ^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/verification/photo_editing_step.dart:368:33: Error: The method\cf2 \
+\cf3 'ImageCropper' isn't defined for the class '_PhotoEditingStepState'.\cf2 \
+\cf3  - '_PhotoEditingStepState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/widgets/verification/photo_editing_step.dart'\cf2 \
+\cf3  ('lib/widgets/verification/photo_editing_step.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'ImageCropper'.\cf2 \
+\cf3       final croppedFile = await ImageCropper().cropImage(\cf2 \
+\cf3                                 ^^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/verification/photo_editing_step.dart:372:11: Error: The method\cf2 \
+\cf3 'AndroidUiSettings' isn't defined for the class '_PhotoEditingStepState'.\cf2 \
+\cf3  - '_PhotoEditingStepState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/widgets/verification/photo_editing_step.dart'\cf2 \
+\cf3  ('lib/widgets/verification/photo_editing_step.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'AndroidUiSettings'.\cf2 \
+\cf3           AndroidUiSettings(\cf2 \
+\cf3           ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/verification/photo_editing_step.dart:376:30: Error: The getter\cf2 \
+\cf3 'CropAspectRatioPreset' isn't defined for the class '_PhotoEditingStepState'.\cf2 \
+\cf3  - '_PhotoEditingStepState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/widgets/verification/photo_editing_step.dart'\cf2 \
+\cf3  ('lib/widgets/verification/photo_editing_step.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'CropAspectRatioPreset'.\cf2 \
+\cf3             initAspectRatio: CropAspectRatioPreset.square,\cf2 \
+\cf3                              ^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/verification/photo_editing_step.dart:383:11: Error: The method\cf2 \
+\cf3 'IOSUiSettings' isn't defined for the class '_PhotoEditingStepState'.\cf2 \
+\cf3  - '_PhotoEditingStepState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/widgets/verification/photo_editing_step.dart'\cf2 \
+\cf3  ('lib/widgets/verification/photo_editing_step.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'IOSUiSettings'.\cf2 \
+\cf3           IOSUiSettings(\cf2 \
+\cf3           ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/widgets/verification/confirmation_step.dart:236:40: Error: The getter\cf2 \
+\cf3 'price' isn't defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'price'.\cf2 \
+\cf3               '\\$' * widget.restaurant.price,\cf2 \
+\cf3                                        ^^^^^\cf2 \
+\cf3 lib/widgets/verification/confirmation_step.dart:418:12: Error: The method\cf2 \
+\cf3 'DateFormat' isn't defined for the class '_ConfirmationStepState'.\cf2 \
+\cf3  - '_ConfirmationStepState' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/widgets/verification/confirmation_step.dart'\cf2 \
+\cf3  ('lib/widgets/verification/confirmation_step.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'DateFormat'.\cf2 \
+\cf3     return DateFormat('MMMM d, yyyy').format(date);\cf2 \
+\cf3            ^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:16:9: Error: 'SupabaseClient' isn't a type.\cf2 \
+\cf3   final SupabaseClient _supabase = Supabase.instance.client;\cf2 \
+\cf3         ^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:16:36: Error: Undefined name 'Supabase'.\cf2 \
+\cf3   final SupabaseClient _supabase = Supabase.instance.client;\cf2 \
+\cf3                                    ^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:17:9: Error: 'LocalAuthentication' isn't a type.\cf2 \
+\cf3   final LocalAuthentication _localAuth = LocalAuthentication();\cf2 \
+\cf3         ^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:17:42: Error: Method not found:\cf2 \
+\cf3 'LocalAuthentication'.\cf2 \
+\cf3   final LocalAuthentication _localAuth = LocalAuthentication();\cf2 \
+\cf3                                          ^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:20:10: Error: 'AuthState' isn't a type.\cf2 \
+\cf3   Stream<AuthState>? _authStateStream;\cf2 \
+\cf3          ^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:40:22: Error: Couldn't find constructor\cf2 \
+\cf3 'AuthOptions'.\cf2 \
+\cf3       options: const AuthOptions(\cf2 \
+\cf3                      ^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:38:11: Error: The getter 'Supabase' isn't defined\cf2 \
+\cf3 for the class 'AuthService'.\cf2 \
+\cf3  - 'AuthService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/auth_service.dart'\cf2 \
+\cf3  ('lib/services/auth_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Supabase'.\cf2 \
+\cf3     await Supabase.instance.client.auth.signInWithOtp(\cf2 \
+\cf3           ^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:47:27: Error: 'AuthState' isn't a type.\cf2 \
+\cf3   void _onAuthStateChange(AuthState data) \{\cf2 \
+\cf3                           ^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:61:27: Error: The getter 'SharedPreferences'\cf2 \
+\cf3 isn't defined for the class 'AuthService'.\cf2 \
+\cf3  - 'AuthService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/auth_service.dart'\cf2 \
+\cf3  ('lib/services/auth_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'SharedPreferences'.\cf2 \
+\cf3       final prefs = await SharedPreferences.getInstance();\cf2 \
+\cf3                           ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:76:37: Error: 'Session' isn't a type.\cf2 \
+\cf3   Future<void> _loadUserFromSession(Session session) async \{\cf2 \
+\cf3                                     ^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:99:29: Error: The getter 'SharedPreferences'\cf2 \
+\cf3 isn't defined for the class 'AuthService'.\cf2 \
+\cf3  - 'AuthService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/auth_service.dart'\cf2 \
+\cf3  ('lib/services/auth_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'SharedPreferences'.\cf2 \
+\cf3         final prefs = await SharedPreferences.getInstance();\cf2 \
+\cf3                             ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:113:24: Error: Couldn't find constructor\cf2 \
+\cf3 'AuthOptions'.\cf2 \
+\cf3         options: const AuthOptions(\cf2 \
+\cf3                        ^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:117:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:144:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:127:15: Error: The getter 'OtpType' isn't defined\cf2 \
+\cf3 for the class 'AuthService'.\cf2 \
+\cf3  - 'AuthService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/auth_service.dart'\cf2 \
+\cf3  ('lib/services/auth_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'OtpType'.\cf2 \
+\cf3         type: OtpType.sms,\cf2 \
+\cf3               ^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:171:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:198:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:222:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:219:27: Error: The getter 'SharedPreferences'\cf2 \
+\cf3 isn't defined for the class 'AuthService'.\cf2 \
+\cf3  - 'AuthService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/auth_service.dart'\cf2 \
+\cf3  ('lib/services/auth_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'SharedPreferences'.\cf2 \
+\cf3       final prefs = await SharedPreferences.getInstance();\cf2 \
+\cf3                           ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:258:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:248:39: Error: The method 'UserAttributes' isn't\cf2 \
+\cf3 defined for the class 'AuthService'.\cf2 \
+\cf3  - 'AuthService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/auth_service.dart'\cf2 \
+\cf3  ('lib/services/auth_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'UserAttributes'.\cf2 \
+\cf3       await _supabase.auth.updateUser(UserAttributes(data: updates));\cf2 \
+\cf3                                       ^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:277:13: Error: Can't use 'updateProfile' because\cf2 \
+\cf3 it is declared more than once.\cf2 \
+\cf3       await updateProfile(\{'avatar_url': publicUrl\});\cf2 \
+\cf3             ^\cf2 \
+\cf3 lib/services/auth_service.dart:305:24: Error: Couldn't find constructor\cf2 \
+\cf3 'AuthenticationOptions'.\cf2 \
+\cf3         options: const AuthenticationOptions(\cf2 \
+\cf3                        ^^^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:325:27: Error: The getter 'SharedPreferences'\cf2 \
+\cf3 isn't defined for the class 'AuthService'.\cf2 \
+\cf3  - 'AuthService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/auth_service.dart'\cf2 \
+\cf3  ('lib/services/auth_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'SharedPreferences'.\cf2 \
+\cf3       final prefs = await SharedPreferences.getInstance();\cf2 \
+\cf3                           ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:334:27: Error: The getter 'SharedPreferences'\cf2 \
+\cf3 isn't defined for the class 'AuthService'.\cf2 \
+\cf3  - 'AuthService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/auth_service.dart'\cf2 \
+\cf3  ('lib/services/auth_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'SharedPreferences'.\cf2 \
+\cf3       final prefs = await SharedPreferences.getInstance();\cf2 \
+\cf3                           ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:343:27: Error: The getter 'SharedPreferences'\cf2 \
+\cf3 isn't defined for the class 'AuthService'.\cf2 \
+\cf3  - 'AuthService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/auth_service.dart'\cf2 \
+\cf3  ('lib/services/auth_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'SharedPreferences'.\cf2 \
+\cf3       final prefs = await SharedPreferences.getInstance();\cf2 \
+\cf3                           ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:358:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:396:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:429:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:460:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:469:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:503:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:483:15: Error: The getter 'OtpType' isn't defined\cf2 \
+\cf3 for the class 'AuthService'.\cf2 \
+\cf3  - 'AuthService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/auth_service.dart'\cf2 \
+\cf3  ('lib/services/auth_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'OtpType'.\cf2 \
+\cf3         type: OtpType.sms,\cf2 \
+\cf3               ^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:533:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:512:9: Error: The getter 'Provider' isn't defined\cf2 \
+\cf3 for the class 'AuthService'.\cf2 \
+\cf3  - 'AuthService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/auth_service.dart'\cf2 \
+\cf3  ('lib/services/auth_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Provider'.\cf2 \
+\cf3         Provider.google,\cf2 \
+\cf3         ^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:563:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:542:9: Error: The getter 'Provider' isn't defined\cf2 \
+\cf3 for the class 'AuthService'.\cf2 \
+\cf3  - 'AuthService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/auth_service.dart'\cf2 \
+\cf3  ('lib/services/auth_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Provider'.\cf2 \
+\cf3         Provider.apple,\cf2 \
+\cf3         ^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:594:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:584:39: Error: The method 'UserAttributes' isn't\cf2 \
+\cf3 defined for the class 'AuthService'.\cf2 \
+\cf3  - 'AuthService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/auth_service.dart'\cf2 \
+\cf3  ('lib/services/auth_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'UserAttributes'.\cf2 \
+\cf3       await _supabase.auth.updateUser(UserAttributes(data: updates));\cf2 \
+\cf3                                       ^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:605:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:603:9: Error: The method 'UserAttributes' isn't\cf2 \
+\cf3 defined for the class 'AuthService'.\cf2 \
+\cf3  - 'AuthService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/auth_service.dart'\cf2 \
+\cf3  ('lib/services/auth_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'UserAttributes'.\cf2 \
+\cf3         UserAttributes(password: newPassword),\cf2 \
+\cf3         ^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:614:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:630:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:627:27: Error: The getter 'SharedPreferences'\cf2 \
+\cf3 isn't defined for the class 'AuthService'.\cf2 \
+\cf3  - 'AuthService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/auth_service.dart'\cf2 \
+\cf3  ('lib/services/auth_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'SharedPreferences'.\cf2 \
+\cf3       final prefs = await SharedPreferences.getInstance();\cf2 \
+\cf3                           ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:643:13: Error: Can't use 'signOut' because it is\cf2 \
+\cf3 declared more than once.\cf2 \
+\cf3       await signOut();\cf2 \
+\cf3             ^\cf2 \
+\cf3 lib/services/auth_service.dart:644:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/auth_service.dart:657:10: Error: 'AuthException' isn't a type.\cf2 \
+\cf3     \} on AuthException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:47:8: Error: 'Dio' isn't a type.\cf2 \
+\cf3   late Dio _dio;\cf2 \
+\cf3        ^^^\cf2 \
+\cf3 lib/services/api_service.dart:53:12: Error: The method 'Dio' isn't defined for\cf2 \
+\cf3 the class 'ApiService'.\cf2 \
+\cf3  - 'ApiService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/api_service.dart'\cf2 \
+\cf3  ('lib/services/api_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'Dio'.\cf2 \
+\cf3     _dio = Dio(BaseOptions(\cf2 \
+\cf3            ^^^\cf2 \
+\cf3 lib/services/api_service.dart:53:16: Error: The method 'BaseOptions' isn't\cf2 \
+\cf3 defined for the class 'ApiService'.\cf2 \
+\cf3  - 'ApiService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/api_service.dart'\cf2 \
+\cf3  ('lib/services/api_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'BaseOptions'.\cf2 \
+\cf3     _dio = Dio(BaseOptions(\cf2 \
+\cf3                ^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:54:16: Error: The getter 'dotenv' isn't defined\cf2 \
+\cf3 for the class 'ApiService'.\cf2 \
+\cf3  - 'ApiService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/api_service.dart'\cf2 \
+\cf3  ('lib/services/api_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'dotenv'.\cf2 \
+\cf3       baseUrl: dotenv.env['API_BASE_URL'] ?? AppConstants.baseUrl,\cf2 \
+\cf3                ^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:67:7: Error: The method 'InterceptorsWrapper'\cf2 \
+\cf3 isn't defined for the class 'ApiService'.\cf2 \
+\cf3  - 'ApiService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/api_service.dart'\cf2 \
+\cf3  ('lib/services/api_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'InterceptorsWrapper'.\cf2 \
+\cf3       InterceptorsWrapper(\cf2 \
+\cf3       ^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:78:9: Error: The method 'InterceptorsWrapper'\cf2 \
+\cf3 isn't defined for the class 'ApiService'.\cf2 \
+\cf3  - 'ApiService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/api_service.dart'\cf2 \
+\cf3  ('lib/services/api_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'InterceptorsWrapper'.\cf2 \
+\cf3         InterceptorsWrapper(\cf2 \
+\cf3         ^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:100:7: Error: The method 'InterceptorsWrapper'\cf2 \
+\cf3 isn't defined for the class 'ApiService'.\cf2 \
+\cf3  - 'ApiService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/api_service.dart'\cf2 \
+\cf3  ('lib/services/api_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'InterceptorsWrapper'.\cf2 \
+\cf3       InterceptorsWrapper(\cf2 \
+\cf3       ^^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:117:21: Error: 'DioException' isn't a type.\cf2 \
+\cf3   bool _shouldRetry(DioException error) \{\cf2 \
+\cf3                     ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:119:23: Error: The getter 'DioExceptionType' isn't\cf2 \
+\cf3 defined for the class 'ApiService'.\cf2 \
+\cf3  - 'ApiService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/api_service.dart'\cf2 \
+\cf3  ('lib/services/api_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'DioExceptionType'.\cf2 \
+\cf3     if (error.type == DioExceptionType.connectionTimeout ||\cf2 \
+\cf3                       ^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:120:23: Error: The getter 'DioExceptionType' isn't\cf2 \
+\cf3 defined for the class 'ApiService'.\cf2 \
+\cf3  - 'ApiService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/api_service.dart'\cf2 \
+\cf3  ('lib/services/api_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'DioExceptionType'.\cf2 \
+\cf3         error.type == DioExceptionType.receiveTimeout ||\cf2 \
+\cf3                       ^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:121:23: Error: The getter 'DioExceptionType' isn't\cf2 \
+\cf3 defined for the class 'ApiService'.\cf2 \
+\cf3  - 'ApiService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/api_service.dart'\cf2 \
+\cf3  ('lib/services/api_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'DioExceptionType'.\cf2 \
+\cf3         error.type == DioExceptionType.connectionError) \{\cf2 \
+\cf3                       ^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:173:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:193:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:201:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:230:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:253:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:276:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:294:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:318:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:329:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:340:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:369:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:382:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:393:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:425:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:449:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:466:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:460:24: Error: The getter 'FormData' isn't defined\cf2 \
+\cf3 for the class 'ApiService'.\cf2 \
+\cf3  - 'ApiService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/api_service.dart'\cf2 \
+\cf3  ('lib/services/api_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'FormData'.\cf2 \
+\cf3       final formData = FormData.fromMap(\{\cf2 \
+\cf3                        ^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:461:24: Error: The getter 'MultipartFile' isn't\cf2 \
+\cf3 defined for the class 'ApiService'.\cf2 \
+\cf3  - 'ApiService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/api_service.dart'\cf2 \
+\cf3  ('lib/services/api_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'MultipartFile'.\cf2 \
+\cf3         'photo': await MultipartFile.fromFile(photoPath),\cf2 \
+\cf3                        ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:482:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:490:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:500:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:511:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:532:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:540:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:551:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:562:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:570:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:584:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:610:10: Error: 'DioException' isn't a type.\cf2 \
+\cf3     \} on DioException catch (e) \{\cf2 \
+\cf3          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:597:24: Error: The getter 'FormData' isn't defined\cf2 \
+\cf3 for the class 'ApiService'.\cf2 \
+\cf3  - 'ApiService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/api_service.dart'\cf2 \
+\cf3  ('lib/services/api_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'FormData'.\cf2 \
+\cf3       final formData = FormData.fromMap(\{\cf2 \
+\cf3                        ^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:598:24: Error: The getter 'MultipartFile' isn't\cf2 \
+\cf3 defined for the class 'ApiService'.\cf2 \
+\cf3  - 'ApiService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/api_service.dart'\cf2 \
+\cf3  ('lib/services/api_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'MultipartFile'.\cf2 \
+\cf3         'photo': await MultipartFile.fromFile(filePath),\cf2 \
+\cf3                        ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:616:26: Error: 'DioException' isn't a type.\cf2 \
+\cf3   Exception _handleError(DioException error) \{\cf2 \
+\cf3                          ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:669:14: Error: Undefined name 'DioExceptionType'.\cf2 \
+\cf3         case DioExceptionType.connectionTimeout:\cf2 \
+\cf3              ^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:672:14: Error: Undefined name 'DioExceptionType'.\cf2 \
+\cf3         case DioExceptionType.receiveTimeout:\cf2 \
+\cf3              ^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:675:14: Error: Undefined name 'DioExceptionType'.\cf2 \
+\cf3         case DioExceptionType.connectionError:\cf2 \
+\cf3              ^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:678:14: Error: Undefined name 'DioExceptionType'.\cf2 \
+\cf3         case DioExceptionType.sendTimeout:\cf2 \
+\cf3              ^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:681:14: Error: Undefined name 'DioExceptionType'.\cf2 \
+\cf3         case DioExceptionType.badResponse:\cf2 \
+\cf3              ^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:684:14: Error: Undefined name 'DioExceptionType'.\cf2 \
+\cf3         case DioExceptionType.cancel:\cf2 \
+\cf3              ^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/api_service.dart:687:14: Error: Undefined name 'DioExceptionType'.\cf2 \
+\cf3         case DioExceptionType.unknown:\cf2 \
+\cf3              ^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/offline_service.dart:21:9: Error: 'Connectivity' isn't a type.\cf2 \
+\cf3   final Connectivity _connectivity = Connectivity();\cf2 \
+\cf3         ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/offline_service.dart:21:38: Error: Method not found:\cf2 \
+\cf3 'Connectivity'.\cf2 \
+\cf3   final Connectivity _connectivity = Connectivity();\cf2 \
+\cf3                                      ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/offline_service.dart:23:8: Error: 'Box' isn't a type.\cf2 \
+\cf3   late Box _cacheBox;\cf2 \
+\cf3        ^^^\cf2 \
+\cf3 lib/services/offline_service.dart:24:8: Error: 'Box' isn't a type.\cf2 \
+\cf3   late Box _settingsBox;\cf2 \
+\cf3        ^^^\cf2 \
+\cf3 lib/services/offline_service.dart:28:22: Error: 'ConnectivityResult' isn't a\cf2 \
+\cf3 type.\cf2 \
+\cf3   StreamSubscription<ConnectivityResult>? _connectivitySubscription;\cf2 \
+\cf3                      ^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/offline_service.dart:52:13: Error: The getter 'Hive' isn't defined\cf2 \
+\cf3 for the class 'OfflineService'.\cf2 \
+\cf3  - 'OfflineService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/offline_service.dart'\cf2 \
+\cf3  ('lib/services/offline_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Hive'.\cf2 \
+\cf3       await Hive.initFlutter();\cf2 \
+\cf3             ^^^^\cf2 \
+\cf3 lib/services/offline_service.dart:53:25: Error: The getter 'Hive' isn't defined\cf2 \
+\cf3 for the class 'OfflineService'.\cf2 \
+\cf3  - 'OfflineService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/offline_service.dart'\cf2 \
+\cf3  ('lib/services/offline_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Hive'.\cf2 \
+\cf3       _cacheBox = await Hive.openBox('cache');\cf2 \
+\cf3                         ^^^^\cf2 \
+\cf3 lib/services/offline_service.dart:54:28: Error: The getter 'Hive' isn't defined\cf2 \
+\cf3 for the class 'OfflineService'.\cf2 \
+\cf3  - 'OfflineService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/offline_service.dart'\cf2 \
+\cf3  ('lib/services/offline_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Hive'.\cf2 \
+\cf3       _settingsBox = await Hive.openBox('settings');\cf2 \
+\cf3                            ^^^^\cf2 \
+\cf3 lib/services/offline_service.dart:58:41: Error: The getter 'ConnectivityResult'\cf2 \
+\cf3 isn't defined for the class 'OfflineService'.\cf2 \
+\cf3  - 'OfflineService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/offline_service.dart'\cf2 \
+\cf3  ('lib/services/offline_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'ConnectivityResult'.\cf2 \
+\cf3       _isOnline = connectivityResult != ConnectivityResult.none;\cf2 \
+\cf3                                         ^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/offline_service.dart:81:31: Error: 'ConnectivityResult' isn't a\cf2 \
+\cf3 type.\cf2 \
+\cf3   void _onConnectivityChanged(ConnectivityResult result) \{\cf2 \
+\cf3                               ^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/offline_service.dart:83:27: Error: The getter 'ConnectivityResult'\cf2 \
+\cf3 isn't defined for the class 'OfflineService'.\cf2 \
+\cf3  - 'OfflineService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/offline_service.dart'\cf2 \
+\cf3  ('lib/services/offline_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'ConnectivityResult'.\cf2 \
+\cf3     _isOnline = result != ConnectivityResult.none;\cf2 \
+\cf3                           ^^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/offline_service.dart:273:7: Error: The getter 'Restaurant' isn't\cf2 \
+\cf3 defined for the class 'OfflineService'.\cf2 \
+\cf3  - 'OfflineService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/offline_service.dart'\cf2 \
+\cf3  ('lib/services/offline_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'Restaurant'.\cf2 \
+\cf3       Restaurant.fromJson(restaurantData),\cf2 \
+\cf3       ^^^^^^^^^^\cf2 \
+\cf3 lib/services/offline_service.dart:288:7: Error: The getter 'RSVP' isn't defined\cf2 \
+\cf3 for the class 'OfflineService'.\cf2 \
+\cf3  - 'OfflineService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/offline_service.dart'\cf2 \
+\cf3  ('lib/services/offline_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'RSVP'.\cf2 \
+\cf3       RSVP.fromJson(rsvpData),\cf2 \
+\cf3       ^^^^\cf2 \
+\cf3 lib/services/offline_service.dart:303:7: Error: The getter 'VerifiedVisit' isn't\cf2 \
+\cf3 defined for the class 'OfflineService'.\cf2 \
+\cf3  - 'OfflineService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/offline_service.dart'\cf2 \
+\cf3  ('lib/services/offline_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'VerifiedVisit'.\cf2 \
+\cf3       VerifiedVisit.fromJson(visitData),\cf2 \
+\cf3       ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:16:10: Error: 'Database' isn't a type.\cf2 \
+\cf3   static Database? _database;\cf2 \
+\cf3          ^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:34:32: Error: The method 'getDatabasesPath'\cf2 \
+\cf3 isn't defined for the class 'DatabaseService'.\cf2 \
+\cf3  - 'DatabaseService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/database_service.dart'\cf2 \
+\cf3  ('lib/services/database_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'getDatabasesPath'.\cf2 \
+\cf3     final databasePath = await getDatabasesPath();\cf2 \
+\cf3                                ^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:37:18: Error: The method 'openDatabase' isn't\cf2 \
+\cf3 defined for the class 'DatabaseService'.\cf2 \
+\cf3  - 'DatabaseService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/database_service.dart'\cf2 \
+\cf3  ('lib/services/database_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'openDatabase'.\cf2 \
+\cf3     return await openDatabase(\cf2 \
+\cf3                  ^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:45:26: Error: 'Database' isn't a type.\cf2 \
+\cf3   Future<void> _onCreate(Database db, int version) async \{\cf2 \
+\cf3                          ^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:148:27: Error: 'Database' isn't a type.\cf2 \
+\cf3   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async \{\cf2 \
+\cf3                           ^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:161:26: Error: The getter 'ConflictAlgorithm'\cf2 \
+\cf3 isn't defined for the class 'DatabaseService'.\cf2 \
+\cf3  - 'DatabaseService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/database_service.dart'\cf2 \
+\cf3  ('lib/services/database_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'ConflictAlgorithm'.\cf2 \
+\cf3       conflictAlgorithm: ConflictAlgorithm.replace,\cf2 \
+\cf3                          ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:173:28: Error: The getter 'ConflictAlgorithm'\cf2 \
+\cf3 isn't defined for the class 'DatabaseService'.\cf2 \
+\cf3  - 'DatabaseService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/database_service.dart'\cf2 \
+\cf3  ('lib/services/database_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'ConflictAlgorithm'.\cf2 \
+\cf3         conflictAlgorithm: ConflictAlgorithm.replace,\cf2 \
+\cf3                            ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:220:26: Error: The getter 'ConflictAlgorithm'\cf2 \
+\cf3 isn't defined for the class 'DatabaseService'.\cf2 \
+\cf3  - 'DatabaseService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/database_service.dart'\cf2 \
+\cf3  ('lib/services/database_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'ConflictAlgorithm'.\cf2 \
+\cf3       conflictAlgorithm: ConflictAlgorithm.replace,\cf2 \
+\cf3                          ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:252:26: Error: The getter 'ConflictAlgorithm'\cf2 \
+\cf3 isn't defined for the class 'DatabaseService'.\cf2 \
+\cf3  - 'DatabaseService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/database_service.dart'\cf2 \
+\cf3  ('lib/services/database_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'ConflictAlgorithm'.\cf2 \
+\cf3       conflictAlgorithm: ConflictAlgorithm.replace,\cf2 \
+\cf3                          ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:279:26: Error: The getter 'ConflictAlgorithm'\cf2 \
+\cf3 isn't defined for the class 'DatabaseService'.\cf2 \
+\cf3  - 'DatabaseService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/database_service.dart'\cf2 \
+\cf3  ('lib/services/database_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'ConflictAlgorithm'.\cf2 \
+\cf3       conflictAlgorithm: ConflictAlgorithm.replace,\cf2 \
+\cf3                          ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:357:26: Error: The getter 'ConflictAlgorithm'\cf2 \
+\cf3 isn't defined for the class 'DatabaseService'.\cf2 \
+\cf3  - 'DatabaseService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/database_service.dart'\cf2 \
+\cf3  ('lib/services/database_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'ConflictAlgorithm'.\cf2 \
+\cf3       conflictAlgorithm: ConflictAlgorithm.replace,\cf2 \
+\cf3                          ^^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:455:26: Error: The getter 'area' isn't\cf2 \
+\cf3 defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'area'.\cf2 \
+\cf3       'area': restaurant.area,\cf2 \
+\cf3                          ^^^^\cf2 \
+\cf3 lib/services/database_service.dart:456:27: Error: The getter 'price' isn't\cf2 \
+\cf3 defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'price'.\cf2 \
+\cf3       'price': restaurant.price,\cf2 \
+\cf3                           ^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:458:34: Error: The getter 'cuisineType' isn't\cf2 \
+\cf3 defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'cuisineType'.\cf2 \
+\cf3       'cuisine_type': restaurant.cuisineType,\cf2 \
+\cf3                                  ^^^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:460:27: Error: The getter 'phone' isn't\cf2 \
+\cf3 defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'phone'.\cf2 \
+\cf3       'phone': restaurant.phone,\cf2 \
+\cf3                           ^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:461:29: Error: The getter 'website' isn't\cf2 \
+\cf3 defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'website'.\cf2 \
+\cf3       'website': restaurant.website,\cf2 \
+\cf3                             ^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:462:29: Error: The getter 'weekOf' isn't\cf2 \
+\cf3 defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'weekOf'.\cf2 \
+\cf3       'week_of': restaurant.weekOf.toIso8601String(),\cf2 \
+\cf3                             ^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:463:32: Error: The getter 'createdAt' isn't\cf2 \
+\cf3 defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'createdAt'.\cf2 \
+\cf3       'created_at': restaurant.createdAt.toIso8601String(),\cf2 \
+\cf3                                ^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:464:32: Error: The getter 'updatedAt' isn't\cf2 \
+\cf3 defined for the class 'Restaurant'.\cf2 \
+\cf3  - 'Restaurant' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/restaurant.dart'\cf2 \
+\cf3  ('lib/models/restaurant.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'updatedAt'.\cf2 \
+\cf3       'updated_at': restaurant.updatedAt.toIso8601String(),\cf2 \
+\cf3                                ^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:476:7: Error: No named parameter with the\cf2 \
+\cf3 name 'area'.\cf2 \
+\cf3       area: map['area'] as String,\cf2 \
+\cf3       ^^^^\cf2 \
+\cf3 lib/models/restaurant.dart:15:9: Context: Found this candidate, but the\cf2 \
+\cf3 arguments don't match.\cf2 \
+\cf3   const Restaurant(\{\cf2 \
+\cf3         ^^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:494:19: Error: The getter 'day' isn't defined\cf2 \
+\cf3 for the class 'RSVP'.\cf2 \
+\cf3  - 'RSVP' is from 'package:austin_food_club_flutter/models/rsvp.dart'\cf2 \
+\cf3  ('lib/models/rsvp.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'day'.\cf2 \
+\cf3       'day': rsvp.day,\cf2 \
+\cf3                   ^^^\cf2 \
+\cf3 lib/services/database_service.dart:495:29: Error: The getter 'name' isn't\cf2 \
+\cf3 defined for the class 'String'.\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'name'.\cf2 \
+\cf3       'status': rsvp.status.name,\cf2 \
+\cf3                             ^^^^\cf2 \
+\cf3 lib/services/database_service.dart:496:26: Error: The getter 'createdAt' isn't\cf2 \
+\cf3 defined for the class 'RSVP'.\cf2 \
+\cf3  - 'RSVP' is from 'package:austin_food_club_flutter/models/rsvp.dart'\cf2 \
+\cf3  ('lib/models/rsvp.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'createdAt'.\cf2 \
+\cf3       'created_at': rsvp.createdAt.toIso8601String(),\cf2 \
+\cf3                          ^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:497:26: Error: The getter 'updatedAt' isn't\cf2 \
+\cf3 defined for the class 'RSVP'.\cf2 \
+\cf3  - 'RSVP' is from 'package:austin_food_club_flutter/models/rsvp.dart'\cf2 \
+\cf3  ('lib/models/rsvp.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'updatedAt'.\cf2 \
+\cf3       'updated_at': rsvp.updatedAt.toIso8601String(),\cf2 \
+\cf3                          ^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:508:7: Error: No named parameter with the\cf2 \
+\cf3 name 'day'.\cf2 \
+\cf3       day: map['day'] as String,\cf2 \
+\cf3       ^^^\cf2 \
+\cf3 lib/models/rsvp.dart:13:9: Context: Found this candidate, but the arguments\cf2 \
+\cf3 don't match.\cf2 \
+\cf3   const RSVP(\{\cf2 \
+\cf3         ^^^^\cf2 \
+\cf3 lib/services/database_service.dart:528:27: Error: The getter 'updatedAt' isn't\cf2 \
+\cf3 defined for the class 'VerifiedVisit'.\cf2 \
+\cf3  - 'VerifiedVisit' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/models/verified_visit.dart'\cf2 \
+\cf3  ('lib/models/verified_visit.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'updatedAt'.\cf2 \
+\cf3       'updated_at': visit.updatedAt.toIso8601String(),\cf2 \
+\cf3                           ^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:544:7: Error: No named parameter with the\cf2 \
+\cf3 name 'updatedAt'.\cf2 \
+\cf3       updatedAt: DateTime.parse(map['updated_at'] as String),\cf2 \
+\cf3       ^^^^^^^^^\cf2 \
+\cf3 lib/models/verified_visit.dart:14:9: Context: Found this candidate, but the\cf2 \
+\cf3 arguments don't match.\cf2 \
+\cf3   const VerifiedVisit(\{\cf2 \
+\cf3         ^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:553:21: Error: The getter 'phone' isn't\cf2 \
+\cf3 defined for the class 'User'.\cf2 \
+\cf3  - 'User' is from 'package:austin_food_club_flutter/models/user.dart'\cf2 \
+\cf3  ('lib/models/user.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'phone'.\cf2 \
+\cf3       'phone': user.phone,\cf2 \
+\cf3                     ^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:554:33: Error: The getter 'profileImageUrl'\cf2 \
+\cf3 isn't defined for the class 'User'.\cf2 \
+\cf3  - 'User' is from 'package:austin_food_club_flutter/models/user.dart'\cf2 \
+\cf3  ('lib/models/user.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'profileImageUrl'.\cf2 \
+\cf3       'profile_image_url': user.profileImageUrl,\cf2 \
+\cf3                                 ^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:556:26: Error: The getter 'updatedAt' isn't\cf2 \
+\cf3 defined for the class 'User'.\cf2 \
+\cf3  - 'User' is from 'package:austin_food_club_flutter/models/user.dart'\cf2 \
+\cf3  ('lib/models/user.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'updatedAt'.\cf2 \
+\cf3       'updated_at': user.updatedAt.toIso8601String(),\cf2 \
+\cf3                          ^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:567:7: Error: No named parameter with the\cf2 \
+\cf3 name 'phone'.\cf2 \
+\cf3       phone: map['phone'] as String?,\cf2 \
+\cf3       ^^^^^\cf2 \
+\cf3 lib/models/user.dart:16:9: Context: Found this candidate, but the arguments\cf2 \
+\cf3 don't match.\cf2 \
+\cf3   const User(\{\cf2 \
+\cf3         ^^^^\cf2 \
+\cf3 lib/services/database_service.dart:584:32: Error: The method 'getDatabasesPath'\cf2 \
+\cf3 isn't defined for the class 'DatabaseService'.\cf2 \
+\cf3  - 'DatabaseService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/database_service.dart'\cf2 \
+\cf3  ('lib/services/database_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing method, or defining a method\cf2 \
+\cf3 named 'getDatabasesPath'.\cf2 \
+\cf3     final databasePath = await getDatabasesPath();\cf2 \
+\cf3                                ^^^^^^^^^^^^^^^^\cf2 \
+\cf3 lib/services/database_service.dart:586:11: Error: The getter 'databaseFactory'\cf2 \
+\cf3 isn't defined for the class 'DatabaseService'.\cf2 \
+\cf3  - 'DatabaseService' is from\cf2 \
+\cf3  'package:austin_food_club_flutter/services/database_service.dart'\cf2 \
+\cf3  ('lib/services/database_service.dart').\cf2 \
+\cf3 Try correcting the name to the name of an existing getter, or defining a getter\cf2 \
+\cf3 or field named 'databaseFactory'.\cf2 \
+\cf3     await databaseFactory.deleteDatabase(path);\cf2 \
+\cf3           ^^^^^^^^^^^^^^^\cf2 \
+\cf3 Unhandled exception:\cf2 \
+\cf3 Null check operator used on a null value\cf2 \
+\cf3 #0      IncrementalJavaScriptBundler.compile\cf2 \
+\cf3 (package:frontend_server/src/javascript_bundle.dart:230:69)\cf2 \
+\cf3 #1      FrontendCompiler.writeJavaScriptBundle\cf2 \
+\cf3 (package:frontend_server/frontend_server.dart:793:46)\cf2 \
+\cf3 <asynchronous suspension>\cf2 \
+\cf3 #2      FrontendCompiler.compile\cf2 \
+\cf3 (package:frontend_server/frontend_server.dart:657:9)\cf2 \
+\cf3 <asynchronous suspension>\cf2 \
+\cf3 #3      listenAndCompile.<anonymous closure>\cf2 \
+\cf3 (package:frontend_server/frontend_server.dart:1323:11)\cf2 \
+\cf3 <asynchronous suspension>\cf2 \
+\cf3 the Dart compiler exited unexpectedly.\cf2 \
+Waiting for connection from debug service on Chrome...             13.6s\
+\cf3 Failed to compile application.}
