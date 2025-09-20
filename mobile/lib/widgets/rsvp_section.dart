@@ -143,9 +143,9 @@ class _RSVPSectionState extends State<RSVPSection> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'See You There',
+            'See You There?',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w400, // Lighter font weight
               color: Colors.orange,
             ),
           ),
@@ -217,49 +217,7 @@ class _RSVPSectionState extends State<RSVPSection> {
               );
             }).toList(),
           ),
-          const SizedBox(height: 20),
-          // Status message
-          if (selectedDay != null)
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.green.withOpacity(0.3)),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.check_circle, color: Colors.green, size: 20),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'You\'re going on $selectedDay! ${rsvpCounts[selectedDay]} people are planning to visit.',
-                      style: const TextStyle(color: Colors.green),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          else
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey[800],
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.info_outline, color: Colors.white70, size: 20),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Select a day to let others know when you\'re planning to visit!',
-                      style: TextStyle(color: Colors.white70),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          // Removed status message boxes for cleaner design
         ],
       ),
     );

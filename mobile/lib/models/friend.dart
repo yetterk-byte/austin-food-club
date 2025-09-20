@@ -80,13 +80,14 @@ class FriendRequest {
 class SocialFeedItem {
   final String id;
   final String userId;
-  final String type; // 'verified_visit', 'new_friend', 'wishlist_add'
+  final String type; // 'verified_visit', 'rsvp', 'new_friend', 'wishlist_add'
   final DateTime createdAt;
   final User user;
   final Restaurant? restaurant;
   final double? rating;
   final String? photoUrl;
   final String? description;
+  final String? rsvpDay; // Day of the week for RSVP (e.g., 'Monday', 'Friday')
 
   SocialFeedItem({
     required this.id,
@@ -98,6 +99,7 @@ class SocialFeedItem {
     this.rating,
     this.photoUrl,
     this.description,
+    this.rsvpDay,
   });
 
   factory SocialFeedItem.fromJson(Map<String, dynamic> json) {
@@ -111,6 +113,7 @@ class SocialFeedItem {
       rating: json['rating']?.toDouble(),
       photoUrl: json['photoUrl'],
       description: json['description'],
+      rsvpDay: json['rsvpDay'],
     );
   }
 
@@ -125,6 +128,7 @@ class SocialFeedItem {
       'rating': rating,
       'photoUrl': photoUrl,
       'description': description,
+      'rsvpDay': rsvpDay,
     };
   }
 

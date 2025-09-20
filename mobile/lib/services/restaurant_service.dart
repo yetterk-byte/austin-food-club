@@ -22,9 +22,21 @@ class RestaurantService {
       
       if (response.statusCode == 200) {
         print('✅ RestaurantService: Successfully fetched restaurant data');
+        print('🔍 RestaurantService: Response body length: ${response.body.length}');
+        
         final data = json.decode(response.body);
         print('🔍 RestaurantService: Restaurant name: ${data['name']}');
-        return Restaurant.fromJson(data);
+        print('🔍 RestaurantService: Restaurant address: ${data['address']}');
+        print('🔍 RestaurantService: Categories: ${data['categories']}');
+        
+        try {
+          final restaurant = Restaurant.fromJson(data);
+          print('✅ RestaurantService: Restaurant parsing successful');
+          return restaurant;
+        } catch (parseError) {
+          print('❌ RestaurantService: Parsing error: $parseError');
+          throw Exception('Failed to parse restaurant data: $parseError');
+        }
       } else if (response.statusCode == 404) {
         throw Exception('No featured restaurant this week');
       } else {

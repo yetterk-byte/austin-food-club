@@ -60,6 +60,7 @@ class SocialService {
     final restaurants = MockDataService.getAllRestaurantsMock();
     
     return [
+      // Recent verified visit - full screen card
       SocialFeedItem(
         id: 'feed_1',
         userId: '3',
@@ -69,16 +70,49 @@ class SocialService {
         restaurant: restaurants[0],
         rating: 5.0,
         photoUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop',
+        description: 'Amazing tacos and perfect margaritas! 🌮✨',
       ),
+      // RSVP activity - thin line item
       SocialFeedItem(
         id: 'feed_2',
+        userId: '5',
+        type: 'rsvp',
+        createdAt: DateTime.now().subtract(const Duration(hours: 4)),
+        user: User(id: '5', email: 'alex@example.com', name: 'Alex Rodriguez', createdAt: DateTime.now()),
+        restaurant: restaurants[1],
+        rsvpDay: 'Friday',
+      ),
+      // Another RSVP - thin line item
+      SocialFeedItem(
+        id: 'feed_3',
+        userId: '6',
+        type: 'rsvp',
+        createdAt: DateTime.now().subtract(const Duration(hours: 6)),
+        user: User(id: '6', email: 'emma@example.com', name: 'Emma Wilson', createdAt: DateTime.now()),
+        restaurant: restaurants[2],
+        rsvpDay: 'Saturday',
+      ),
+      // Older verified visit - full screen card
+      SocialFeedItem(
+        id: 'feed_4',
         userId: '4',
         type: 'verified_visit',
         createdAt: DateTime.now().subtract(const Duration(days: 1)),
         user: User(id: '4', email: 'mike@example.com', name: 'Mike Chen', createdAt: DateTime.now()),
-        restaurant: restaurants[1],
+        restaurant: restaurants[2],
         rating: 4.5,
         photoUrl: 'https://images.unsplash.com/photo-1558030006-450675393462?w=400&h=300&fit=crop',
+        description: 'Incredible sushi experience! The omakase was outstanding 🍣',
+      ),
+      // More RSVP activity
+      SocialFeedItem(
+        id: 'feed_5',
+        userId: '7',
+        type: 'rsvp',
+        createdAt: DateTime.now().subtract(const Duration(days: 1, hours: 3)),
+        user: User(id: '7', email: 'james@example.com', name: 'James Park', createdAt: DateTime.now()),
+        restaurant: restaurants[0],
+        rsvpDay: 'Thursday',
       ),
     ];
   }

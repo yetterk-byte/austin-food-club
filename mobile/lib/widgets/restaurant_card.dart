@@ -29,7 +29,7 @@ class RestaurantCard extends StatelessWidget {
                   height: 200,
                   width: double.infinity,
                   child: CachedNetworkImage(
-                    imageUrl: restaurant.imageUrl,
+                    imageUrl: restaurant.imageUrl ?? 'https://via.placeholder.com/400x200?text=Restaurant+Image',
                     fit: BoxFit.cover,
                     placeholder: (context, url) => Container(
                       color: Colors.grey[800],
@@ -106,7 +106,7 @@ class RestaurantCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          restaurant.cuisineType,
+                          restaurant.categories?.first.title ?? 'Restaurant',
                           style: const TextStyle(
                             fontSize: 12,
                             color: Colors.white70,
@@ -122,11 +122,12 @@ class RestaurantCard extends StatelessWidget {
                       // Stars
                       Row(
                         children: List.generate(5, (index) {
+                          final rating = restaurant.rating ?? 0.0;
                           return Icon(
-                            index < restaurant.rating.floor()
+                            index < rating.floor()
                                 ? Icons.star
-                                : (index < restaurant.rating ? Icons.star_half : Icons.star_border),
-                            color: Colors.amber,
+                                : (index < rating ? Icons.star_half : Icons.star_border),
+                            color: Colors.white,
                             size: 18,
                           );
                         }),
@@ -134,7 +135,7 @@ class RestaurantCard extends StatelessWidget {
                       const SizedBox(width: 16),
                       // Price Range
                       Text(
-                        restaurant.priceRange,
+                        restaurant.price ?? '\$\$',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -147,8 +148,8 @@ class RestaurantCard extends StatelessWidget {
                         children: [
                           const Icon(Icons.access_time, size: 16, color: Colors.white70),
                           const SizedBox(width: 4),
-                          Text(
-                            restaurant.waitTime,
+                              Text(
+                                restaurant.expectedWait ?? 'N/A',
                             style: const TextStyle(
                               fontSize: 14,
                               color: Colors.white70,
@@ -160,11 +161,11 @@ class RestaurantCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   // Specialties
-                  if (restaurant.specialties.isNotEmpty)
+                  if (restaurant.categories != null && restaurant.categories!.isNotEmpty)
                     Wrap(
                       spacing: 8,
                       runSpacing: 4,
-                      children: restaurant.specialties.take(3).map((specialty) {
+                      children: restaurant.categories!.take(3).map((category) {
                         return Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
@@ -173,7 +174,7 @@ class RestaurantCard extends StatelessWidget {
                             border: Border.all(color: Colors.orange.withOpacity(0.5)),
                           ),
                           child: Text(
-                            specialty,
+                            category.title,
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.orange[300],

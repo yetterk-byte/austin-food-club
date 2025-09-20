@@ -27,6 +27,7 @@ const cronService = require('./services/cronService');
 
 // Import API router
 const apiRouter = require('./routes/apiRouter');
+const simpleRestaurantRoutes = require('./routes/simpleRestaurantRoutes');
 
 const app = express();
 const PORT = 3001;
@@ -35,11 +36,28 @@ const prisma = new PrismaClient();
 // Database storage via Prisma (in-memory storage removed)
 
 // Middleware
-app.use(cors());
+// CORS configuration for Flutter web (dynamic ports)
+app.use(cors({
+  origin: [
+    'http://localhost:51070',  // Current Flutter port
+    'http://localhost:8080',   // Standard Flutter web port
+    'http://localhost:8081',   // Alternative Flutter ports
+    'http://localhost:8082',
+    'http://localhost:3000',   // React dev server
+    /^http:\/\/localhost:\d+$/ // Allow any localhost port
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  optionsSuccessStatus: 200
+}));
 app.use(express.json());
 
 // API versioning - Mount v1 API routes
 app.use('/api/v1', apiRouter);
+
+// Simple restaurant routes (working version)
+app.use('/api/restaurants', simpleRestaurantRoutes);
 
 // Test endpoint
 app.get('/api/test', (req, res) => {
@@ -1363,7 +1381,7 @@ app.post('/api/rsvp', verifySupabaseToken, requireAuth, async (req, res) => {
     const rsvp = await prisma.$transaction(async (tx) => {
       // Delete any existing RSVPs for this user-restaurant pair
       await tx.rSVP.deleteMany({
-        where: {
+      where: {
           userId,
           restaurantId: currentRestaurantId
         }
@@ -1372,11 +1390,11 @@ app.post('/api/rsvp', verifySupabaseToken, requireAuth, async (req, res) => {
       // Create new RSVP
       return await tx.rSVP.create({
         data: {
-          userId,
-          restaurantId: currentRestaurantId,
-          day,
-          status
-        }
+        userId,
+        restaurantId: currentRestaurantId,
+        day,
+        status
+      }
       });
     });
     

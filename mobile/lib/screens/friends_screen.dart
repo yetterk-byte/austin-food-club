@@ -135,7 +135,7 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
       onRefresh: _loadData,
       color: Colors.orange,
       child: ListView.builder(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 120), // Extra bottom padding for floating buttons
         itemCount: friends.length,
         itemBuilder: (context, index) {
           final friend = friends[index];
@@ -227,7 +227,7 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
             ),
             const SizedBox(height: 12),
             Text(
-              'Your friends\' weekly event visits will appear here!',
+              'Your friends\' activity will appear here!\nVerified visits and RSVPs from your network.',
               style: TextStyle(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
@@ -239,13 +239,337 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
     return RefreshIndicator(
       onRefresh: _loadData,
       color: Colors.orange,
-      child: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: socialFeed.length,
-        itemBuilder: (context, index) {
+      child: CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 120), // Extra bottom padding for floating buttons
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
           final item = socialFeed[index];
-          return _buildFeedItem(item);
-        },
+                  return _buildModernFeedItem(item);
+                },
+                childCount: socialFeed.length,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildModernFeedItem(SocialFeedItem item) {
+    switch (item.type) {
+      case 'verified_visit':
+        return _buildVerifiedVisitCard(item);
+      case 'rsvp':
+        return _buildRSVPLineItem(item);
+      default:
+        return _buildGenericFeedItem(item);
+    }
+  }
+
+  Widget _buildVerifiedVisitCard(SocialFeedItem item) {
+    return Container(
+      width: double.infinity,
+      height: 400, // Full screen height card
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background photo from verified visit
+          ClipRRect(
+            borderRadius: BorderRadius.circular(0), // Full screen edge-to-edge
+            child: Image.network(
+              item.photoUrl ?? 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&h=600&fit=crop',
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  color: Colors.grey[800],
+                  child: const Center(
+                    child: Icon(Icons.restaurant, size: 60, color: Colors.white54),
+                  ),
+                );
+              },
+            ),
+          ),
+          // Dark gradient overlay for text readability
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.transparent,
+                  Colors.black.withOpacity(0.3),
+                  Colors.black.withOpacity(0.8),
+                ],
+                stops: const [0.0, 0.5, 1.0],
+              ),
+            ),
+          ),
+          // Top-left: Friend name
+          Positioned(
+            top: 20,
+            left: 20,
+            child: Text(
+              item.user.name,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w400,
+                shadows: [
+                  Shadow(
+                    color: Colors.black54,
+                    blurRadius: 2,
+                    offset: Offset(1, 1),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          // Top-right: Star rating
+          if (item.rating != null)
+            Positioned(
+              top: 20,
+              right: 20,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.orange.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.star, color: Colors.white, size: 16),
+                    const SizedBox(width: 4),
+                    Text(
+                      item.rating!.toStringAsFixed(1),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          // Bottom-left: Restaurant name and date visited
+          Positioned(
+            bottom: 20,
+            left: 20,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (item.restaurant != null)
+                  Text(
+                    item.restaurant!.name,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black54,
+                          blurRadius: 2,
+                          offset: Offset(1, 1),
+                        ),
+                      ],
+                    ),
+                  ),
+                const SizedBox(height: 4),
+                Text(
+                  _formatDate(item.createdAt),
+                  style: TextStyle(
+                    color: Colors.grey[300],
+                    fontSize: 14,
+                    shadows: const [
+                      Shadow(
+                        color: Colors.black54,
+                        blurRadius: 2,
+                        offset: Offset(1, 1),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRSVPLineItem(SocialFeedItem item) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      margin: const EdgeInsets.only(bottom: 1),
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.grey[800]!,
+            width: 0.5,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          // User avatar
+          CircleAvatar(
+            radius: 16,
+            backgroundColor: Colors.orange.withOpacity(0.3),
+            child: Text(
+              item.user.name.substring(0, 1).toUpperCase(),
+              style: const TextStyle(
+                color: Colors.orange,
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          // RSVP info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    style: const TextStyle(color: Colors.white, fontSize: 14),
+                    children: [
+                      TextSpan(
+                        text: item.user.name,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const TextSpan(text: ' is going to '),
+                      TextSpan(
+                        text: item.restaurant?.name ?? 'a restaurant',
+                        style: const TextStyle(
+                          color: Colors.orange,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      if (item.rsvpDay != null) ...[
+                        const TextSpan(text: ' on '),
+                        TextSpan(
+                          text: item.rsvpDay!,
+                          style: const TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  _formatDate(item.createdAt),
+                  style: TextStyle(
+                    color: Colors.grey[500],
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // RSVP status indicator
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.green.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.green.withOpacity(0.5)),
+            ),
+            child: const Text(
+              'Going',
+              style: TextStyle(
+                color: Colors.green,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGenericFeedItem(SocialFeedItem item) {
+    // Fallback for other activity types
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 16,
+                backgroundColor: Colors.orange,
+                child: Text(
+                  item.user.name.substring(0, 1).toUpperCase(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.user.name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Text(
+                      _formatDate(item.createdAt),
+                      style: TextStyle(
+                        color: Colors.grey[500],
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          if (item.description != null) ...[
+            const SizedBox(height: 8),
+            Text(
+              item.description!,
+              style: TextStyle(
+                color: Colors.grey[300],
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -320,7 +644,7 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
                                 index < (item.rating ?? 0).floor()
                                     ? Icons.star
                                     : Icons.star_border,
-                                color: Colors.amber,
+                                color: Colors.white,
                                 size: 16,
                               );
                             }),
@@ -472,7 +796,7 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
                         '${_getVerifiedVisitsCount(friend.friendUser.id)}',
                         style: const TextStyle(
                           fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w400,
                           color: Colors.orange,
                         ),
                       ),

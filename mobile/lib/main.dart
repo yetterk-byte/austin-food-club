@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'screens/main_app.dart';
 import 'screens/auth/login_screen.dart';
 import 'providers/auth_provider.dart';
+import 'config/app_theme.dart';
 
 void main() {
   runApp(const AustinFoodClubApp());
@@ -17,13 +18,7 @@ class AustinFoodClubApp extends StatelessWidget {
       create: (context) => AuthProvider(),
       child: MaterialApp(
         title: 'Austin Food Club',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.orange,
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-      ),
+        theme: AppTheme.darkTheme,
         home: const AuthWrapper(),
       ),
     );

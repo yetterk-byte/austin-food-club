@@ -19,12 +19,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int friendCount = 0;
   
   List<VerifiedVisit> verifiedVisits = [];
+  Restaurant? favoriteRestaurant;
 
   @override
   void initState() {
     super.initState();
     _loadVerifiedVisits();
     _loadFriendCount();
+    _loadFavoriteRestaurant();
   }
 
   Future<void> _loadVerifiedVisits() async {
@@ -73,6 +75,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _loadFavoriteRestaurant() async {
+    try {
+      // For now, use mock data - in production this would come from user preferences
+      final restaurants = MockDataService.getAllRestaurantsMock();
+      setState(() {
+        favoriteRestaurant = restaurants[2]; // Default to Uchi as favorite
+      });
+    } catch (e) {
+      print('Error loading favorite restaurant: $e');
+    }
+  }
+
   void _showPhotoVerificationModal() {
     // Temporarily disabled - photo verification
     ScaffoldMessenger.of(context).showSnackBar(
@@ -83,51 +97,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  void _showRestaurantSelector() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.grey[900],
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Choose Your Favorite Restaurant',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              const SizedBox(height: 16),
+              ...MockDataService.getAllRestaurantsMock().map((restaurant) {
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.orange,
+                    child: Text(
+                      restaurant.name.substring(0, 1),
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  title: Text(restaurant.name),
+                  subtitle: Text(restaurant.categories?.first.title ?? 'Restaurant'),
+                  trailing: favoriteRestaurant?.id == restaurant.id
+                      ? const Icon(Icons.favorite, color: Colors.white) // Filled for current favorite
+                      : const Icon(Icons.favorite_border, color: Colors.white), // Outline for options
+                  onTap: () {
+                    setState(() {
+                      favoriteRestaurant = restaurant;
+                    });
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('${restaurant.name} set as favorite!'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  },
+                );
+              }).toList(),
+              const SizedBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Profile',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          PopupMenuButton<String>(
-            onSelected: (value) async {
-              if (value == 'settings') {
-                // TODO: Navigate to settings
-              } else if (value == 'signout') {
-                final authProvider = Provider.of<AuthProvider>(context, listen: false);
-                await authProvider.signOut();
-              }
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'settings',
-                child: Row(
-                  children: [
-                    Icon(Icons.settings, size: 20),
-                    SizedBox(width: 12),
-                    Text('Settings'),
-                  ],
-                ),
-              ),
-              const PopupMenuItem(
-                value: 'signout',
-                child: Row(
-                  children: [
-                    Icon(Icons.logout, size: 20, color: Colors.red),
-                    SizedBox(width: 12),
-                    Text('Sign Out', style: TextStyle(color: Colors.red)),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -157,7 +187,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               user.initials,
                               style: const TextStyle(
                                 fontSize: 24,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w400,
                                 color: Colors.white,
                               ),
                             ),
@@ -171,7 +201,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   user.name,
                                   style: const TextStyle(
                                     fontSize: 22,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w400,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
@@ -196,6 +226,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ],
                             ),
+                          ),
+                          // Settings menu
+                          PopupMenuButton<String>(
+                            onSelected: (value) async {
+                              if (value == 'settings') {
+                                // TODO: Navigate to settings
+                              } else if (value == 'signout') {
+                                final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                                await authProvider.signOut();
+                              }
+                            },
+                            itemBuilder: (context) => [
+                              const PopupMenuItem(
+                                value: 'settings',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.settings, size: 20),
+                                    SizedBox(width: 12),
+                                    Text('Settings'),
+                                  ],
+                                ),
+                              ),
+                              const PopupMenuItem(
+                                value: 'signout',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.logout, size: 20, color: Colors.red),
+                                    SizedBox(width: 12),
+                                    Text('Sign Out', style: TextStyle(color: Colors.red)),
+                                  ],
+                                ),
+                              ),
+                            ],
+                            icon: const Icon(Icons.more_vert, color: Colors.grey),
                           ),
                         ],
                       );
@@ -231,7 +295,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     'Quick Actions',
                     style: TextStyle(
                       fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -263,6 +327,89 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 24),
             
+            // Favorite Restaurant - Full Photo with Overlay
+            if (favoriteRestaurant != null)
+              _buildFavoriteRestaurantCard(favoriteRestaurant!)
+            else
+              Container(
+                width: double.infinity,
+                constraints: const BoxConstraints(
+                  maxHeight: 300, // Reasonable max height
+                ),
+                child: AspectRatio(
+                  aspectRatio: 1.0, // Perfect square
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[800],
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.grey[600]!, width: 2),
+                    ),
+                    child: Stack(
+                      children: [
+                        // Background pattern or placeholder
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Colors.grey[800]!,
+                                Colors.grey[900]!,
+                              ],
+                            ),
+                          ),
+                        ),
+                        // "Favorite Restaurant" title overlay
+                        Positioned(
+                          top: 20,
+                          left: 20,
+                          right: 20,
+                          child: const Text(
+                            'Favorite Restaurant',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        // Center content
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.favorite_border,
+                                size: 60,
+                                color: Colors.grey[500],
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'No favorite selected',
+                                style: TextStyle(
+                                  color: Colors.grey[400],
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Tap ♡ on any verified visit',
+                                style: TextStyle(
+                                  color: Colors.grey[500],
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            const SizedBox(height: 24),
+            
             // Verified Visits
             Container(
               padding: const EdgeInsets.all(16),
@@ -278,10 +425,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'Event Visits',
+                        'Verified Visits',
                         style: TextStyle(
                           fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                       Text(
@@ -306,7 +453,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'No event visits yet',
+                            'No verified visits yet',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey[400],
@@ -342,6 +489,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
             ),
+            
             const SizedBox(height: 100), // Bottom padding for navigation
           ],
         ),
@@ -358,7 +506,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           value,
           style: const TextStyle(
             fontSize: 20,
-            fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w400,
           ),
         ),
         Text(
@@ -369,6 +517,159 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildFavoriteRestaurantCard(Restaurant restaurant) {
+    return AspectRatio(
+      aspectRatio: 1.0, // Perfect square
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.red.withOpacity(0.4), width: 2),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(14),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // Background restaurant image
+              Image.network(
+                restaurant.imageUrl ?? 'https://via.placeholder.com/400x400?text=Restaurant',
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: Colors.grey[800],
+                    child: const Center(
+                      child: Icon(Icons.restaurant, size: 60, color: Colors.white54),
+                    ),
+                  );
+                },
+              ),
+              // Gradient overlay for text readability
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withOpacity(0.7), // Darker at top for titles
+                      Colors.transparent,
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.8), // Darker at bottom for details
+                    ],
+                    stops: const [0.0, 0.3, 0.7, 1.0],
+                  ),
+                ),
+              ),
+              // "Favorite Restaurant" title at top-left
+              Positioned(
+                top: 20,
+                left: 20,
+                right: 80, // Leave space for heart
+                child: Text(
+                  'Favorite Restaurant',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black54,
+                        blurRadius: 4,
+                        offset: Offset(1, 1),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // Favorite heart badge (top-right)
+              Positioned(
+                top: 16,
+                right: 16,
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.9),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.red.withOpacity(0.4),
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.favorite,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+              ),
+              // Bottom content - name, cuisine and stars
+              Positioned(
+                bottom: 20,
+                left: 20,
+                right: 20,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Restaurant name
+                    Text(
+                      restaurant.name,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black54,
+                            blurRadius: 6,
+                            offset: Offset(2, 2),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    // Cuisine type
+                    Text(
+                      restaurant.categories?.first.title ?? 'Restaurant',
+                      style: TextStyle(
+                        color: Colors.orange.shade300,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        shadows: const [
+                          Shadow(
+                            color: Colors.black54,
+                            blurRadius: 4,
+                            offset: Offset(1, 1),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    // Star rating
+                    Row(
+                      children: List.generate(5, (index) {
+                        final rating = restaurant.rating ?? 0.0;
+                        return Icon(
+                          index < rating.floor()
+                              ? Icons.star
+                              : (index < rating ? Icons.star_half : Icons.star_border),
+                          color: Colors.white,
+                          size: 18,
+                        );
+                      }),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -410,15 +711,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
         padding: const EdgeInsets.all(12),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
+            // Heart button in top-right
+            Positioned(
+              top: 0,
+              right: 0,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    favoriteRestaurant = visit.restaurant;
+                  });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('${visit.restaurant.name} set as favorite!'),
+                      backgroundColor: Colors.green,
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: favoriteRestaurant?.id == visit.restaurant.id
+                        ? Colors.red.withOpacity(0.9) // Red background for favorite
+                        : Colors.transparent, // Transparent for clickable hearts
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.6), // White border for all
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Icon(
+                    favoriteRestaurant?.id == visit.restaurant.id
+                        ? Icons.favorite // Filled heart for current favorite
+                        : Icons.favorite_border, // Outline heart for clickable options
+                    color: Colors.white,
+                    size: 14,
+                  ),
+                ),
+              ),
+            ),
+            // Content at bottom
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
             Text(
               visit.restaurant.name,
               style: const TextStyle(
                 fontSize: 14,
-                fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w400,
                 color: Colors.white,
               ),
               maxLines: 1,
@@ -432,7 +778,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     index < visit.rating.floor()
                         ? Icons.star
                         : (index < visit.rating ? Icons.star_half : Icons.star_border),
-                    color: Colors.amber,
+                    color: Colors.white,
                     size: 12,
                   );
                 }),
@@ -447,11 +793,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
             const SizedBox(height: 4),
-            Text(
-              _formatDate(visit.visitDate),
-              style: TextStyle(
-                color: Colors.grey[300],
-                fontSize: 10,
+                  Text(
+                    _formatDate(visit.visitDate),
+                    style: TextStyle(
+                      color: Colors.grey[300],
+                      fontSize: 10,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
