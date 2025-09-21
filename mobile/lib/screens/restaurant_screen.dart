@@ -122,7 +122,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
             expandedHeight: MediaQuery.of(context).size.height, // Full screen height
             floating: false,
             pinned: true,
-            backgroundColor: Colors.black.withOpacity(0.5), // More translucent app bar background
+            backgroundColor: Colors.black, // Clean, solid app bar background
             toolbarHeight: 80, // Increased height to accommodate large Monoton text
             title: Text(
               'Austin Food Club',
@@ -192,29 +192,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                         ),
                       ),
                     ),
-                    // App bar bottom edge gradient (only at the very bottom)
-                    if (scrollProgress > 0.7) // Show gradient when app bar is mostly visible
-                      Positioned(
-                        top: collapsedHeight - 5, // Start at very bottom of app bar
-                        left: 0,
-                        right: 0,
-                        height: 30, // Much smaller gradient zone
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.black.withOpacity(0.3),  // Light start
-                                Colors.black.withOpacity(0.15), // Very light
-                                Colors.black.withOpacity(0.05), // Almost transparent
-                                Colors.transparent,              // Fully transparent
-                              ],
-                              stops: const [0.0, 0.4, 0.7, 1.0], // Quick, subtle bottom fade
-                            ),
-                          ),
-                        ),
-                      ),
+                    // Clean, simple app bar - elegant and straightforward
                         // Austin Food Club is now always in the app bar
                     // Animated restaurant name that transitions from hero to content position
                     if (scrollProgress < 0.9) // Hide when almost fully scrolled to avoid overlap

@@ -275,22 +275,22 @@ const warmUpCache = async (yelpService) => {
     console.log('Warming up cache with popular Austin searches...');
     
     const popularSearches = [
-      { location: 'Austin, TX', categories: 'bbq', limit: 10 },
-      { location: 'Austin, TX', categories: 'tex-mex', limit: 10 },
-      { location: 'Austin, TX', categories: 'foodtrucks', limit: 10 },
-      { location: 'Austin, TX', term: 'brunch', limit: 10 }
+      { location: 'Austin, TX', cuisine: 'bbq', limit: 10 },
+      { location: 'Austin, TX', cuisine: 'mexican', limit: 10 },
+      { location: 'Austin, TX', cuisine: 'japanese', limit: 10 },
+      { location: 'Austin, TX', cuisine: 'italian', limit: 10 }
     ];
 
     for (const search of popularSearches) {
       try {
-        const results = await yelpService.searchRestaurants(search.location, search.term, search.categories, search.price, search.limit);
+        const results = await yelpService.searchRestaurants(search.location, search.cuisine, search.price, search.limit);
         if (results && results.restaurants) {
           const cacheKey = generateCacheKey('search', search);
           setCachedData(searchCache, cacheKey, results);
-          console.log(`Warmed up cache for: ${search.categories || search.term}`);
+          console.log(`Warmed up cache for: ${search.cuisine}`);
         }
       } catch (error) {
-        console.error(`Failed to warm up cache for ${search.categories || search.term}:`, error);
+        console.error(`Failed to warm up cache for ${search.cuisine}:`, error);
       }
     }
     
