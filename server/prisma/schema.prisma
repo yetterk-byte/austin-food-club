@@ -1,6 +1,3 @@
-// Austin Food Club Prisma Schema
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,139 +8,252 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  supabaseId    String    @unique
-  email         String?   @unique
-  phone         String?   @unique
-  name          String
-  avatar        String?   // URL for user avatar (from OAuth providers)
-  provider      String?   // "email", "google", "apple", etc.
-  emailVerified Boolean   @default(false)
-  lastLogin     DateTime?
-  createdAt     DateTime  @default(now())
-  
-  // Relations
+  id             String          @id @default(cuid())
+  supabaseId     String          @unique
+  email          String?         @unique
+  phone          String?         @unique
+  name           String
+  avatar         String?
+  provider       String?
+  emailVerified  Boolean         @default(false)
+  isAdmin        Boolean         @default(false) // Admin access control
+  lastLogin      DateTime?
+  createdAt      DateTime        @default(now())
+  verifiedVisits VerifiedVisit[]
+  friendOf       Friendship[]    @relation("FriendOf")
+  friendships    Friendship[]    @relation("UserFriendships")
   rsvps          RSVP[]
   wishlists      Wishlist[]
-  verifiedVisits VerifiedVisit[]
-  friendships    Friendship[] @relation("UserFriendships")
-  friendOf       Friendship[] @relation("FriendOf")
-  
+  restaurantQueue RestaurantQueue[] // Restaurants added by this admin
+  adminLogs      AdminLog[] // Admin actions performed by this user
+
   @@map("users")
 }
 
 model Restaurant {
-  id          String   @id @default(cuid())
-  name        String
-  cuisine     String
-  price       String   // e.g., "$", "$$", "$$$"
-  area        String   // e.g., "East Austin", "South Austin"
-  description String?
-  address     String
-  imageUrl    String?
-  weekOf      DateTime // The week this restaurant is featured
-  createdAt   DateTime @default(now())
-  
-  // Yelp integration fields
-  yelpId      String?  @unique
-  rating      Float?
-  reviewCount Int?
-  photos      Json?    // Array of photo URLs as JSON
-  categories  Json?    // Array of category strings as JSON
-  priceRange  String?  // Yelp price range (Budget, Moderate, etc.)
-  coordinates Json?    // { latitude: Float, longitude: Float }
-  hours       Json?    // Business hours object
-  isClaimed   Boolean? @default(false)
-  yelpUrl     String?
-  lastSynced  DateTime? // When this restaurant was last synced with Yelp
-  isCurrentPick Boolean? @default(false) // Is this the current week's featured restaurant
-  
-  // Relations
-  rsvps              RSVP[]
-  wishlists          Wishlist[]
-  verifiedVisits     VerifiedVisit[]
-  featuredRestaurants FeaturedRestaurant[]
-  
+  id             String          @id @default(cuid())
+  yelpId         String          @unique
+  name           String
+  slug           String          @unique
+  address        String
+  city           String          @default("Austin")
+  state          String          @default("TX")
+  zipCode        String
+  latitude       Float
+  longitude      Float
+  phone          String?
+  imageUrl       String?
+  yelpUrl        String?
+  price          String?
+  rating         Float?
+  reviewCount    Int?
+  categories     String?
+  hours          String?
+  isFeatured     Boolean         @default(false)
+  featuredWeek   DateTime?
+  featuredDate   DateTime?
+  specialNotes   String?
+  expectedWait   String?
+  dressCode      String?
+  parkingInfo    String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime
+  lastSyncedAt   DateTime?
+  verifiedVisits VerifiedVisit[]
+  rsvps          RSVP[]
+  wishlists      Wishlist[]
+  queueItems     RestaurantQueue[] // Queue entries for this restaurant
+  rotationHistory RotationHistory[] // History of when this restaurant was featured
+
+  // Rotation tracking fields
+  lastFeaturedDate DateTime? // When this restaurant was last featured
+  timesFeatures    Int       @default(0) // How many times this restaurant has been featured
+  averageRating    Float?    // Calculated average rating from verified visits
+  totalRsvps       Int       @default(0) // Total RSVPs across all features
+
   @@map("restaurants")
 }
 
 model RSVP {
-  id           String   @id @default(cuid())
+  id           String     @id @default(cuid())
   userId       String
   restaurantId String
-  day          String   // e.g., "monday", "tuesday", etc.
-  status       String   // "going", "maybe", "not_going"
-  createdAt    DateTime @default(now())
-  
-  // Relations
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  
-  // Ensure one RSVP per user per restaurant per day
+  day          String
+  status       String
+  createdAt    DateTime   @default(now())
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, restaurantId, day])
   @@map("rsvps")
 }
 
 model Wishlist {
-  id           String   @id @default(cuid())
+  id           String     @id @default(cuid())
   userId       String
   restaurantId String
-  addedAt      DateTime @default(now())
-  
-  // Relations
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  
-  // Ensure one wishlist entry per user per restaurant
+  addedAt      DateTime   @default(now())
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, restaurantId])
   @@map("wishlists")
 }
 
 model VerifiedVisit {
-  id           String   @id @default(uuid())
+  id           String     @id @default(uuid())
   userId       String
   restaurantId String
   visitDate    DateTime
-  photoUrl     String   // URL or base64 of uploaded photo
-  rating       Int      // 1-5 stars
-  review       String?  // Optional text review
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  
-  user         User       @relation(fields: [userId], references: [id])
+  photoUrl     String
+  rating       Int
+  review       String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  user         User       @relation(fields: [userId], references: [id])
 }
 
 model Friendship {
   id        String   @id @default(cuid())
   userId    String
   friendId  String
-  status    String   // "pending", "accepted", "blocked"
+  status    String
   createdAt DateTime @default(now())
-  
-  // Relations
-  user   User @relation("UserFriendships", fields: [userId], references: [id], onDelete: Cascade)
-  friend User @relation("FriendOf", fields: [friendId], references: [id], onDelete: Cascade)
-  
-  // Ensure unique friendship pairs
+  friend    User     @relation("FriendOf", fields: [friendId], references: [id], onDelete: Cascade)
+  user      User     @relation("UserFriendships", fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, friendId])
   @@map("friendships")
 }
 
-model FeaturedRestaurant {
-  id                String    @id @default(cuid())
-  restaurantId      String
-  weekStartDate     DateTime
-  weekEndDate       DateTime
-  customDescription String?   // For special themes or events
-  isActive          Boolean   @default(true)
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+// Restaurant Queue for Admin Management
+model RestaurantQueue {
+  id            String      @id @default(cuid())
+  restaurantId  String
+  position      Int         // Queue position (1 = next, 2 = after next, etc.)
+  scheduledWeek DateTime?   // Optional: specific week to schedule
+  status        QueueStatus @default(PENDING)
+  addedBy       String      // Admin who added this
+  addedAt       DateTime    @default(now())
+  notes         String?     // Admin notes about why this restaurant was queued
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
   
   // Relations
   restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  admin      User       @relation(fields: [addedBy], references: [id], onDelete: Cascade)
   
-  // Ensure one active featured restaurant per week
-  @@unique([weekStartDate, isActive])
-  @@map("featured_restaurants")
+  // Ensure unique position in queue
+  @@unique([position])
+  @@map("restaurant_queue")
+}
+
+// Admin Action Logging
+model AdminLog {
+  id          String    @id @default(cuid())
+  adminId     String
+  action      String    // "add_restaurant", "remove_restaurant", "reorder_queue", "set_featured", etc.
+  targetId    String?   // ID of affected resource (restaurant, user, etc.)
+  targetType  String?   // "restaurant", "user", "queue_item", etc.
+  details     Json?     // Additional action details
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime  @default(now())
+  
+  // Relations
+  admin User @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  
+  @@map("admin_logs")
+}
+
+// Rotation Configuration
+model RotationConfig {
+  id               String      @id @default(cuid())
+  mode             RotationMode @default(MANUAL)
+  rotationDay      String      @default("monday") // Day of week for rotation
+  rotationTime     String      @default("00:00")  // Time of day (24h format)
+  isActive         Boolean     @default(true)
+  nextRotationDate DateTime?   // Calculated next rotation date
+  timezone         String      @default("America/Chicago") // Austin timezone
+  
+  // Notification settings
+  notifyAdmins     Boolean     @default(true)
+  notifyUsers      Boolean     @default(false)
+  
+  // Advanced settings
+  skipWeekends     Boolean     @default(false) // Skip featuring on weekends
+  minQueueSize     Int         @default(2) // Minimum restaurants needed in queue
+  
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  
+  @@map("rotation_config")
+}
+
+// Rotation History for Analytics
+model RotationHistory {
+  id            String     @id @default(cuid())
+  restaurantId  String
+  startDate     DateTime   // When restaurant became featured
+  endDate       DateTime?  // When restaurant stopped being featured
+  
+  // Performance metrics
+  totalRsvps    Int        @default(0)
+  totalVisits   Int        @default(0)
+  averageRating Float?
+  
+  // Context
+  rotationType  String     // 'automatic', 'manual', 'emergency'
+  triggeredBy   String?    // Admin ID if manual
+  notes         String?    // Admin notes or reason
+  
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  
+  // Relations
+  restaurant    Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  
+  @@map("rotation_history")
+}
+
+// Rotation Notifications Log
+model RotationNotification {
+  id            String           @id @default(cuid())
+  type          NotificationType
+  recipientType String           // 'admin', 'user', 'all'
+  recipientId   String?          // Specific user ID if targeted
+  title         String
+  message       String
+  status        String           @default("pending") // pending, sent, failed
+  sentAt        DateTime?
+  
+  // Context
+  restaurantId  String?
+  rotationId    String?
+  
+  createdAt     DateTime         @default(now())
+  
+  @@map("rotation_notifications")
+}
+
+enum QueueStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum RotationMode {
+  MANUAL      // Admin manually rotates restaurants
+  AUTOMATIC   // System automatically rotates based on schedule
+}
+
+enum NotificationType {
+  ROTATION_COMPLETE      // Restaurant rotated successfully
+  ROTATION_FAILED        // Rotation failed
+  QUEUE_EMPTY           // No restaurants in queue
+  QUEUE_LOW             // Queue running low
+  MANUAL_ROTATION       // Admin manually rotated
+  EMERGENCY_ROTATION    // Emergency restaurant change
 }

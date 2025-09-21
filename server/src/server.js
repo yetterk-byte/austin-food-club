@@ -24,10 +24,13 @@ const {
   startQueueProcessor
 } = require('./utils/rateLimiter');
 const cronService = require('./services/cronService');
+const rotationJobManager = require('./jobs/rotationJob');
 
 // Import API router
 const apiRouter = require('./routes/apiRouter');
 const simpleRestaurantRoutes = require('./routes/simpleRestaurantRoutes');
+const adminRoutes = require('./routes/admin.routes'); // Admin routes
+const rotationRoutes = require('./routes/rotation.routes'); // Rotation routes
 
 const app = express();
 const PORT = 3001;
@@ -59,12 +62,46 @@ app.use('/api/v1', apiRouter);
 // Simple restaurant routes (working version)
 app.use('/api/restaurants', simpleRestaurantRoutes);
 
+// Admin routes (protected)
+app.use('/api/admin', adminRoutes);
+
+// Rotation routes (protected)
+app.use('/api/rotation', rotationRoutes);
+
 // Test endpoint
 app.get('/api/test', (req, res) => {
   res.json({ 
     message: 'Server is running!', 
     timestamp: new Date().toISOString() 
   });
+});
+
+// Admin login endpoint (demo - replace with proper auth)
+app.post('/api/auth/admin-login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    
+    // Demo credentials - replace with proper auth
+    if (email === 'admin@austinfoodclub.com' && password === 'admin123') {
+      // Generate a demo token (in production, use proper JWT)
+      const token = 'demo-admin-token-' + Date.now();
+      
+      res.json({
+        token,
+        user: {
+          id: 'admin-user',
+          email: 'admin@austinfoodclub.com',
+          name: 'Austin Food Club Admin',
+          isAdmin: true
+        }
+      });
+    } else {
+      res.status(401).json({ error: 'Invalid credentials' });
+    }
+  } catch (error) {
+    console.error('Admin login error:', error);
+    res.status(500).json({ error: 'Login failed' });
+  }
 });
 
 // Test user endpoint (requires auth)
@@ -1939,9 +1976,17 @@ app.delete('/api/wishlist/:restaurantId', verifySupabaseToken, requireAuth, asyn
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);
   console.log(`Test endpoint: http://localhost:${PORT}/api/test`);
+  
+  // Initialize rotation system
+  try {
+    await rotationJobManager.initialize();
+    console.log('🔄 Rotation system initialized');
+  } catch (error) {
+    console.error('❌ Failed to initialize rotation system:', error);
+  }
   console.log(`\nRestaurant endpoints:`);
   console.log(`  - Current: http://localhost:${PORT}/api/restaurants/current`);
   console.log(`  - Featured: http://localhost:${PORT}/api/restaurants/featured`);

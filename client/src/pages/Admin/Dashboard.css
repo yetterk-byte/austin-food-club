@@ -1,0 +1,287 @@
+.admin-dashboard {
+  color: white;
+}
+
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #20b2aa;
+  margin: 0 0 0.5rem 0;
+}
+
+.dashboard-header p {
+  font-size: 1.1rem;
+  color: #888;
+  margin: 0;
+}
+
+.dashboard-section {
+  background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.dashboard-section h2 {
+  font-size: 1.4rem;
+  color: #20b2aa;
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+}
+
+/* Current Restaurant Card */
+.current-restaurant-card {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.restaurant-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.restaurant-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.restaurant-info {
+  flex: 1;
+}
+
+.restaurant-info h3 {
+  font-size: 1.5rem;
+  color: white;
+  margin: 0 0 0.5rem 0;
+}
+
+.restaurant-address {
+  color: #888;
+  margin: 0 0 1rem 0;
+}
+
+.restaurant-stats {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.restaurant-stats span {
+  background: rgba(32, 178, 170, 0.1);
+  border: 1px solid rgba(32, 178, 170, 0.3);
+  border-radius: 6px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+  color: #20b2aa;
+}
+
+.restaurant-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-primary {
+  background: #20b2aa;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: #1a9d96;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid #20b2aa;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  color: #20b2aa;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(32, 178, 170, 0.1);
+}
+
+/* No Restaurant State */
+.no-restaurant {
+  text-align: center;
+  padding: 2rem;
+  color: #888;
+}
+
+.no-restaurant p {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+/* RSVP Breakdown */
+.rsvp-breakdown {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.rsvp-day {
+  background: rgba(32, 178, 170, 0.1);
+  border: 1px solid rgba(32, 178, 170, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.rsvp-day-name {
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 0.5rem;
+}
+
+.rsvp-day-count {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #20b2aa;
+}
+
+/* Recent Actions */
+.recent-actions {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.action-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  border-bottom: 1px solid #333;
+  transition: background 0.2s ease;
+}
+
+.action-item:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.action-item:last-child {
+  border-bottom: none;
+}
+
+.action-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.action-admin {
+  font-weight: 500;
+  color: #20b2aa;
+  font-size: 0.9rem;
+}
+
+.action-description {
+  color: white;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+}
+
+.action-time {
+  color: #888;
+  font-size: 0.75rem;
+}
+
+.no-actions {
+  color: #888;
+  text-align: center;
+  padding: 2rem;
+  font-style: italic;
+}
+
+/* Quick Actions */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.quick-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem 1rem;
+  background: rgba(32, 178, 170, 0.1);
+  border: 1px solid rgba(32, 178, 170, 0.3);
+  border-radius: 8px;
+  color: #20b2aa;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.quick-action-btn:hover {
+  background: rgba(32, 178, 170, 0.2);
+  transform: translateY(-2px);
+}
+
+.quick-action-btn span:first-child {
+  font-size: 1.5rem;
+}
+
+.quick-action-btn span:last-child {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .current-restaurant-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .restaurant-image {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .restaurant-actions {
+    justify-content: center;
+  }
+  
+  .rsvp-breakdown {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .quick-actions {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header h1 {
+    font-size: 2rem;
+  }
+  
+  .rsvp-breakdown {
+    grid-template-columns: 1fr;
+  }
+  
+  .restaurant-actions {
+    flex-direction: column;
+  }
+}
