@@ -25,7 +25,7 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 2, vsync: this, initialIndex: 1);
     _loadData();
   }
 
