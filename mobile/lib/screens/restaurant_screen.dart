@@ -531,7 +531,9 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                   ),
                 const SizedBox(height: 32),
                 // RSVP Section
-                RSVPSection(restaurant: widget.restaurant),
+                Center(
+                  child: RSVPSection(restaurant: widget.restaurant),
+                ),
                   const SizedBox(height: 120), // Extra space for floating buttons
               ],
               ),
