@@ -663,6 +663,8 @@
             } catch (error) {
                 if (error.message.includes('already in queue')) {
                     showMessage(`${currentRestaurant.name || 'Current restaurant'} is already in the queue!`, 'error');
+                } else if (error.message.includes('currently featured restaurant')) {
+                    showMessage(`${currentRestaurant.name || 'Current restaurant'} is currently featured and cannot be added to queue`, 'error');
                 } else {
                     showMessage(`Failed to add restaurant: ${error.message}`, 'error');
                 }

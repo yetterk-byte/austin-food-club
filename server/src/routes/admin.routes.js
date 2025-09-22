@@ -146,6 +146,15 @@ router.post('/queue', logAdminActionMiddleware('add_to_queue', 'restaurant'), as
       return res.status(400).json({ error: 'Restaurant already in queue' });
     }
 
+    // Check if restaurant is currently featured
+    const currentFeatured = await prisma.restaurant.findFirst({
+      where: { isFeatured: true }
+    });
+
+    if (currentFeatured && currentFeatured.id === restaurantId) {
+      return res.status(400).json({ error: 'Cannot add currently featured restaurant to queue' });
+    }
+
     // Get next position in queue
     const lastPosition = await prisma.restaurantQueue.findFirst({
       orderBy: { position: 'desc' },
