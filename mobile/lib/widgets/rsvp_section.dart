@@ -140,7 +140,7 @@ class _RSVPSectionState extends State<RSVPSection> {
         border: Border.all(color: Colors.grey[700]!),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             'See You There?',
@@ -148,17 +148,20 @@ class _RSVPSectionState extends State<RSVPSection> {
               fontWeight: FontWeight.w400, // Lighter font weight
               color: Colors.orange,
             ),
+            textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
           Text(
             'Select a day to RSVP:',
             style: Theme.of(context).textTheme.bodyLarge,
+            textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
           // Day buttons
           Wrap(
             spacing: 8,
             runSpacing: 8,
+            alignment: WrapAlignment.center,
             children: daysOfWeek.map((day) {
               final isSelected = selectedDay == day;
               final count = rsvpCounts[day] ?? 0;
