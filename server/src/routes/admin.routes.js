@@ -1256,10 +1256,9 @@ router.post('/rotation/trigger', async (req, res) => {
         }
       });
 
-      // Mark queue item as completed (featured) - don't reorder positions for now
-      await tx.restaurantQueue.update({
-        where: { id: nextInQueue.id },
-        data: { status: 'COMPLETED' }
+      // Remove the featured restaurant from the queue entirely
+      await tx.restaurantQueue.delete({
+        where: { id: nextInQueue.id }
       });
     });
 
