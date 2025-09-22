@@ -544,7 +544,8 @@ router.post('/restaurants/add-from-yelp', logAdminActionMiddleware('add_restaura
           reviewCount: yelpDetails.review_count,
           categories: JSON.stringify(yelpDetails.categories || []),
           hours: yelpDetails.hours ? JSON.stringify(yelpDetails.hours) : null,
-          lastSyncedAt: new Date()
+          lastSyncedAt: new Date(),
+          updatedAt: new Date()
         }
       });
     }

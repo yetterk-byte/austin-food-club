@@ -109,6 +109,12 @@ const optionalAdmin = async (req, res, next) => {
  */
 const logAdminAction = async (adminId, action, targetId = null, targetType = null, details = null, req = null) => {
   try {
+    // Skip logging for demo admin to avoid foreign key issues
+    if (adminId === 'demo-admin') {
+      console.log(`📝 Admin action (demo): ${action} - ${targetType || 'system'}`);
+      return;
+    }
+
     await prisma.adminLog.create({
       data: {
         adminId,
