@@ -327,8 +327,20 @@ router.post('/queue/reorder', logAdminActionMiddleware('reorder_queue', 'queue')
       return res.status(400).json({ error: 'newOrder must be an array' });
     }
 
-    // Update positions in a transaction
+    console.log('🔄 Reordering queue with new order:', newOrder);
+
+    // Update positions in a transaction using temporary positions to avoid conflicts
     await prisma.$transaction(async (tx) => {
+      // Step 1: Set all items to temporary negative positions to avoid conflicts
+      for (let i = 0; i < newOrder.length; i++) {
+        const item = newOrder[i];
+        await tx.restaurantQueue.update({
+          where: { id: item.id },
+          data: { position: -(i + 1000) } // Use negative numbers as temporary positions
+        });
+      }
+
+      // Step 2: Set final positions
       for (const item of newOrder) {
         await tx.restaurantQueue.update({
           where: { id: item.id },
@@ -708,23 +720,69 @@ async function getNextQueuePosition() {
 async function reorderQueue(oldPosition, newPosition) {
   if (oldPosition === newPosition) return;
 
+  console.log('🔄 Reordering from position', oldPosition, 'to', newPosition);
+
   await prisma.$transaction(async (tx) => {
+    // Get all affected items
+    const affectedItems = await tx.restaurantQueue.findMany({
+      where: {
+        position: {
+          gte: Math.min(oldPosition, newPosition),
+          lte: Math.max(oldPosition, newPosition)
+        }
+      },
+      orderBy: { position: 'asc' }
+    });
+
+    console.log('📋 Affected items:', affectedItems.map(item => ({ id: item.id, position: item.position })));
+
+    // Step 1: Move all affected items to temporary negative positions
+    for (let i = 0; i < affectedItems.length; i++) {
+      await tx.restaurantQueue.update({
+        where: { id: affectedItems[i].id },
+        data: { position: -(i + 2000) } // Use negative numbers as temporary
+      });
+    }
+
+    // Step 2: Calculate new positions and update
     if (oldPosition < newPosition) {
-      // Moving down: shift items up
-      await tx.restaurantQueue.updateMany({
-        where: {
-          position: { gt: oldPosition, lte: newPosition }
-        },
-        data: { position: { decrement: 1 } }
-      });
+      // Moving down: shift items up, move target to end
+      let newPos = oldPosition;
+      for (const item of affectedItems) {
+        if (item.position === oldPosition) {
+          // This is the item being moved - put it at newPosition
+          await tx.restaurantQueue.update({
+            where: { id: item.id },
+            data: { position: newPosition }
+          });
+        } else {
+          // Shift other items up
+          await tx.restaurantQueue.update({
+            where: { id: item.id },
+            data: { position: newPos }
+          });
+          newPos++;
+        }
+      }
     } else {
-      // Moving up: shift items down
-      await tx.restaurantQueue.updateMany({
-        where: {
-          position: { gte: newPosition, lt: oldPosition }
-        },
-        data: { position: { increment: 1 } }
-      });
+      // Moving up: shift items down, move target to beginning
+      let newPos = newPosition + 1;
+      for (const item of affectedItems) {
+        if (item.position === oldPosition) {
+          // This is the item being moved - put it at newPosition
+          await tx.restaurantQueue.update({
+            where: { id: item.id },
+            data: { position: newPosition }
+          });
+        } else {
+          // Shift other items down
+          await tx.restaurantQueue.update({
+            where: { id: item.id },
+            data: { position: newPos }
+          });
+          newPos++;
+        }
+      }
     }
   });
 }
@@ -1100,96 +1158,6 @@ router.post('/restaurants/quick-add', async (req, res) => {
   } catch (error) {
     console.error('❌ Quick add error:', error);
     res.status(500).json({ error: error.message });
-  }
-});
-
-/**
- * POST /api/admin/queue/reorder
- * Reorder queue items by changing positions
- */
-router.post('/queue/reorder', async (req, res) => {
-  try {
-    const { queueItemId, newPosition } = req.body;
-    
-    if (!queueItemId || !newPosition) {
-      return res.status(400).json({ error: 'Queue item ID and new position are required' });
-    }
-
-    console.log('🔄 Reordering queue item:', queueItemId, 'to position:', newPosition);
-
-    // Get the item being moved
-    const itemToMove = await prisma.restaurantQueue.findUnique({
-      where: { id: queueItemId },
-      include: { restaurant: { select: { name: true } } }
-    });
-
-    if (!itemToMove) {
-      return res.status(404).json({ error: 'Queue item not found' });
-    }
-
-    const oldPosition = itemToMove.position;
-    
-    if (oldPosition === newPosition) {
-      return res.json({ message: 'No change needed' });
-    }
-
-    // Use a transaction to ensure consistency
-    await prisma.$transaction(async (tx) => {
-      if (oldPosition < newPosition) {
-        // Moving down: shift items up
-        await tx.restaurantQueue.updateMany({
-          where: {
-            position: {
-              gt: oldPosition,
-              lte: newPosition
-            }
-          },
-          data: {
-            position: {
-              decrement: 1
-            }
-          }
-        });
-      } else {
-        // Moving up: shift items down
-        await tx.restaurantQueue.updateMany({
-          where: {
-            position: {
-              gte: newPosition,
-              lt: oldPosition
-            }
-          },
-          data: {
-            position: {
-              increment: 1
-            }
-          }
-        });
-      }
-
-      // Update the moved item
-      await tx.restaurantQueue.update({
-        where: { id: queueItemId },
-        data: { position: newPosition }
-      });
-    });
-
-    await logAdminAction(req.admin.id, 'reorder_queue', queueItemId, 'queue_item', { 
-      oldPosition, 
-      newPosition, 
-      restaurantName: itemToMove.restaurant.name 
-    }, req);
-
-    console.log('✅ Queue reordered successfully');
-
-    res.json({ 
-      success: true,
-      message: `${itemToMove.restaurant.name} moved from position ${oldPosition} to ${newPosition}`
-    });
-
-  } catch (error) {
-    console.error('❌ Queue reorder error:', error);
-    res.status(500).json({ error: 'Failed to reorder queue: ' + error.message });
   }
 });
 
