@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { AdminProvider } from './contexts/AdminContext';
 import './App.css';
 import Header from './components/Header';
 import BottomNav from './components/BottomNav';
@@ -15,6 +16,13 @@ import RestaurantDetail from './pages/RestaurantDetail';
 import Wishlist from './pages/Wishlist';
 import Login from './pages/Login';
 import StaticMapTest from './components/StaticMapTest';
+
+// Admin Components
+import AdminGuard from './components/Admin/AdminGuard';
+import AdminLayout from './components/Admin/AdminLayout';
+import AdminLogin from './pages/Admin/AdminLogin';
+import AdminDashboard from './pages/Admin/Dashboard';
+import RestaurantQueue from './pages/Admin/RestaurantQueue';
 
 const AppContent = () => {
   const location = useLocation();
@@ -100,19 +108,33 @@ const AppContent = () => {
         } />
         <Route path="/restaurant/:restaurantId" element={<RestaurantDetail />} />
         
+        {/* Admin routes */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={
+          <AdminGuard>
+            <AdminLayout />
+          </AdminGuard>
+        }>
+          <Route index element={<AdminDashboard />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="queue" element={<RestaurantQueue />} />
+          {/* Add more admin routes here as needed */}
+        </Route>
+        
         {/* Default redirects */}
         <Route path="/" element={<Navigate to="/current" replace />} />
         <Route path="*" element={<Navigate to="/current" replace />} />
       </Routes>
       
-      {/* Only show bottom nav on protected routes */}
+      {/* Only show bottom nav on protected routes (exclude admin pages) */}
       {location.pathname !== '/login' && 
        location.pathname !== '/auth' && 
        location.pathname !== '/auth/callback' &&
            location.pathname !== '/oauth-test' &&
            location.pathname !== '/test-auth' &&
            location.pathname !== '/map-test' && 
-           !location.pathname.startsWith('/restaurant/') && (
+           !location.pathname.startsWith('/restaurant/') &&
+           !location.pathname.startsWith('/admin') && (
         <BottomNav 
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
@@ -126,7 +148,9 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <AppContent />
+        <AdminProvider>
+          <AppContent />
+        </AdminProvider>
       </Router>
     </AuthProvider>
   );

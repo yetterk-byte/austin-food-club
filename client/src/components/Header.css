@@ -30,6 +30,23 @@
   letter-spacing: -0.5px;
 }
 
+.admin-access-btn {
+  background: rgba(32, 178, 170, 0.1);
+  border: 1px solid rgba(32, 178, 170, 0.3);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  color: #20b2aa;
+  font-size: 0.8rem;
+  cursor: pointer;
+  margin-left: 1rem;
+  transition: all 0.2s ease;
+}
+
+.admin-access-btn:hover {
+  background: rgba(32, 178, 170, 0.2);
+  border-color: #20b2aa;
+}
+
 .page-badge {
   background-color: #4a4a4a;
   border-radius: 12px;

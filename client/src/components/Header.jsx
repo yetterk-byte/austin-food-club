@@ -65,6 +65,14 @@ const Header = ({ currentPage }) => {
       <div className="header-content">
         <div className="logo">
           <h1>Austin Food Club</h1>
+          {/* Temporary admin access button */}
+          <button 
+            onClick={() => navigate('/admin/login')}
+            className="admin-access-btn"
+            title="Admin Dashboard"
+          >
+            ⚙️ Admin
+          </button>
         </div>
         
         <div className="header-right">

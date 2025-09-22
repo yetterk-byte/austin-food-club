@@ -68,7 +68,7 @@ const QueueItem = ({ item, position, onRemove, onEdit }) => {
       </div>
 
       <div className="queue-actions">
-        <div className="status-badge status-${item.status.toLowerCase()}">
+        <div className={`status-badge status-${item.status.toLowerCase()}`}>
           {item.status}
         </div>
         

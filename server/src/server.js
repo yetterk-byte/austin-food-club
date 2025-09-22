@@ -259,7 +259,7 @@ app.get('/api/restaurants/current', async (req, res) => {
         longitude: -97.7431
       },
       website: 'https://franklinbarbecue.com',
-      isCurrentPick: true,
+      isFeatured: true,
       lastUpdated: restaurant.createdAt.toISOString()
     };
 
@@ -298,7 +298,7 @@ app.get('/api/restaurants', async (req, res) => {
         longitude: -97.7431
       },
       website: 'https://franklinbarbecue.com',
-      isCurrentPick: false,
+      isFeatured: false,
       lastUpdated: restaurant.createdAt.toISOString()
     }));
 
@@ -315,12 +315,12 @@ app.get('/api/restaurants/featured', async (req, res) => {
   try {
     // First try to get from our database
     const dbRestaurant = await prisma.restaurant.findFirst({
-      where: { isCurrentPick: true },
+      where: { isFeatured: true },
       orderBy: { createdAt: 'desc' }
     });
 
     console.log('Database restaurant found:', dbRestaurant ? dbRestaurant.name : 'None');
-    console.log('Database restaurant isCurrentPick:', dbRestaurant ? dbRestaurant.isCurrentPick : 'N/A');
+    console.log('Database restaurant isFeatured:', dbRestaurant ? dbRestaurant.isFeatured : 'N/A');
 
     if (dbRestaurant) {
       return res.json({
@@ -349,7 +349,7 @@ app.get('/api/restaurants/featured', async (req, res) => {
           ],
           categories: dbRestaurant.categories || [dbRestaurant.cuisine],
           reviewCount: dbRestaurant.reviewCount || 0,
-          isCurrentPick: true,
+          isFeatured: true,
           lastUpdated: dbRestaurant.createdAt.toISOString()
         }
       });
@@ -367,7 +367,7 @@ app.get('/api/restaurants/featured', async (req, res) => {
           source: 'yelp',
           restaurant: {
             ...formattedRestaurant,
-            isCurrentPick: true,
+            isFeatured: true,
             lastUpdated: new Date().toISOString()
           }
         });
@@ -409,7 +409,7 @@ app.get('/api/restaurants/featured', async (req, res) => {
           photos: fallbackRestaurant.photos || ['https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=300&fit=crop'],
           categories: fallbackRestaurant.categories || [fallbackRestaurant.cuisine],
           reviewCount: fallbackRestaurant.reviewCount || 0,
-          isCurrentPick: true,
+          isFeatured: true,
           lastUpdated: new Date().toISOString()
         }
       });
@@ -451,7 +451,7 @@ app.get('/api/restaurants/featured', async (req, res) => {
         ],
         categories: ['Barbecue', 'BBQ'],
         reviewCount: 1250,
-        isCurrentPick: true,
+        isFeatured: true,
         lastUpdated: new Date().toISOString()
       }
     });
@@ -1466,8 +1466,8 @@ app.get('/api/rsvp', verifySupabaseToken, requireAuth, async (req, res) => {
           select: {
             id: true,
             name: true,
-            cuisine: true,
-            area: true
+            categories: true,
+            city: true
           }
         }
       },
@@ -1553,8 +1553,8 @@ app.get('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, re
           select: {
             id: true,
             name: true,
-            cuisine: true,
-            area: true
+            categories: true,
+            city: true
           }
         }
       },
@@ -1663,8 +1663,8 @@ app.post('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, r
           select: {
             id: true,
             name: true,
-            cuisine: true,
-            area: true
+            categories: true,
+            city: true
           }
         }
       }
@@ -1717,8 +1717,8 @@ app.get('/api/verified-visits/:userId', verifySupabaseToken, requireAuth, async 
           select: {
             id: true,
             name: true,
-            cuisine: true,
-            area: true
+            categories: true,
+            city: true
           }
         }
       },
@@ -1811,10 +1811,10 @@ app.get('/api/wishlist', verifySupabaseToken, requireAuth, async (req, res) => {
           select: {
             id: true,
             name: true,
-            cuisine: true,
-            area: true,
+            categories: true,
+            city: true,
             price: true,
-            description: true,
+            specialNotes: true,
             address: true,
             imageUrl: true
           }
@@ -1889,10 +1889,10 @@ app.post('/api/wishlist', verifySupabaseToken, requireAuth, async (req, res) => 
           select: {
             id: true,
             name: true,
-            cuisine: true,
-            area: true,
+            categories: true,
+            city: true,
             price: true,
-            description: true,
+            specialNotes: true,
             address: true,
             imageUrl: true
           }
@@ -1938,8 +1938,8 @@ app.delete('/api/wishlist/:restaurantId', verifySupabaseToken, requireAuth, asyn
           select: {
             id: true,
             name: true,
-            cuisine: true,
-            area: true
+            categories: true,
+            city: true
           }
         }
       }
