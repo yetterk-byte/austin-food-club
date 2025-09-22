@@ -311,6 +311,60 @@
             color: #888;
         }
         
+        /* Drag and Drop Styles */
+        .queue-item {
+            cursor: move;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .queue-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(32, 178, 170, 0.2);
+        }
+        
+        .queue-item.dragging {
+            opacity: 0.5;
+            transform: rotate(2deg);
+            z-index: 1000;
+        }
+        
+        .queue-item.drag-over {
+            border-color: #20b2aa !important;
+            background: #1a3a3a !important;
+        }
+        
+        .drag-handle {
+            color: #888;
+            cursor: grab;
+            margin-right: 0.75rem;
+            font-size: 1.2rem;
+            user-select: none;
+        }
+        
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+        
+        .queue-position {
+            background: #20b2aa;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-right: 0.75rem;
+            min-width: 2rem;
+            text-align: center;
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+            border-radius: 4px;
+            min-width: 2rem;
+        }
+        
         .loading {
             text-align: center;
             padding: 2rem;
@@ -656,14 +710,19 @@
                     container.innerHTML = '<p style="text-align: center; color: #888; padding: 2rem;">Queue is empty. Add restaurants to start planning.</p>';
                 } else {
                     container.innerHTML = data.queue.map((item, index) => `
-                        <div class="queue-item">
-                            <div>
-                                <h4>#${index + 1} - ${item.restaurant.name}</h4>
-                                <p>${item.restaurant.address}</p>
-                                <p>Added by ${item.admin.name} • ${item.notes || 'No notes'}</p>
+                        <div class="queue-item" data-queue-id="${item.id}" data-position="${item.position}">
+                            <div style="display: flex; align-items: center; flex: 1;">
+                                <span class="queue-position">${item.position}</span>
+                                <div style="flex: 1;">
+                                    <h4>${item.restaurant.name}</h4>
+                                    <p>${item.restaurant.address}</p>
+                                    <p>Added by ${item.admin.name} • ${item.notes || 'No notes'}</p>
+                                </div>
                             </div>
-                            <div>
-                                <button class="btn btn-secondary" onclick="removeFromQueue('${item.id}')">Remove</button>
+                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                ${index > 0 ? `<button class="btn btn-sm" onclick="moveQueueItem('${item.id}', ${item.position - 1})" title="Move Up">↑</button>` : ''}
+                                ${index < data.queue.length - 1 ? `<button class="btn btn-sm" onclick="moveQueueItem('${item.id}', ${item.position + 1})" title="Move Down">↓</button>` : ''}
+                                <button class="btn btn-secondary btn-sm" onclick="removeFromQueue('${item.id}')">Remove</button>
                             </div>
                         </div>
                     `).join('');
@@ -942,6 +1001,144 @@
         function logout() {
             localStorage.removeItem('adminToken');
             window.location.href = '/admin.html';
+        }
+        
+        // Drag and Drop Queue Reordering
+        function addDragAndDropListeners() {
+            const queueItems = document.querySelectorAll('.queue-item');
+            
+            queueItems.forEach(item => {
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragover', handleDragOver);
+                item.addEventListener('drop', handleDrop);
+                item.addEventListener('dragend', handleDragEnd);
+                item.addEventListener('dragenter', handleDragEnter);
+                item.addEventListener('dragleave', handleDragLeave);
+            });
+        }
+        
+        let draggedElement = null;
+        
+        function handleDragStart(e) {
+            draggedElement = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.outerHTML);
+        }
+        
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            e.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+        
+        function handleDragEnter(e) {
+            if (this !== draggedElement) {
+                this.classList.add('drag-over');
+            }
+        }
+        
+        function handleDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+        
+        async function handleDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            
+            if (draggedElement !== this) {
+                const draggedId = draggedElement.getAttribute('data-queue-id');
+                const draggedPosition = parseInt(draggedElement.getAttribute('data-position'));
+                const targetPosition = parseInt(this.getAttribute('data-position'));
+                
+                console.log('Reordering:', { draggedId, draggedPosition, targetPosition });
+                
+                try {
+                    // Get current queue to build new order array
+                    const currentQueue = await apiCall('/api/admin/queue');
+                    
+                    // Create new order array by swapping positions
+                    const newOrder = [];
+                    
+                    // First, create a copy of the queue with updated positions
+                    const queueCopy = [...currentQueue.queue];
+                    
+                    // Find the dragged item and target item
+                    const draggedItem = queueCopy.find(item => item.id === draggedId);
+                    const targetItem = queueCopy.find(item => item.position === targetPosition);
+                    
+                    if (draggedItem && targetItem) {
+                        // Swap positions
+                        const tempPosition = draggedItem.position;
+                        draggedItem.position = targetItem.position;
+                        targetItem.position = tempPosition;
+                        
+                        // Build the new order array
+                        queueCopy.forEach(item => {
+                            newOrder.push({
+                                id: item.id,
+                                position: item.position
+                            });
+                        });
+                        
+                        // Call API to reorder with the expected format
+                        await apiCall('/api/admin/queue/reorder', {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                newOrder: newOrder
+                            })
+                        });
+                        
+                        showMessage('Queue reordered successfully!', 'success');
+                        await loadQueue(); // Refresh the queue
+                        await loadDashboardStats(); // Update stats
+                    }
+                    
+                } catch (error) {
+                    console.error('Reorder error:', error);
+                    showMessage('Failed to reorder queue: ' + error.message, 'error');
+                }
+            }
+            
+            this.classList.remove('drag-over');
+            return false;
+        }
+        
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            
+            // Remove drag-over class from all items
+            document.querySelectorAll('.queue-item').forEach(item => {
+                item.classList.remove('drag-over');
+            });
+            
+            draggedElement = null;
+        }
+        
+        // Move queue item up or down one position (simplified approach)
+        async function moveQueueItem(queueItemId, newPosition) {
+            try {
+                console.log('Moving queue item:', queueItemId, 'to position:', newPosition);
+                
+                // Use the PUT endpoint to update individual queue item
+                const response = await apiCall(`/api/admin/queue/${queueItemId}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        position: newPosition
+                    })
+                });
+                
+                showMessage(`Restaurant moved to position ${newPosition}!`, 'success');
+                await loadQueue();
+                await loadDashboardStats();
+                
+            } catch (error) {
+                console.error('Move queue item error:', error);
+                showMessage('Failed to move restaurant: ' + error.message, 'error');
+            }
         }
         
         // Initialize dashboard (removed duplicate - handled above)
