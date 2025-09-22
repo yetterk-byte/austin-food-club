@@ -4,6 +4,7 @@ import '../models/restaurant.dart';
 import '../services/mock_data_service.dart';
 import '../services/social_service.dart';
 import '../providers/auth_provider.dart';
+import 'test_notifications_screen.dart';
 // import 'photo_verification_screen.dart'; // Temporarily disabled
 
 class ProfileScreen extends StatefulWidget {
@@ -232,6 +233,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             onSelected: (value) async {
                               if (value == 'settings') {
                                 // TODO: Navigate to settings
+                              } else if (value == 'test_notifications') {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const TestNotificationsScreen(),
+                                  ),
+                                );
                               } else if (value == 'signout') {
                                 final authProvider = Provider.of<AuthProvider>(context, listen: false);
                                 await authProvider.signOut();
@@ -245,6 +253,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     Icon(Icons.settings, size: 20),
                                     SizedBox(width: 12),
                                     Text('Settings'),
+                                  ],
+                                ),
+                              ),
+                              const PopupMenuItem(
+                                value: 'test_notifications',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.notifications, size: 20),
+                                    SizedBox(width: 12),
+                                    Text('Test Notifications'),
                                   ],
                                 ),
                               ),
@@ -270,7 +288,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _buildStatItem('Events', totalVisits.toString(), Icons.event),
+                      _buildStatItem('Verified Visits', verifiedVisits.length.toString(), Icons.verified),
                       _buildStatItem('Avg Rating', averageRating.toString(), Icons.star),
                       _buildStatItem('Friends', friendCount.toString(), Icons.people),
                     ],

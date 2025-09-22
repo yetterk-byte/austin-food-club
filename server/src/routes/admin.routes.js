@@ -6,7 +6,39 @@ const yelpService = require('../services/yelpService');
 const router = express.Router();
 const prisma = new PrismaClient();
 
-// Apply admin authentication to all routes
+// Admin login endpoint (no auth required)
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    
+    // Simple demo admin login
+    if (email === 'admin@austinfoodclub.com' && password === 'admin123') {
+      const token = 'demo-admin-token-123';
+      res.json({
+        success: true,
+        token,
+        admin: {
+          id: 'demo-admin',
+          name: 'Austin Food Club Admin',
+          email: 'admin@austinfoodclub.com'
+        }
+      });
+    } else {
+      res.status(401).json({
+        error: 'Invalid credentials',
+        code: 'INVALID_CREDENTIALS'
+      });
+    }
+  } catch (error) {
+    console.error('Admin login error:', error);
+    res.status(500).json({
+      error: 'Login failed',
+      code: 'LOGIN_ERROR'
+    });
+  }
+});
+
+// Apply admin authentication to all other routes
 router.use(requireAdmin);
 
 /**

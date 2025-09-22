@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const CityService = require('../services/cityService');
 const { cityContext, requireActiveCity, clearCityCache } = require('../middleware/cityContext');
-const { adminAuth } = require('../middleware/adminAuth');
+const { requireAdmin } = require('../middleware/adminAuth');
 
 /**
  * City Management Routes for Multi-City Food Club
@@ -91,7 +91,7 @@ router.get('/:slug', async (req, res) => {
  */
 
 // Create new city
-router.post('/', adminAuth, async (req, res) => {
+router.post('/', requireAdmin, async (req, res) => {
   try {
     const cityData = req.body;
     const city = await CityService.createCity(cityData);
@@ -115,7 +115,7 @@ router.post('/', adminAuth, async (req, res) => {
 });
 
 // Update city configuration
-router.put('/:slug', adminAuth, async (req, res) => {
+router.put('/:slug', requireAdmin, async (req, res) => {
   try {
     const { slug } = req.params;
     const updateData = req.body;
@@ -149,7 +149,7 @@ router.put('/:slug', adminAuth, async (req, res) => {
 });
 
 // Initialize default cities (development/setup endpoint)
-router.post('/initialize', adminAuth, async (req, res) => {
+router.post('/initialize', requireAdmin, async (req, res) => {
   try {
     const results = await CityService.initializeDefaultCities();
     
@@ -172,7 +172,7 @@ router.post('/initialize', adminAuth, async (req, res) => {
 });
 
 // Get city-specific statistics
-router.get('/:slug/stats', adminAuth, async (req, res) => {
+router.get('/:slug/stats', requireAdmin, async (req, res) => {
   try {
     const { slug } = req.params;
     const city = await CityService.getCityBySlug(slug);
@@ -216,7 +216,7 @@ router.get('/:slug/stats', adminAuth, async (req, res) => {
 });
 
 // Clear city cache (admin utility)
-router.post('/cache/clear', adminAuth, async (req, res) => {
+router.post('/cache/clear', requireAdmin, async (req, res) => {
   try {
     const { citySlug } = req.body;
     clearCityCache(citySlug);

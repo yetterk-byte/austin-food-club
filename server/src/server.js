@@ -44,18 +44,46 @@ const prisma = new PrismaClient();
 // Middleware
 // CORS configuration for Flutter web (dynamic ports)
 app.use(cors({
-  origin: [
-    'http://localhost:51070',  // Current Flutter port
-    'http://localhost:8080',   // Standard Flutter web port
-    'http://localhost:8081',   // Alternative Flutter ports
-    'http://localhost:8082',
-    'http://localhost:3000',   // React dev server
-    /^http:\/\/localhost:\d+$/ // Allow any localhost port
-  ],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Allow any localhost port for development
+    if (origin.match(/^http:\/\/localhost:\d+$/)) {
+      return callback(null, true);
+    }
+    
+    // Allow specific origins
+    const allowedOrigins = [
+      'http://localhost:51070',
+      'http://localhost:51121',
+      'http://localhost:8080',
+      'http://localhost:8081',
+      'http://localhost:8082',
+      'http://localhost:3000',
+      'http://localhost:3001'
+    ];
+    
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-  optionsSuccessStatus: 200
+  allowedHeaders: [
+    'Content-Type', 
+    'Authorization', 
+    'X-Requested-With', 
+    'Accept',
+    'X-City-Slug',
+    'Access-Control-Allow-Origin',
+    'Access-Control-Allow-Methods',
+    'Access-Control-Allow-Headers'
+  ],
+  optionsSuccessStatus: 200,
+  preflightContinue: false
 }));
 app.use(express.json());
 
