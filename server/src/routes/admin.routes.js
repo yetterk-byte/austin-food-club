@@ -1161,4 +1161,140 @@ router.post('/restaurants/quick-add', async (req, res) => {
   }
 });
 
+/**
+ * POST /api/admin/queue/auto-add
+ * Manually trigger auto-add of new restaurant to queue
+ */
+router.post('/queue/auto-add', async (req, res) => {
+  try {
+    const autoQueueService = require('../services/autoQueueService');
+    
+    console.log('🎯 Manual trigger: Auto-adding restaurant to queue...');
+    
+    const result = await autoQueueService.addNewRestaurantToQueue();
+    
+    await logAdminAction(req.admin.id, 'auto_add_restaurant', result.restaurant.id, 'queue_item', {
+      restaurantName: result.restaurant.name,
+      queuePosition: result.queuePosition,
+      categories: result.restaurant.categories
+    }, req);
+
+    res.json({
+      success: true,
+      message: `${result.restaurant.name} added to queue at position ${result.queuePosition}`,
+      restaurant: result.restaurant,
+      queuePosition: result.queuePosition
+    });
+
+  } catch (error) {
+    console.error('❌ Manual auto-add error:', error);
+    res.status(500).json({ error: 'Failed to auto-add restaurant: ' + error.message });
+  }
+});
+
+/**
+ * GET /api/admin/queue/stats
+ * Get queue statistics and insights
+ */
+router.get('/queue/stats', async (req, res) => {
+  try {
+    const autoQueueService = require('../services/autoQueueService');
+    
+    const stats = await autoQueueService.getQueueStats();
+    
+    await logAdminAction(req.admin.id, 'view_queue_stats', null, 'queue', null, req);
+
+    res.json(stats);
+
+  } catch (error) {
+    console.error('❌ Queue stats error:', error);
+    res.status(500).json({ error: 'Failed to get queue stats: ' + error.message });
+  }
+});
+
+/**
+ * POST /api/admin/rotation/trigger
+ * Manually trigger a rotation for testing auto-queue
+ */
+router.post('/rotation/trigger', async (req, res) => {
+  try {
+    console.log('🔄 Manual rotation trigger initiated...');
+
+    // Get current featured restaurant
+    const currentFeatured = await prisma.restaurant.findFirst({
+      where: { isFeatured: true }
+    });
+
+    // Get next restaurant from queue (position 1)
+    const nextInQueue = await prisma.restaurantQueue.findFirst({
+      where: { status: 'PENDING' },
+      orderBy: { position: 'asc' },
+      include: { restaurant: true }
+    });
+
+    if (!nextInQueue) {
+      return res.status(400).json({ error: 'No restaurants in queue' });
+    }
+
+    // Execute simple rotation - just change featured status
+    await prisma.$transaction(async (tx) => {
+      // Unfeatured current restaurant
+      if (currentFeatured) {
+        await tx.restaurant.update({
+          where: { id: currentFeatured.id },
+          data: { isFeatured: false }
+        });
+      }
+
+      // Feature new restaurant
+      await tx.restaurant.update({
+        where: { id: nextInQueue.restaurantId },
+        data: { 
+          isFeatured: true,
+          featuredDate: new Date(),
+          featuredWeek: new Date()
+        }
+      });
+
+      // Mark queue item as completed (featured) - don't reorder positions for now
+      await tx.restaurantQueue.update({
+        where: { id: nextInQueue.id },
+        data: { status: 'COMPLETED' }
+      });
+    });
+
+    console.log(`✅ Rotation complete: ${nextInQueue.restaurant.name} is now featured`);
+
+    // Auto-add new restaurant to queue
+    try {
+      const autoQueueService = require('../services/autoQueueService');
+      console.log('🎯 Auto-queue: Adding new restaurant after rotation...');
+      
+      const autoQueueResult = await autoQueueService.addNewRestaurantToQueue();
+      console.log(`🎉 Auto-added to queue: ${autoQueueResult.restaurant.name} at position ${autoQueueResult.queuePosition}`);
+      
+    } catch (autoQueueError) {
+      console.error('❌ Auto-queue failed after rotation:', autoQueueError.message);
+      // Don't fail the rotation if auto-queue fails
+    }
+
+    await logAdminAction(req.admin.id, 'manual_rotation_trigger', nextInQueue.restaurantId, 'restaurant', {
+      previousRestaurant: currentFeatured?.name,
+      newRestaurant: nextInQueue.restaurant.name,
+      rotationType: 'manual_test'
+    }, req);
+
+    res.json({
+      success: true,
+      message: `Rotation complete: ${nextInQueue.restaurant.name} is now featured`,
+      previousRestaurant: currentFeatured?.name,
+      newRestaurant: nextInQueue.restaurant.name
+    });
+
+  } catch (error) {
+    console.error('❌ Manual rotation trigger error:', error);
+    res.status(500).json({ error: 'Failed to trigger rotation: ' + error.message });
+  }
+});
+
 module.exports = router;

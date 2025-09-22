@@ -473,6 +473,7 @@
                                style="flex: 1; padding: 0.75rem; border: 1px solid #444; border-radius: 6px; background: #2a2a2a; color: white;">
                         <button class="btn" onclick="searchRestaurants()">🔍 Search Yelp</button>
                         <button class="btn btn-secondary" onclick="refreshQueue()">🔄 Refresh Queue</button>
+                        <button class="btn btn-success" onclick="autoAddRestaurant()">🎯 Auto-Discover Restaurant</button>
                     </div>
                     
                     <div id="searchResults" style="margin-bottom: 1rem;"></div>
@@ -522,6 +523,9 @@
                         Restaurants rotate automatically every Tuesday at 9:00 AM. 
                         Use the queue management to control the order.
                     </p>
+                    <button class="btn btn-warning" onclick="testRotationAndAutoQueue()" style="margin-top: 1rem;">
+                        🧪 Test Rotation + Auto-Queue
+                    </button>
                 </div>
             </div>
             
@@ -1146,6 +1150,74 @@
             }
         }
         
+        // Auto-discover and add restaurant to queue
+        async function autoAddRestaurant() {
+            try {
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = '🔍 Discovering...';
+                button.disabled = true;
+
+                console.log('Auto-discovering restaurant...');
+
+                const response = await apiCall('/api/admin/queue/auto-add', {
+                    method: 'POST'
+                });
+
+                if (response.success) {
+                    showMessage(`🎉 Auto-discovered: ${response.restaurant.name} added to queue at position ${response.queuePosition}!`, 'success');
+                    await loadQueue();
+                    await loadDashboardStats();
+                } else {
+                    showMessage('Failed to auto-discover restaurant', 'error');
+                }
+
+            } catch (error) {
+                console.error('Auto-discover error:', error);
+                showMessage('Failed to auto-discover restaurant: ' + error.message, 'error');
+            } finally {
+                const button = event.target;
+                button.textContent = '🎯 Auto-Discover Restaurant';
+                button.disabled = false;
+            }
+        }
+
+        // Test rotation and auto-queue functionality
+        async function testRotationAndAutoQueue() {
+            try {
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = '🔄 Rotating...';
+                button.disabled = true;
+
+                console.log('Testing rotation + auto-queue...');
+
+                const response = await apiCall('/api/admin/rotation/trigger', {
+                    method: 'POST'
+                });
+
+                if (response.success) {
+                    showMessage(`🎉 Rotation complete! ${response.newRestaurant} is now featured. New restaurant auto-added to queue!`, 'success');
+                    await loadQueue();
+                    await loadDashboardStats();
+                    // Refresh current featured restaurant if that section exists
+                    if (document.getElementById('currentFeaturedRestaurant')) {
+                        loadCurrentFeaturedRestaurant();
+                    }
+                } else {
+                    showMessage('Failed to trigger rotation: ' + response.error, 'error');
+                }
+
+            } catch (error) {
+                console.error('Rotation test error:', error);
+                showMessage('Failed to trigger rotation: ' + error.message, 'error');
+            } finally {
+                const button = event.target;
+                button.textContent = '🧪 Test Rotation + Auto-Queue';
+                button.disabled = false;
+            }
+        }
+
         // Initialize dashboard (removed duplicate - handled above)
     </script>
 </body>

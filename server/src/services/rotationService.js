@@ -334,6 +334,32 @@ class RotationService {
 
       console.log(`✅ Rotation complete: ${nextRestaurant.restaurant.name} is now featured`);
 
+      // Auto-add new restaurant to queue after successful rotation
+      try {
+        const autoQueueService = require('./autoQueueService');
+        console.log('🎯 Auto-queue: Adding new restaurant after rotation...');
+        
+        const autoQueueResult = await autoQueueService.addNewRestaurantToQueue();
+        console.log(`🎉 Auto-added to queue: ${autoQueueResult.restaurant.name} at position ${autoQueueResult.queuePosition}`);
+        
+        // Send notification about new restaurant added
+        await this.sendNotification('QUEUE_UPDATED', {
+          title: 'New Restaurant Added to Queue',
+          message: `${autoQueueResult.restaurant.name} has been automatically added to the queue at position ${autoQueueResult.queuePosition}`,
+          recipientType: 'admin',
+          restaurantId: autoQueueResult.restaurant.id
+        });
+        
+      } catch (autoQueueError) {
+        console.error('❌ Auto-queue failed after rotation:', autoQueueError.message);
+        // Don't fail the rotation if auto-queue fails
+        await this.sendNotification('QUEUE_ERROR', {
+          title: 'Auto-Queue Failed',
+          message: `Failed to automatically add new restaurant after rotation: ${autoQueueError.message}`,
+          recipientType: 'admin'
+        });
+      }
+
       return {
         previousRestaurant: currentRestaurant,
         newRestaurant: nextRestaurant.restaurant,
