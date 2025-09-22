@@ -993,25 +993,59 @@ router.post('/restaurants/quick-add', async (req, res) => {
     
     console.log('🔍 Quick add restaurant:', { yelpId, name });
     
-    // Create restaurant
-    const restaurant = await prisma.restaurant.create({
-      data: {
-        yelpId: yelpId || 'quick-' + Date.now(),
-        name: name || 'Quick Restaurant',
-        slug: (name || 'quick-restaurant').toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Date.now(),
-        address: address || 'Austin, TX',
-        city: 'Austin',
-        state: 'TX',
-        zipCode: '78701',
-        latitude: 30.2672,
-        longitude: -97.7431,
-        imageUrl: imageUrl,
-        price: price || '$$',
-        rating: rating || 0,
-        categories: categories ? JSON.stringify([{alias: 'restaurant', title: categories}]) : null,
-        lastSyncedAt: new Date()
-      }
+    // Check if restaurant already exists
+    let restaurant = await prisma.restaurant.findUnique({
+      where: { yelpId: yelpId }
     });
+
+    if (!restaurant) {
+      // Create new restaurant
+      try {
+        restaurant = await prisma.restaurant.create({
+          data: {
+            yelpId: yelpId || 'quick-' + Date.now(),
+            name: name || 'Quick Restaurant',
+            slug: (name || 'quick-restaurant').toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Date.now(),
+            address: address || 'Austin, TX',
+            city: 'Austin',
+            state: 'TX',
+            zipCode: '78701',
+            latitude: 30.2672,
+            longitude: -97.7431,
+            imageUrl: imageUrl,
+            price: price || '$$',
+            rating: rating || 0,
+            reviewCount: 0,
+            categories: categories ? JSON.stringify([{alias: 'restaurant', title: categories}]) : null,
+            lastSyncedAt: new Date()
+          }
+        });
+        console.log('✅ Created new restaurant:', restaurant.name, 'ID:', restaurant.id);
+      } catch (createError) {
+        console.error('❌ Failed to create restaurant:', createError);
+        return res.status(500).json({ error: 'Failed to create restaurant: ' + createError.message });
+      }
+    } else {
+      console.log('✅ Found existing restaurant:', restaurant.name, 'ID:', restaurant.id);
+    }
+
+    // Check if restaurant is already in queue
+    const existingQueueItem = await prisma.restaurantQueue.findFirst({
+      where: { restaurantId: restaurant.id, status: 'PENDING' }
+    });
+
+    if (existingQueueItem) {
+      return res.status(400).json({ error: 'Restaurant already in queue' });
+    }
+
+    // Check if restaurant is currently featured
+    const currentFeatured = await prisma.restaurant.findFirst({
+      where: { isFeatured: true }
+    });
+
+    if (currentFeatured && currentFeatured.id === restaurant.id) {
+      return res.status(400).json({ error: 'Cannot add currently featured restaurant to queue' });
+    }
 
     // Get admin user
     let adminId = req.admin.id;
@@ -1042,6 +1076,8 @@ router.post('/restaurants/quick-add', async (req, res) => {
     });
     const nextPosition = (lastPosition?.position || 0) + 1;
 
+    console.log('🔧 Adding to queue at position:', nextPosition, 'Admin ID:', adminId);
+
     // Add to queue
     const queueItem = await prisma.restaurantQueue.create({
       data: {
@@ -1051,6 +1087,8 @@ router.post('/restaurants/quick-add', async (req, res) => {
         notes: notes || 'Added from quick add'
       }
     });
+
+    console.log('✅ Successfully added to queue:', queueItem.id);
 
     res.json({ 
       success: true,

@@ -797,8 +797,13 @@
                 resultsContainer.innerHTML = `
                     <h4 style="color: #20b2aa; margin-bottom: 1rem;">Search Results (${data.restaurants.length})</h4>
                     <div class="search-results">
-                        ${data.restaurants.map((restaurant, index) => `
-                            <div class="search-result-item" data-restaurant='${JSON.stringify(restaurant)}'>
+                        ${data.restaurants.map((restaurant, index) => {
+                            // Store restaurant data in a global variable to avoid JSON escaping issues
+                            window.searchResults = window.searchResults || {};
+                            window.searchResults[restaurant.yelpId] = restaurant;
+                            
+                            return `
+                            <div class="search-result-item" data-yelp-id="${restaurant.yelpId}">
                                 <div class="search-result-info">
                                     <h4>${restaurant.name}</h4>
                                     <p>📍 ${restaurant.address}</p>
@@ -815,7 +820,8 @@
                                     </button>
                                 </div>
                             </div>
-                        `).join('')}
+                        `;
+                        }).join('')}
                     </div>
                 `;
             } catch (error) {
@@ -824,12 +830,17 @@
             }
         }
         
-        // Add restaurant from search results to queue (new simplified approach)
+        // Add restaurant from search results to queue (fixed approach)
         async function addRestaurantFromSearch(buttonElement) {
             try {
-                // Get restaurant data from the parent element
+                // Get restaurant data from global storage (avoids JSON parsing issues)
                 const searchItem = buttonElement.closest('.search-result-item');
-                const restaurantData = JSON.parse(searchItem.getAttribute('data-restaurant'));
+                const yelpId = searchItem.getAttribute('data-yelp-id');
+                const restaurantData = window.searchResults[yelpId];
+                
+                if (!restaurantData) {
+                    throw new Error('Restaurant data not found. Please search again.');
+                }
                 
                 console.log('Adding restaurant to queue:', restaurantData);
                 
@@ -861,6 +872,7 @@
                     // Clear search results and refresh
                     document.getElementById('searchResults').innerHTML = '';
                     document.getElementById('restaurantSearch').value = '';
+                    window.searchResults = {}; // Clear search data
                     await loadCurrentlyFeatured();
                     await loadQueue();
                     await loadDashboardStats();
