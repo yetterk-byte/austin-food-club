@@ -163,27 +163,41 @@ router.post('/queue', logAdminActionMiddleware('add_to_queue', 'restaurant'), as
 
     const nextPosition = (lastPosition?.position || 0) + 1;
 
-    // Handle demo admin - create a demo user if needed
+    // Handle demo admin - ensure user exists in database
     let adminId = req.admin.id;
     if (adminId === 'demo-admin') {
-      // Create or find demo admin user
+      // Try to find existing demo user first
       let demoUser = await prisma.user.findUnique({
         where: { email: 'admin@austinfoodclub.com' }
       });
       
       if (!demoUser) {
-        demoUser = await prisma.user.create({
-          data: {
-            supabaseId: 'demo-admin-supabase-id',
-            email: 'admin@austinfoodclub.com',
-            name: 'Austin Food Club Admin',
-            isAdmin: true,
-            emailVerified: true,
-            provider: 'demo'
+        // Create demo admin user if it doesn't exist
+        try {
+          demoUser = await prisma.user.create({
+            data: {
+              supabaseId: 'demo-admin-supabase-id-' + Date.now(),
+              email: 'admin@austinfoodclub.com',
+              name: 'Austin Food Club Admin',
+              isAdmin: true,
+              emailVerified: true,
+              provider: 'demo'
+            }
+          });
+          console.log('✅ Created demo admin user for queue:', demoUser.id);
+        } catch (createError) {
+          console.error('❌ Failed to create demo admin user for queue:', createError);
+          // Try to find if user was created by another request
+          demoUser = await prisma.user.findUnique({
+            where: { email: 'admin@austinfoodclub.com' }
+          });
+          if (!demoUser) {
+            throw new Error('Could not create or find demo admin user');
           }
-        });
+        }
       }
       adminId = demoUser.id;
+      console.log('🔧 Using demo admin ID for queue:', adminId);
     }
 
     // Add to queue
@@ -765,6 +779,8 @@ router.post('/restaurants/add-from-yelp', async (req, res) => {
   try {
     const { yelpId, notes, addToQueue = true, queuePosition, restaurantData } = req.body;
     
+    console.log('🔍 Add from Yelp request:', { yelpId, addToQueue, restaurantData: restaurantData?.name });
+    
     if (!yelpId) {
       return res.status(400).json({ error: 'Yelp ID is required' });
     }
@@ -775,59 +791,83 @@ router.post('/restaurants/add-from-yelp', async (req, res) => {
     });
 
     if (!restaurant) {
-      // Create restaurant with basic data (will be synced later with full details)
-      restaurant = await prisma.restaurant.create({
-        data: {
-          yelpId: yelpId,
-          name: restaurantData?.name || `Restaurant ${yelpId}`,
-          slug: restaurantData?.name?.toLowerCase().replace(/\s+/g, '-') || `restaurant-${yelpId}`,
-          address: restaurantData?.address || 'Austin, TX',
-          city: 'Austin',
-          state: 'TX',
-          zipCode: '78701',
-          latitude: 30.2672, // Default Austin coordinates
-          longitude: -97.7431,
-          imageUrl: restaurantData?.imageUrl || null,
-          price: restaurantData?.price || '$$',
-          rating: restaurantData?.rating || 0,
-          reviewCount: restaurantData?.reviewCount || 0,
-          categories: restaurantData?.categories ? JSON.stringify([{alias: 'restaurant', title: restaurantData.categories}]) : null,
-          lastSyncedAt: new Date()
-        }
+      // Create restaurant with minimal required data
+      try {
+        const restaurantName = restaurantData?.name || `Restaurant ${yelpId}`;
+        const restaurantSlug = restaurantName.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Date.now();
+        
+        restaurant = await prisma.restaurant.create({
+          data: {
+            yelpId: yelpId,
+            name: restaurantName,
+            slug: restaurantSlug,
+            address: restaurantData?.address || 'Austin, TX',
+            city: 'Austin',
+            state: 'TX',
+            zipCode: '78701',
+            latitude: 30.2672,
+            longitude: -97.7431,
+            imageUrl: restaurantData?.imageUrl,
+            price: restaurantData?.price || '$$',
+            rating: restaurantData?.rating || 0,
+            reviewCount: restaurantData?.reviewCount || 0,
+            categories: restaurantData?.categories ? JSON.stringify([{alias: 'restaurant', title: restaurantData.categories}]) : null,
+            lastSyncedAt: new Date()
+          }
+        });
+        console.log('✅ Created restaurant:', restaurant.name, 'ID:', restaurant.id);
+      } catch (createError) {
+        console.error('❌ Failed to create restaurant:', createError);
+        return res.status(500).json({ error: 'Failed to create restaurant: ' + createError.message });
+      }
+    } else {
+      console.log('✅ Found existing restaurant:', restaurant.name, 'ID:', restaurant.id);
+    }
+
+    if (!addToQueue) {
+      await logAdminAction(req.admin.id, 'add_restaurant_from_yelp', restaurant.id, 'restaurant', { yelpId, addedToQueue: false }, req);
+      return res.status(201).json({ 
+        restaurant,
+        message: 'Restaurant added to database successfully'
       });
     }
 
-    // Add to queue if requested
-    if (addToQueue) {
-      // Check if restaurant is already in queue
-      const existingQueueItem = await prisma.restaurantQueue.findFirst({
-        where: { restaurantId: restaurant.id, status: 'PENDING' }
+    // Check if restaurant is already in queue
+    const existingQueueItem = await prisma.restaurantQueue.findFirst({
+      where: { restaurantId: restaurant.id, status: 'PENDING' }
+    });
+
+    if (existingQueueItem) {
+      return res.status(400).json({ error: 'Restaurant already in queue' });
+    }
+
+    // Check if restaurant is currently featured
+    const currentFeatured = await prisma.restaurant.findFirst({
+      where: { isFeatured: true }
+    });
+
+    if (currentFeatured && currentFeatured.id === restaurant.id) {
+      return res.status(400).json({ error: 'Cannot add currently featured restaurant to queue' });
+    }
+
+    // Handle demo admin user creation
+    let adminId = req.admin.id;
+    if (adminId === 'demo-admin') {
+      console.log('🔧 Creating/finding demo admin user...');
+      let demoUser = await prisma.user.findFirst({
+        where: { 
+          OR: [
+            { email: 'admin@austinfoodclub.com' },
+            { supabaseId: { startsWith: 'demo-admin-supabase-id' } }
+          ]
+        }
       });
-
-      if (existingQueueItem) {
-        return res.status(400).json({ error: 'Restaurant already in queue' });
-      }
-
-      // Check if restaurant is currently featured
-      const currentFeatured = await prisma.restaurant.findFirst({
-        where: { isFeatured: true }
-      });
-
-      if (currentFeatured && currentFeatured.id === restaurant.id) {
-        return res.status(400).json({ error: 'Cannot add currently featured restaurant to queue' });
-      }
-
-      // Handle demo admin
-      let adminId = req.admin.id;
-      if (adminId === 'demo-admin') {
-        let demoUser = await prisma.user.findUnique({
-          where: { email: 'admin@austinfoodclub.com' }
-        });
-        
-        if (!demoUser) {
+      
+      if (!demoUser) {
+        try {
           demoUser = await prisma.user.create({
             data: {
-              supabaseId: 'demo-admin-supabase-id',
+              supabaseId: 'demo-admin-supabase-id-' + Date.now(),
               email: 'admin@austinfoodclub.com',
               name: 'Austin Food Club Admin',
               isAdmin: true,
@@ -835,18 +875,27 @@ router.post('/restaurants/add-from-yelp', async (req, res) => {
               provider: 'demo'
             }
           });
+          console.log('✅ Created demo admin user:', demoUser.id);
+        } catch (createError) {
+          console.error('❌ Failed to create demo admin user:', createError);
+          return res.status(500).json({ error: 'Failed to create admin user' });
         }
-        adminId = demoUser.id;
       }
+      adminId = demoUser.id;
+      console.log('🔧 Using admin ID:', adminId);
+    }
 
-      // Get next position
-      const lastPosition = await prisma.restaurantQueue.findFirst({
-        orderBy: { position: 'desc' },
-        select: { position: true }
-      });
-      const nextPosition = queuePosition || (lastPosition?.position || 0) + 1;
+    // Get next position in queue
+    const lastPosition = await prisma.restaurantQueue.findFirst({
+      orderBy: { position: 'desc' },
+      select: { position: true }
+    });
+    const nextPosition = queuePosition || (lastPosition?.position || 0) + 1;
 
-      // Add to queue
+    console.log('🔧 Adding to queue at position:', nextPosition);
+
+    // Add to queue
+    try {
       const queueItem = await prisma.restaurantQueue.create({
         data: {
           restaurantId: restaurant.id,
@@ -867,6 +916,8 @@ router.post('/restaurants/add-from-yelp', async (req, res) => {
         }
       });
 
+      console.log('✅ Added to queue successfully:', queueItem.id);
+
       await logAdminAction(req.admin.id, 'add_restaurant_from_yelp', restaurant.id, 'restaurant', { yelpId, addedToQueue: true }, req);
       
       res.status(201).json({ 
@@ -874,17 +925,89 @@ router.post('/restaurants/add-from-yelp', async (req, res) => {
         queueItem,
         message: 'Restaurant added to database and queue successfully'
       });
-    } else {
-      await logAdminAction(req.admin.id, 'add_restaurant_from_yelp', restaurant.id, 'restaurant', { yelpId, addedToQueue: false }, req);
-      
-      res.status(201).json({ 
-        restaurant,
-        message: 'Restaurant added to database successfully'
-      });
+    } catch (queueError) {
+      console.error('❌ Failed to add to queue:', queueError);
+      return res.status(500).json({ error: 'Failed to add to queue: ' + queueError.message });
     }
+
   } catch (error) {
-    console.error('Add restaurant from Yelp error:', error);
-    res.status(500).json({ error: 'Failed to add restaurant from Yelp' });
+    console.error('❌ Add restaurant from Yelp error:', error);
+    res.status(500).json({ error: 'Failed to add restaurant from Yelp: ' + error.message });
+  }
+});
+
+/**
+ * POST /api/admin/test-add-restaurant
+ * Simple test endpoint for adding restaurants
+ */
+router.post('/test-add-restaurant', async (req, res) => {
+  try {
+    console.log('🔍 Test add restaurant - Admin:', req.admin);
+    
+    // Create a simple test restaurant
+    const restaurant = await prisma.restaurant.create({
+      data: {
+        yelpId: 'test-' + Date.now(),
+        name: 'Test Restaurant ' + Date.now(),
+        slug: 'test-restaurant-' + Date.now(),
+        address: 'Test Address',
+        city: 'Austin',
+        state: 'TX',
+        zipCode: '78701',
+        latitude: 30.2672,
+        longitude: -97.7431,
+        lastSyncedAt: new Date()
+      }
+    });
+
+    console.log('✅ Created test restaurant:', restaurant.id);
+
+    // Handle demo admin
+    let adminId = req.admin.id;
+    if (adminId === 'demo-admin') {
+      let demoUser = await prisma.user.findFirst({
+        where: { email: 'admin@austinfoodclub.com' }
+      });
+      
+      if (!demoUser) {
+        demoUser = await prisma.user.create({
+          data: {
+            supabaseId: 'demo-admin-test-' + Date.now(),
+            email: 'admin@austinfoodclub.com',
+            name: 'Austin Food Club Admin',
+            isAdmin: true,
+            emailVerified: true,
+            provider: 'demo'
+          }
+        });
+      }
+      adminId = demoUser.id;
+    }
+
+    console.log('🔧 Using admin ID:', adminId);
+
+    // Add to queue
+    const queueItem = await prisma.restaurantQueue.create({
+      data: {
+        restaurantId: restaurant.id,
+        position: 1,
+        addedBy: adminId,
+        notes: 'Test queue item'
+      }
+    });
+
+    console.log('✅ Added to queue:', queueItem.id);
+
+    res.json({ 
+      success: true, 
+      restaurant: restaurant.name,
+      queueItem: queueItem.id,
+      adminId: adminId
+    });
+
+  } catch (error) {
+    console.error('❌ Test add restaurant error:', error);
+    res.status(500).json({ error: error.message });
   }
 });
 
