@@ -31,6 +31,7 @@ const apiRouter = require('./routes/apiRouter');
 const simpleRestaurantRoutes = require('./routes/simpleRestaurantRoutes');
 const adminRoutes = require('./routes/admin.routes'); // Admin routes
 const rotationRoutes = require('./routes/rotation.routes'); // Rotation routes
+const cityRoutes = require('./routes/city.routes'); // City routes for multi-city support
 
 const app = express();
 const PORT = 3001;
@@ -67,6 +68,9 @@ app.use('/api/admin', adminRoutes);
 
 // Rotation routes (protected)
 app.use('/api/rotation', rotationRoutes);
+
+// City routes (multi-city support)
+app.use('/api/cities', cityRoutes);
 
 // Test endpoint
 app.get('/api/test', (req, res) => {

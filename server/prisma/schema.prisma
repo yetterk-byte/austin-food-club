@@ -17,6 +17,7 @@ model User {
   provider       String?
   emailVerified  Boolean         @default(false)
   isAdmin        Boolean         @default(false) // Admin access control
+  cityId         String?         // User's primary city
   lastLogin      DateTime?
   createdAt      DateTime        @default(now())
   verifiedVisits VerifiedVisit[]
@@ -26,18 +27,58 @@ model User {
   wishlists      Wishlist[]
   restaurantQueue RestaurantQueue[] // Restaurants added by this admin
   adminLogs      AdminLog[] // Admin actions performed by this user
+  
+  // Relations
+  city           City?           @relation(fields: [cityId], references: [id])
 
   @@map("users")
+}
+
+// City Configuration for Multi-City Support
+model City {
+  id              String    @id @default(cuid())
+  name            String    @unique // "Austin", "New Orleans", "Boston", "New York"
+  slug            String    @unique // "austin", "nola", "boston", "nyc"
+  state           String    // "TX", "LA", "MA", "NY"
+  displayName     String    // "Austin Food Club", "NOLA Food Club"
+  timezone        String    // "America/Chicago", "America/New_York"
+  
+  // Yelp API Configuration
+  yelpLocation    String    // "Austin, TX", "New Orleans, LA"
+  yelpRadius      Int       @default(24140) // Search radius in meters
+  
+  // Branding
+  brandColor      String    @default("#20b2aa") // Primary brand color
+  logoUrl         String?   // City-specific logo
+  heroImageUrl    String?   // Default hero image
+  
+  // App Configuration  
+  rotationDay     String    @default("tuesday")
+  rotationTime    String    @default("09:00")
+  minQueueSize    Int       @default(3)
+  
+  // Status
+  isActive        Boolean   @default(true)
+  launchDate      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  // Relations
+  users           User[]
+  restaurants     Restaurant[]
+  rotationConfigs RotationConfig[]
+  
+  @@map("cities")
 }
 
 model Restaurant {
   id             String          @id @default(cuid())
   yelpId         String          @unique
   name           String
-  slug           String          @unique
+  slug           String          
   address        String
-  city           String          @default("Austin")
-  state          String          @default("TX")
+  cityName       String          @default("Austin") // Keep for backward compatibility
+  state          String          
   zipCode        String
   latitude       Float
   longitude      Float
@@ -56,6 +97,7 @@ model Restaurant {
   expectedWait   String?
   dressCode      String?
   parkingInfo    String?
+  cityId         String?         // Foreign key to City (nullable for migration)
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   lastSyncedAt   DateTime?
@@ -70,7 +112,11 @@ model Restaurant {
   timesFeatures    Int       @default(0) // How many times this restaurant has been featured
   averageRating    Float?    // Calculated average rating from verified visits
   totalRsvps       Int       @default(0) // Total RSVPs across all features
+  
+  // Relations
+  city           City?           @relation(fields: [cityId], references: [id])
 
+  @@unique([slug, cityId]) // Unique slug per city
   @@map("restaurants")
 }
 
@@ -167,14 +213,14 @@ model AdminLog {
   @@map("admin_logs")
 }
 
-// Rotation Configuration - Simplified Automatic Only
+// Rotation Configuration - City-Specific Automatic Only
 model RotationConfig {
   id               String      @id @default(cuid())
+  cityId           String?     // Foreign key to City (nullable for migration)
   rotationDay      String      @default("tuesday") // Day of week for rotation
   rotationTime     String      @default("09:00")  // Time of day (24h format)
   isActive         Boolean     @default(true)
   nextRotationDate DateTime?   // Calculated next rotation date
-  timezone         String      @default("America/Chicago") // Austin timezone
   
   // Notification settings
   notifyAdmins     Boolean     @default(true)
@@ -187,6 +233,10 @@ model RotationConfig {
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
   
+  // Relations
+  city             City?       @relation(fields: [cityId], references: [id])
+  
+  @@unique([cityId]) // One rotation config per city
   @@map("rotation_config")
 }
 

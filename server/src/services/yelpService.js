@@ -10,11 +10,9 @@ class YelpService {
     this.cacheTimeout = 60 * 60 * 1000; // 1 hour in milliseconds
     this.fallbackService = fallbackService;
     
-    // Austin-specific configuration
-    this.austinConfig = {
-      location: 'Austin, TX',
+    // City-specific configurations (can be overridden by database)
+    this.defaultConfig = {
       radius: 24140, // 15 miles in meters
-      downtownCoords: { latitude: 30.2672, longitude: -97.7431 },
       priceRanges: ['1', '2', '3', '4'], // $, $$, $$$, $$$$
       featuredCategories: [
         'bbq', 'mexican', 'tradamerican', 'italian', 'chinese', 
@@ -25,6 +23,14 @@ class YelpService {
         'fastfood', 'sandwiches', 'coffee', 'icecream', 'donuts',
         'pizza', 'burgers', 'chicken_wings', 'hotdogs'
       ]
+    };
+    
+    // City-specific downtown coordinates (for distance calculations)
+    this.cityCoords = {
+      austin: { latitude: 30.2672, longitude: -97.7431 },
+      nola: { latitude: 29.9511, longitude: -90.0715 },
+      boston: { latitude: 42.3601, longitude: -71.0589 },
+      nyc: { latitude: 40.7128, longitude: -74.0060 }
     };
     
     if (!this.apiKey) {
@@ -118,15 +124,27 @@ class YelpService {
     }
   }
 
-  // Search restaurants with Austin-specific parameters
-  async searchRestaurants(location = null, cuisine = null, price = null, limit = 20, searchTerm = null) {
+  // Search restaurants with city-aware parameters
+  async searchRestaurants(locationOrConfig = null, cuisine = null, price = null, limit = 20, searchTerm = null) {
     if (!this.isConfigured()) {
       throw new Error('Yelp API not configured. Please set YELP_API_KEY in environment variables.');
     }
 
-    // Use Austin config if no location specified
-    const searchLocation = location || this.austinConfig.location;
-    const searchRadius = this.austinConfig.radius;
+    // Handle both legacy string location and new city config object
+    let searchLocation, searchRadius, citySlug;
+    
+    if (typeof locationOrConfig === 'string' || locationOrConfig === null) {
+      // Legacy format - location string or null (default to Austin)
+      searchLocation = locationOrConfig || 'Austin, TX';
+      searchRadius = this.defaultConfig.radius;
+      citySlug = 'austin';
+    } else {
+      // New format - city config object
+      const cityConfig = locationOrConfig;
+      searchLocation = cityConfig.yelpLocation || cityConfig.location || 'Austin, TX';
+      searchRadius = cityConfig.yelpRadius || this.defaultConfig.radius;
+      citySlug = cityConfig.slug || 'austin';
+    }
 
     const cacheKey = this.getCacheKey('search', { location: searchLocation, cuisine, price, limit, searchTerm });
     const cached = this.getFromCache(cacheKey);
