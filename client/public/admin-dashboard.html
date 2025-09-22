@@ -797,8 +797,8 @@
                 resultsContainer.innerHTML = `
                     <h4 style="color: #20b2aa; margin-bottom: 1rem;">Search Results (${data.restaurants.length})</h4>
                     <div class="search-results">
-                        ${data.restaurants.map(restaurant => `
-                            <div class="search-result-item">
+                        ${data.restaurants.map((restaurant, index) => `
+                            <div class="search-result-item" data-restaurant='${JSON.stringify(restaurant)}'>
                                 <div class="search-result-info">
                                     <h4>${restaurant.name}</h4>
                                     <p>📍 ${restaurant.address}</p>
@@ -810,7 +810,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <button class="btn" onclick="addRestaurantToQueue('${restaurant.yelpId}', '${restaurant.name.replace(/'/g, "\\'")}', ${JSON.stringify(restaurant).replace(/'/g, "\\'")})">
+                                    <button class="btn" onclick="addRestaurantFromSearch(this)">
                                         + Add to Queue
                                     </button>
                                 </div>
@@ -824,16 +824,25 @@
             }
         }
         
-        // Add restaurant from Yelp search to queue
-        async function addRestaurantToQueue(yelpId, restaurantName, restaurantDataStr) {
+        // Add restaurant from search results to queue (new simplified approach)
+        async function addRestaurantFromSearch(buttonElement) {
             try {
-                const restaurantData = JSON.parse(restaurantDataStr);
-                const notes = prompt(`Add notes for ${restaurantName}:`) || `Added ${restaurantName} from Yelp search`;
+                // Get restaurant data from the parent element
+                const searchItem = buttonElement.closest('.search-result-item');
+                const restaurantData = JSON.parse(searchItem.getAttribute('data-restaurant'));
                 
-                const data = await apiCall('/api/admin/restaurants/quick-add', {
+                console.log('Adding restaurant to queue:', restaurantData);
+                
+                const notes = prompt(`Add notes for ${restaurantData.name}:`) || `Added ${restaurantData.name} from Yelp search`;
+                
+                // Disable button to prevent double-clicks
+                buttonElement.disabled = true;
+                buttonElement.textContent = 'Adding...';
+                
+                const response = await apiCall('/api/admin/restaurants/quick-add', {
                     method: 'POST',
                     body: JSON.stringify({
-                        yelpId: yelpId,
+                        yelpId: restaurantData.yelpId,
                         name: restaurantData.name,
                         address: restaurantData.address,
                         rating: restaurantData.rating,
@@ -844,22 +853,34 @@
                     })
                 });
                 
-                showMessage(`${restaurantName} added to queue successfully!`, 'success');
+                console.log('Add to queue response:', response);
                 
-                // Clear search results and refresh queue
-                document.getElementById('searchResults').innerHTML = '';
-                document.getElementById('restaurantSearch').value = '';
-                await loadCurrentlyFeatured();
-                await loadQueue();
-                await loadDashboardStats();
+                if (response.success) {
+                    showMessage(`${restaurantData.name} added to queue at position ${response.position}!`, 'success');
+                    
+                    // Clear search results and refresh
+                    document.getElementById('searchResults').innerHTML = '';
+                    document.getElementById('restaurantSearch').value = '';
+                    await loadCurrentlyFeatured();
+                    await loadQueue();
+                    await loadDashboardStats();
+                } else {
+                    throw new Error(response.error || 'Failed to add restaurant');
+                }
                 
             } catch (error) {
+                console.error('Add to queue error:', error);
+                
+                // Re-enable button
+                buttonElement.disabled = false;
+                buttonElement.textContent = '+ Add to Queue';
+                
                 if (error.message.includes('already in queue')) {
-                    showMessage(`${restaurantName} is already in the queue!`, 'error');
+                    showMessage(`Restaurant is already in the queue!`, 'error');
                 } else if (error.message.includes('currently featured')) {
-                    showMessage(`${restaurantName} is currently featured and cannot be added to queue`, 'error');
+                    showMessage(`Restaurant is currently featured and cannot be added to queue`, 'error');
                 } else {
-                    showMessage(`Failed to add ${restaurantName}: ${error.message}`, 'error');
+                    showMessage(`Failed to add restaurant: ${error.message}`, 'error');
                 }
             }
         }
