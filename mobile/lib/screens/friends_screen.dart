@@ -16,18 +16,23 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
   late TabController _tabController;
   List<Friend> friends = [];
   List<SocialFeedItem> socialFeed = [];
+  List<User> searchResults = [];
   bool isLoading = true;
+  bool isSearching = false;
+  String searchQuery = '';
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     _loadData();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -55,6 +60,100 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
     }
   }
 
+  Future<void> _searchFriends(String query) async {
+    setState(() {
+      isSearching = true;
+    });
+
+    try {
+      // Simulate API call to search users
+      await Future.delayed(const Duration(milliseconds: 500));
+      
+      // Mock search results based on query
+      final mockUsers = [
+        User(
+          id: 'search_1',
+          email: 'emma.wilson@email.com',
+          name: 'Emma Wilson',
+          isVerified: true,
+          createdAt: DateTime.now(),
+        ),
+        User(
+          id: 'search_2',
+          email: 'david.martinez@email.com',
+          name: 'David Martinez',
+          isVerified: true,
+          createdAt: DateTime.now(),
+        ),
+        User(
+          id: 'search_3',
+          email: 'lisa.taylor@email.com',
+          name: 'Lisa Taylor',
+          isVerified: false,
+          createdAt: DateTime.now(),
+        ),
+        User(
+          id: 'search_4',
+          email: 'james.brown@email.com',
+          name: 'James Brown',
+          isVerified: true,
+          createdAt: DateTime.now(),
+        ),
+      ];
+
+      // Filter based on search query
+      final filteredUsers = mockUsers.where((user) {
+        final nameMatch = user.name.toLowerCase().contains(query.toLowerCase());
+        final emailMatch = user.email.toLowerCase().contains(query.toLowerCase());
+        return nameMatch || emailMatch;
+      }).toList();
+
+      setState(() {
+        searchResults = filteredUsers;
+      });
+    } catch (e) {
+      print('Error searching friends: $e');
+    }
+  }
+
+  Future<void> _addFriend(User user) async {
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final userId = authProvider.currentUser?.id ?? '1';
+      
+      // Simulate API call to add friend
+      await Future.delayed(const Duration(milliseconds: 300));
+      
+      // Create new friend object
+      final newFriend = Friend(
+        id: 'friend_${user.id}',
+        userId: userId,
+        friendId: user.id,
+        friendUser: user,
+        status: 'accepted',
+        createdAt: DateTime.now(),
+      );
+      
+      setState(() {
+        friends.add(newFriend);
+      });
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${user.name} added to friends!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to add friend: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,7 +178,6 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
           tabs: const [
             Tab(text: 'My Friends'),
             Tab(text: 'Activity'),
-            Tab(text: 'Discover'),
           ],
         ),
       ),
@@ -88,13 +186,73 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
         children: [
           _buildFriendsTab(),
           _buildActivityTab(),
-          _buildDiscoverTab(),
         ],
       ),
     );
   }
 
   Widget _buildFriendsTab() {
+    return Column(
+      children: [
+        // Search Bar
+        Container(
+          padding: const EdgeInsets.all(16),
+          child: TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              hintText: 'Search for friends by name or email...',
+              prefixIcon: const Icon(Icons.search, color: Colors.orange),
+              suffixIcon: searchQuery.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        _searchController.clear();
+                        setState(() {
+                          searchQuery = '';
+                          searchResults.clear();
+                          isSearching = false;
+                        });
+                      },
+                    )
+                  : null,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.grey[700]!),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Colors.orange),
+              ),
+              filled: true,
+              fillColor: Colors.grey[900],
+            ),
+            onChanged: (value) {
+              setState(() {
+                searchQuery = value;
+              });
+              if (value.isNotEmpty) {
+                _searchFriends(value);
+              } else {
+                setState(() {
+                  searchResults.clear();
+                  isSearching = false;
+                });
+              }
+            },
+          ),
+        ),
+        
+        // Content Area
+        Expanded(
+          child: isSearching 
+              ? _buildSearchResults()
+              : _buildMyFriendsList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMyFriendsList() {
     if (isLoading) {
       return const Center(child: CircularProgressIndicator(color: Colors.orange));
     }
@@ -112,19 +270,9 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
             ),
             const SizedBox(height: 12),
             Text(
-              'Add friends to see their weekly event attendance!',
+              'Search above to find and add friends!',
               style: TextStyle(color: Colors.grey[500]),
               textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 32),
-            ElevatedButton.icon(
-              onPressed: _showAddFriendDialog,
-              icon: const Icon(Icons.person_add),
-              label: const Text('Add Friends'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                foregroundColor: Colors.white,
-              ),
             ),
           ],
         ),
@@ -135,13 +283,88 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
       onRefresh: _loadData,
       color: Colors.orange,
       child: ListView.builder(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 120), // Extra bottom padding for floating buttons
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 120), // Extra bottom padding for floating buttons
         itemCount: friends.length,
         itemBuilder: (context, index) {
           final friend = friends[index];
           return _buildFriendCard(friend);
         },
       ),
+    );
+  }
+
+  Widget _buildSearchResults() {
+    if (searchResults.isEmpty && searchQuery.isNotEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.search_off, size: 60, color: Colors.grey[600]),
+            const SizedBox(height: 16),
+            Text(
+              'No users found',
+              style: TextStyle(fontSize: 18, color: Colors.grey[400]),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Try a different search term',
+              style: TextStyle(color: Colors.grey[500]),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 120),
+      itemCount: searchResults.length,
+      itemBuilder: (context, index) {
+        final user = searchResults[index];
+        final isAlreadyFriend = friends.any((f) => f.friendUser.id == user.id);
+        
+        return Card(
+          margin: const EdgeInsets.only(bottom: 12),
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Colors.orange,
+              child: Text(
+                user.initials,
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
+            title: Text(
+              user.name,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+            subtitle: Text(
+              user.email,
+              style: TextStyle(color: Colors.grey[400], fontSize: 13),
+            ),
+            trailing: isAlreadyFriend
+                ? Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.green.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.green),
+                    ),
+                    child: const Text(
+                      'Friends',
+                      style: TextStyle(color: Colors.green, fontSize: 12),
+                    ),
+                  )
+                : ElevatedButton(
+                    onPressed: () => _addFriend(user),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    ),
+                    child: const Text('Add', style: TextStyle(fontSize: 12)),
+                  ),
+          ),
+        );
+      },
     );
   }
 
@@ -677,77 +900,19 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
     );
   }
 
-  Widget _buildDiscoverTab() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.search, size: 80, color: Colors.grey[600]),
-          const SizedBox(height: 24),
-          Text(
-            'Find Friends',
-            style: TextStyle(fontSize: 20, color: Colors.grey[400]),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Search for friends by name or email',
-            style: TextStyle(color: Colors.grey[500]),
-          ),
-          const SizedBox(height: 32),
-          ElevatedButton.icon(
-            onPressed: _showAddFriendDialog,
-            icon: const Icon(Icons.search),
-            label: const Text('Search Friends'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange,
-              foregroundColor: Colors.white,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   void _showAddFriendDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.grey[900],
-        title: const Text('Add Friend'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Search for friends by name:'),
-            const SizedBox(height: 16),
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Enter name...',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                prefixIcon: const Icon(Icons.search),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // TODO: Implement search
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Friend search coming soon!'),
-                  backgroundColor: Colors.orange,
-                ),
-              );
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-            child: const Text('Search'),
-          ),
-        ],
+    // Switch to My Friends tab and focus search
+    _tabController.animateTo(0);
+    Future.delayed(const Duration(milliseconds: 300), () {
+      FocusScope.of(context).requestFocus(FocusNode());
+    });
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Use the search bar above to find friends!'),
+        backgroundColor: Colors.orange,
+        duration: Duration(seconds: 2),
       ),
     );
   }
