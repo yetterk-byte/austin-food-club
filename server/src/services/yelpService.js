@@ -119,7 +119,7 @@ class YelpService {
   }
 
   // Search restaurants with Austin-specific parameters
-  async searchRestaurants(location = null, cuisine = null, price = null, limit = 20) {
+  async searchRestaurants(location = null, cuisine = null, price = null, limit = 20, searchTerm = null) {
     if (!this.isConfigured()) {
       throw new Error('Yelp API not configured. Please set YELP_API_KEY in environment variables.');
     }
@@ -128,7 +128,7 @@ class YelpService {
     const searchLocation = location || this.austinConfig.location;
     const searchRadius = this.austinConfig.radius;
 
-    const cacheKey = this.getCacheKey('search', { location: searchLocation, cuisine, price, limit });
+    const cacheKey = this.getCacheKey('search', { location: searchLocation, cuisine, price, limit, searchTerm });
     const cached = this.getFromCache(cacheKey);
     if (cached) {
       console.log('Returning cached search results');
@@ -138,7 +138,7 @@ class YelpService {
     try {
       const params = {
         location: searchLocation,
-        term: 'restaurants',
+        term: searchTerm || 'restaurants', // Use searchTerm if provided, otherwise default to 'restaurants'
         limit: Math.min(limit, 50), // Yelp API max is 50
         sort_by: 'rating',
         radius: searchRadius

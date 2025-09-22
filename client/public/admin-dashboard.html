@@ -830,13 +830,17 @@
                 const restaurantData = JSON.parse(restaurantDataStr);
                 const notes = prompt(`Add notes for ${restaurantName}:`) || `Added ${restaurantName} from Yelp search`;
                 
-                const data = await apiCall('/api/admin/restaurants/add-from-yelp', {
+                const data = await apiCall('/api/admin/restaurants/quick-add', {
                     method: 'POST',
                     body: JSON.stringify({
                         yelpId: yelpId,
-                        notes: notes,
-                        addToQueue: true,
-                        restaurantData: restaurantData
+                        name: restaurantData.name,
+                        address: restaurantData.address,
+                        rating: restaurantData.rating,
+                        price: restaurantData.price,
+                        categories: restaurantData.categories,
+                        imageUrl: restaurantData.imageUrl,
+                        notes: notes
                     })
                 });
                 
