@@ -130,7 +130,6 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
         userId: userId,
         friendId: user.id,
         friendUser: user,
-        status: 'accepted',
         createdAt: DateTime.now(),
       );
       
