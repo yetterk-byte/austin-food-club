@@ -64,53 +64,7 @@ router.get('/preview', logAdminActionMiddleware('view_rotation_preview', 'rotati
   }
 });
 
-/**
- * POST /api/rotation/manual
- * Manually rotate to next restaurant
- */
-router.post('/manual', logAdminActionMiddleware('manual_rotation', 'rotation'), async (req, res) => {
-  try {
-    const { restaurantId, notes } = req.body;
-    
-    const result = await rotationService.manualRotate(restaurantId, req.admin.id, notes);
-    
-    res.json({
-      ...result,
-      message: 'Manual rotation completed successfully'
-    });
-  } catch (error) {
-    console.error('Manual rotation error:', error);
-    res.status(500).json({ error: error.message || 'Manual rotation failed' });
-  }
-});
-
-/**
- * POST /api/rotation/emergency
- * Emergency rotation to specific restaurant
- */
-router.post('/emergency', logAdminActionMiddleware('emergency_rotation', 'rotation'), async (req, res) => {
-  try {
-    const { restaurantId, reason } = req.body;
-    
-    if (!restaurantId) {
-      return res.status(400).json({ error: 'Restaurant ID required for emergency rotation' });
-    }
-    
-    if (!reason) {
-      return res.status(400).json({ error: 'Reason required for emergency rotation' });
-    }
-    
-    const result = await rotationService.emergencyRotate(restaurantId, req.admin.id, reason);
-    
-    res.json({
-      ...result,
-      message: 'Emergency rotation completed successfully'
-    });
-  } catch (error) {
-    console.error('Emergency rotation error:', error);
-    res.status(500).json({ error: error.message || 'Emergency rotation failed' });
-  }
-});
+// Manual and emergency rotation removed - automatic rotation only
 
 /**
  * GET /api/rotation/history

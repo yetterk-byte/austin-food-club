@@ -167,12 +167,11 @@ model AdminLog {
   @@map("admin_logs")
 }
 
-// Rotation Configuration
+// Rotation Configuration - Simplified Automatic Only
 model RotationConfig {
   id               String      @id @default(cuid())
-  mode             RotationMode @default(MANUAL)
-  rotationDay      String      @default("monday") // Day of week for rotation
-  rotationTime     String      @default("00:00")  // Time of day (24h format)
+  rotationDay      String      @default("tuesday") // Day of week for rotation
+  rotationTime     String      @default("09:00")  // Time of day (24h format)
   isActive         Boolean     @default(true)
   nextRotationDate DateTime?   // Calculated next rotation date
   timezone         String      @default("America/Chicago") // Austin timezone
@@ -183,7 +182,7 @@ model RotationConfig {
   
   // Advanced settings
   skipWeekends     Boolean     @default(false) // Skip featuring on weekends
-  minQueueSize     Int         @default(2) // Minimum restaurants needed in queue
+  minQueueSize     Int         @default(3) // Minimum restaurants needed in queue
   
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
@@ -204,9 +203,9 @@ model RotationHistory {
   averageRating Float?
   
   // Context
-  rotationType  String     // 'automatic', 'manual', 'emergency'
-  triggeredBy   String?    // Admin ID if manual
-  notes         String?    // Admin notes or reason
+  rotationType  String     @default("automatic") // Always automatic now
+  triggeredBy   String?    // System-triggered
+  notes         String?    // System notes
   
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
@@ -244,16 +243,9 @@ enum QueueStatus {
   CANCELLED
 }
 
-enum RotationMode {
-  MANUAL      // Admin manually rotates restaurants
-  AUTOMATIC   // System automatically rotates based on schedule
-}
-
 enum NotificationType {
   ROTATION_COMPLETE      // Restaurant rotated successfully
   ROTATION_FAILED        // Rotation failed
   QUEUE_EMPTY           // No restaurants in queue
   QUEUE_LOW             // Queue running low
-  MANUAL_ROTATION       // Admin manually rotated
-  EMERGENCY_ROTATION    // Emergency restaurant change
 }
