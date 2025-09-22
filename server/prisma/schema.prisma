@@ -27,6 +27,8 @@ model User {
   wishlists      Wishlist[]
   restaurantQueue RestaurantQueue[] // Restaurants added by this admin
   adminLogs      AdminLog[] // Admin actions performed by this user
+  notificationPreferences NotificationPreferences? // User's notification settings
+  pushSubscriptions PushSubscription[] // User's push notification subscriptions
   
   // Relations
   city           City?           @relation(fields: [cityId], references: [id])
@@ -300,4 +302,70 @@ enum NotificationType {
   QUEUE_LOW             // Queue running low
   QUEUE_UPDATED         // New restaurant added to queue
   QUEUE_ERROR           // Error with queue management
+}
+
+// User Notification Preferences
+model NotificationPreferences {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Notification types
+  weeklyAnnouncement    Boolean @default(true)
+  rsvpReminders        Boolean @default(true)
+  friendActivity       Boolean @default(true)
+  visitReminders       Boolean @default(true)
+  adminAlerts          Boolean @default(false)
+  
+  // Push specific settings
+  pushEnabled         Boolean @default(false)
+  quietHoursStart    String  @default("22:00")
+  quietHoursEnd      String  @default("08:00")
+  
+  // Timing preferences
+  reminderHoursBefore  Int     @default(2)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("notification_preferences")
+}
+
+// Push Subscription Storage
+model PushSubscription {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Web Push / FCM Token
+  endpoint    String?  @unique
+  p256dh      String?  // Web push key
+  auth        String?  // Web push auth
+  fcmToken    String?  @unique // Mobile FCM token
+  
+  platform    String   // 'web', 'ios', 'android'
+  deviceInfo  Json?    // Device metadata
+  isActive    Boolean  @default(true)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("push_subscriptions")
+}
+
+// Notification Delivery Log
+model NotificationLog {
+  id          String   @id @default(cuid())
+  userId      String
+  type        String   // weekly_announcement, rsvp_reminder, etc.
+  title       String
+  body        String
+  data        Json?    // Additional payload
+  status      String   // sent, failed, pending, clicked
+  error       String?
+  sentAt      DateTime?
+  clickedAt   DateTime?
+  createdAt   DateTime @default(now())
+  
+  @@map("notification_logs")
 }

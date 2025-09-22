@@ -25,6 +25,7 @@ const {
 } = require('./utils/rateLimiter');
 const cronService = require('./services/cronService');
 const rotationJobManager = require('./jobs/rotationJob');
+const notificationJobs = require('./jobs/notificationJobs');
 
 // Import API router
 const apiRouter = require('./routes/apiRouter');
@@ -32,6 +33,7 @@ const simpleRestaurantRoutes = require('./routes/simpleRestaurantRoutes');
 const adminRoutes = require('./routes/admin.routes'); // Admin routes
 const rotationRoutes = require('./routes/rotation.routes'); // Rotation routes
 const cityRoutes = require('./routes/city.routes'); // City routes for multi-city support
+const notificationRoutes = require('./routes/notification.routes'); // Push notification routes
 
 const app = express();
 const PORT = 3001;
@@ -71,6 +73,9 @@ app.use('/api/rotation', rotationRoutes);
 
 // City routes (multi-city support)
 app.use('/api/cities', cityRoutes);
+
+// Notification routes (push notifications)
+app.use('/api/notifications', notificationRoutes);
 
 // Test endpoint
 app.get('/api/test', (req, res) => {
@@ -1990,6 +1995,14 @@ app.listen(PORT, async () => {
     console.log('🔄 Rotation system initialized');
   } catch (error) {
     console.error('❌ Failed to initialize rotation system:', error);
+  }
+
+  // Initialize notification jobs
+  try {
+    notificationJobs.initialize();
+    console.log('📱 Notification system initialized');
+  } catch (error) {
+    console.error('❌ Failed to initialize notification system:', error);
   }
   console.log(`\nRestaurant endpoints:`);
   console.log(`  - Current: http://localhost:${PORT}/api/restaurants/current`);
