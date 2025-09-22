@@ -1218,6 +1218,84 @@
             }
         }
 
+        // Navigation function
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName).style.display = 'block';
+            document.querySelector(`[onclick="showSection('${sectionName}')"]`).classList.add('active');
+            
+            // Load section-specific data
+            if (sectionName === 'overview') {
+                loadDashboardStats();
+            } else if (sectionName === 'queue') {
+                loadQueue();
+            } else if (sectionName === 'current') {
+                loadCurrentFeaturedRestaurant();
+            }
+        }
+        
+        // Load current featured restaurant for Current Week page
+        async function loadCurrentFeaturedRestaurant() {
+            try {
+                const data = await apiCall('/api/restaurants/current');
+                const container = document.getElementById('currentFeaturedRestaurant');
+                
+                if (data) {
+                    const categories = data.categories ? (Array.isArray(data.categories) ? data.categories : JSON.parse(data.categories)) : [];
+                    const categoryText = Array.isArray(categories) ? categories.map(c => c.title || c).join(', ') : 'Restaurant';
+                    
+                    container.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 1.5rem; background: #2a2a2a; padding: 1.5rem; border-radius: 12px; border: 2px solid #20b2aa;">
+                            <img src="${data.imageUrl || '/placeholder.jpg'}" alt="${data.name}" 
+                                 style="width: 120px; height: 120px; object-fit: cover; border-radius: 12px; border: 2px solid #444;">
+                            <div style="flex: 1;">
+                                <h3 style="margin: 0; color: #20b2aa; font-size: 1.5rem;">${data.name}</h3>
+                                <p style="margin: 0.5rem 0; color: #ccc; font-size: 1.1rem;">${data.address}</p>
+                                <p style="margin: 0.5rem 0; color: #888;">${categoryText}</p>
+                                <div style="display: flex; gap: 1rem; margin-top: 0.75rem;">
+                                    <span style="background: #20b2aa; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: bold;">
+                                        ⭐ ${data.rating || 'N/A'}
+                                    </span>
+                                    <span style="background: #28a745; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: bold;">
+                                        ${data.price || 'N/A'}
+                                    </span>
+                                    <span style="background: #6c757d; color: white; padding: 0.25rem 0.75rem; border-radius: 20px;">
+                                        ${data.reviewCount || 0} reviews
+                                    </span>
+                                </div>
+                                <p style="margin: 0.75rem 0 0 0; color: #20b2aa; font-size: 0.9rem;">
+                                    📍 Featured since ${new Date(data.featuredDate || data.createdAt).toLocaleDateString()}
+                                </p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="background: linear-gradient(135deg, #20b2aa, #17a2b8); color: white; padding: 1rem; border-radius: 50%; margin-bottom: 0.5rem;">
+                                    <span style="font-size: 2rem;">🍽️</span>
+                                </div>
+                                <p style="margin: 0; color: #20b2aa; font-weight: bold;">FEATURED</p>
+                                <p style="margin: 0; color: #888; font-size: 0.8rem;">This Week</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = '<p style="color: #888; text-align: center; padding: 2rem;">No restaurant currently featured</p>';
+                }
+            } catch (error) {
+                console.error('Error loading current featured restaurant:', error);
+                document.getElementById('currentFeaturedRestaurant').innerHTML = 
+                    '<div class="error" style="text-align: center; padding: 2rem; color: #dc3545;">Failed to load current restaurant</div>';
+            }
+        }
+
         // Initialize dashboard (removed duplicate - handled above)
     </script>
 </body>
