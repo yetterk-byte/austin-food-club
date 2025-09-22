@@ -154,12 +154,35 @@ router.post('/queue', logAdminActionMiddleware('add_to_queue', 'restaurant'), as
 
     const nextPosition = (lastPosition?.position || 0) + 1;
 
+    // Handle demo admin - create a demo user if needed
+    let adminId = req.admin.id;
+    if (adminId === 'demo-admin') {
+      // Create or find demo admin user
+      let demoUser = await prisma.user.findUnique({
+        where: { email: 'admin@austinfoodclub.com' }
+      });
+      
+      if (!demoUser) {
+        demoUser = await prisma.user.create({
+          data: {
+            supabaseId: 'demo-admin-supabase-id',
+            email: 'admin@austinfoodclub.com',
+            name: 'Austin Food Club Admin',
+            isAdmin: true,
+            emailVerified: true,
+            provider: 'demo'
+          }
+        });
+      }
+      adminId = demoUser.id;
+    }
+
     // Add to queue
     const queueItem = await prisma.restaurantQueue.create({
       data: {
         restaurantId,
         position: nextPosition,
-        addedBy: req.admin.id,
+        addedBy: adminId,
         notes,
         scheduledWeek: scheduledWeek ? new Date(scheduledWeek) : null
       },
@@ -544,8 +567,7 @@ router.post('/restaurants/add-from-yelp', logAdminActionMiddleware('add_restaura
           reviewCount: yelpDetails.review_count,
           categories: JSON.stringify(yelpDetails.categories || []),
           hours: yelpDetails.hours ? JSON.stringify(yelpDetails.hours) : null,
-          lastSyncedAt: new Date(),
-          updatedAt: new Date()
+          lastSyncedAt: new Date()
         }
       });
     }
