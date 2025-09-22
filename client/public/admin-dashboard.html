@@ -221,6 +221,44 @@
             font-size: 0.9rem;
         }
         
+        .featured-restaurant {
+            background: linear-gradient(135deg, #2d4a22 0%, #3d5a32 100%);
+            border: 2px solid #20b2aa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .featured-restaurant .restaurant-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        .featured-restaurant .restaurant-info h4 {
+            color: #20b2aa;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .featured-restaurant .restaurant-info p {
+            color: #ccc;
+            margin-bottom: 0.25rem;
+        }
+        
+        .featured-badge {
+            background: #20b2aa;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: auto;
+        }
+        
         .loading {
             text-align: center;
             padding: 2rem;
@@ -313,6 +351,13 @@
                 <div class="dashboard-header">
                     <h2>Restaurant Queue</h2>
                     <p>Manage upcoming featured restaurants</p>
+                </div>
+                
+                <div class="section">
+                    <h3>Currently Featured Restaurant</h3>
+                    <div id="currentlyFeatured">
+                        <div class="loading">Loading current restaurant...</div>
+                    </div>
                 </div>
                 
                 <div class="section">
@@ -457,6 +502,7 @@
                     await loadCurrentRestaurant();
                     break;
                 case 'queue':
+                    await loadCurrentlyFeatured();
                     await loadQueue();
                     break;
                 case 'rotation':
@@ -515,6 +561,30 @@
             }
         }
         
+        // Load currently featured restaurant for queue page
+        async function loadCurrentlyFeatured() {
+            try {
+                const data = await apiCall('/api/restaurants/current');
+                
+                const container = document.getElementById('currentlyFeatured');
+                container.innerHTML = `
+                    <div class="featured-restaurant">
+                        <img src="${data.imageUrl || '/placeholder-restaurant.jpg'}" alt="${data.name}" class="restaurant-image">
+                        <div class="restaurant-info">
+                            <h4>⭐ ${data.name}</h4>
+                            <p>📍 ${data.address}</p>
+                            <p>⭐ ${data.rating} • ${data.price} • ${data.expectedWait || 'N/A wait'}</p>
+                            <p style="font-size: 0.9rem; color: #888;">This restaurant is currently featured to users</p>
+                        </div>
+                        <div class="featured-badge">LIVE NOW</div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading currently featured restaurant:', error);
+                document.getElementById('currentlyFeatured').innerHTML = '<div class="error">Failed to load current restaurant</div>';
+            }
+        }
+
         // Load queue
         async function loadQueue() {
             try {
@@ -690,6 +760,7 @@
         }
         
         async function refreshQueue() {
+            await loadCurrentlyFeatured();
             await loadQueue();
             showMessage('Queue refreshed', 'success');
         }
