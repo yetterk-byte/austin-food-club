@@ -25,7 +25,7 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this, initialIndex: 1);
+    _tabController = TabController(length: 2, vsync: this, initialIndex: 0);
     _loadData();
   }
 
@@ -175,16 +175,16 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
           labelColor: Colors.orange,
           unselectedLabelColor: Colors.grey[400],
           tabs: const [
-            Tab(text: 'My Friends'),
             Tab(text: 'Activity'),
+            Tab(text: 'My Friends'),
           ],
         ),
       ),
       body: TabBarView(
         controller: _tabController,
         children: [
-          _buildFriendsTab(),
           _buildActivityTab(),
+          _buildFriendsTab(),
         ],
       ),
     );
