@@ -661,7 +661,11 @@
                 loadQueue();
                 loadDashboardStats();
             } catch (error) {
-                showMessage(`Failed to add restaurant: ${error.message}`, 'error');
+                if (error.message.includes('already in queue')) {
+                    showMessage(`${currentRestaurant.name || 'Current restaurant'} is already in the queue!`, 'error');
+                } else {
+                    showMessage(`Failed to add restaurant: ${error.message}`, 'error');
+                }
             }
         }
         
