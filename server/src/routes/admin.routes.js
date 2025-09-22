@@ -715,4 +715,177 @@ async function reorderQueue(oldPosition, newPosition) {
   });
 }
 
+/**
+ * GET /api/admin/restaurants/search-yelp
+ * Search Yelp for restaurants to add to queue
+ */
+router.get('/restaurants/search-yelp', async (req, res) => {
+  try {
+    const { term, location = 'Austin, TX', limit = 10 } = req.query;
+    
+    if (!term) {
+      return res.status(400).json({ error: 'Search term is required' });
+    }
+
+    // Use the restaurant search endpoint that works
+    const searchResults = await yelpService.searchRestaurants(location, term, null, parseInt(limit));
+    
+    if (!searchResults || !searchResults.businesses) {
+      return res.json({ restaurants: [] });
+    }
+
+    // Format results for frontend
+    const restaurants = searchResults.businesses.map(business => ({
+      yelpId: business.id,
+      name: business.name,
+      address: business.location?.address1 || business.location?.display_address?.[0] || '',
+      city: business.location?.city || 'Austin',
+      rating: business.rating,
+      reviewCount: business.review_count,
+      price: business.price,
+      categories: business.categories?.map(c => c.title).join(', ') || 'Restaurant',
+      imageUrl: business.image_url,
+      yelpUrl: business.url
+    }));
+
+    await logAdminAction(req.admin.id, 'search_yelp', null, 'yelp_api', { term, location, resultCount: restaurants.length }, req);
+    
+    res.json({ restaurants });
+  } catch (error) {
+    console.error('Yelp search error:', error);
+    res.status(500).json({ error: 'Failed to search Yelp for restaurants' });
+  }
+});
+
+/**
+ * POST /api/admin/restaurants/add-from-yelp
+ * Add a restaurant from Yelp to database and optionally to queue
+ */
+router.post('/restaurants/add-from-yelp', async (req, res) => {
+  try {
+    const { yelpId, notes, addToQueue = true, queuePosition, restaurantData } = req.body;
+    
+    if (!yelpId) {
+      return res.status(400).json({ error: 'Yelp ID is required' });
+    }
+
+    // Check if restaurant already exists
+    let restaurant = await prisma.restaurant.findUnique({
+      where: { yelpId }
+    });
+
+    if (!restaurant) {
+      // Create restaurant with basic data (will be synced later with full details)
+      restaurant = await prisma.restaurant.create({
+        data: {
+          yelpId: yelpId,
+          name: restaurantData?.name || `Restaurant ${yelpId}`,
+          slug: restaurantData?.name?.toLowerCase().replace(/\s+/g, '-') || `restaurant-${yelpId}`,
+          address: restaurantData?.address || 'Austin, TX',
+          city: 'Austin',
+          state: 'TX',
+          zipCode: '78701',
+          latitude: 30.2672, // Default Austin coordinates
+          longitude: -97.7431,
+          imageUrl: restaurantData?.imageUrl || null,
+          price: restaurantData?.price || '$$',
+          rating: restaurantData?.rating || 0,
+          reviewCount: restaurantData?.reviewCount || 0,
+          categories: restaurantData?.categories ? JSON.stringify([{alias: 'restaurant', title: restaurantData.categories}]) : null,
+          lastSyncedAt: new Date()
+        }
+      });
+    }
+
+    // Add to queue if requested
+    if (addToQueue) {
+      // Check if restaurant is already in queue
+      const existingQueueItem = await prisma.restaurantQueue.findFirst({
+        where: { restaurantId: restaurant.id, status: 'PENDING' }
+      });
+
+      if (existingQueueItem) {
+        return res.status(400).json({ error: 'Restaurant already in queue' });
+      }
+
+      // Check if restaurant is currently featured
+      const currentFeatured = await prisma.restaurant.findFirst({
+        where: { isFeatured: true }
+      });
+
+      if (currentFeatured && currentFeatured.id === restaurant.id) {
+        return res.status(400).json({ error: 'Cannot add currently featured restaurant to queue' });
+      }
+
+      // Handle demo admin
+      let adminId = req.admin.id;
+      if (adminId === 'demo-admin') {
+        let demoUser = await prisma.user.findUnique({
+          where: { email: 'admin@austinfoodclub.com' }
+        });
+        
+        if (!demoUser) {
+          demoUser = await prisma.user.create({
+            data: {
+              supabaseId: 'demo-admin-supabase-id',
+              email: 'admin@austinfoodclub.com',
+              name: 'Austin Food Club Admin',
+              isAdmin: true,
+              emailVerified: true,
+              provider: 'demo'
+            }
+          });
+        }
+        adminId = demoUser.id;
+      }
+
+      // Get next position
+      const lastPosition = await prisma.restaurantQueue.findFirst({
+        orderBy: { position: 'desc' },
+        select: { position: true }
+      });
+      const nextPosition = queuePosition || (lastPosition?.position || 0) + 1;
+
+      // Add to queue
+      const queueItem = await prisma.restaurantQueue.create({
+        data: {
+          restaurantId: restaurant.id,
+          position: nextPosition,
+          addedBy: adminId,
+          notes: notes || null
+        },
+        include: {
+          restaurant: {
+            select: {
+              name: true,
+              address: true,
+              imageUrl: true,
+              rating: true,
+              price: true
+            }
+          }
+        }
+      });
+
+      await logAdminAction(req.admin.id, 'add_restaurant_from_yelp', restaurant.id, 'restaurant', { yelpId, addedToQueue: true }, req);
+      
+      res.status(201).json({ 
+        restaurant,
+        queueItem,
+        message: 'Restaurant added to database and queue successfully'
+      });
+    } else {
+      await logAdminAction(req.admin.id, 'add_restaurant_from_yelp', restaurant.id, 'restaurant', { yelpId, addedToQueue: false }, req);
+      
+      res.status(201).json({ 
+        restaurant,
+        message: 'Restaurant added to database successfully'
+      });
+    }
+  } catch (error) {
+    console.error('Add restaurant from Yelp error:', error);
+    res.status(500).json({ error: 'Failed to add restaurant from Yelp' });
+  }
+});
+
 module.exports = router;

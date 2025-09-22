@@ -259,6 +259,58 @@
             margin-left: auto;
         }
         
+        .search-results {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .search-result-item {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: border-color 0.2s ease;
+        }
+        
+        .search-result-item:hover {
+            border-color: #20b2aa;
+        }
+        
+        .search-result-info h4 {
+            color: white;
+            margin-bottom: 0.25rem;
+        }
+        
+        .search-result-info p {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .search-result-meta {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            font-size: 0.8rem;
+        }
+        
+        .rating-stars {
+            color: #ffd700;
+        }
+        
+        .price-range {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .review-count {
+            color: #888;
+        }
+        
         .loading {
             text-align: center;
             padding: 2rem;
@@ -361,10 +413,19 @@
                 </div>
                 
                 <div class="section">
-                    <h3>Queue Management</h3>
-                    <button class="btn" onclick="addSampleRestaurant()">+ Add Sample Restaurant</button>
-                    <button class="btn btn-secondary" onclick="refreshQueue()">🔄 Refresh Queue</button>
+                    <h3>Add Restaurant to Queue</h3>
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center;">
+                        <input type="text" id="restaurantSearch" placeholder="Search Austin restaurants..." 
+                               style="flex: 1; padding: 0.75rem; border: 1px solid #444; border-radius: 6px; background: #2a2a2a; color: white;">
+                        <button class="btn" onclick="searchRestaurants()">🔍 Search Yelp</button>
+                        <button class="btn btn-secondary" onclick="refreshQueue()">🔄 Refresh Queue</button>
+                    </div>
                     
+                    <div id="searchResults" style="margin-bottom: 1rem;"></div>
+                </div>
+                
+                <div class="section">
+                    <h3>Restaurant Queue</h3>
                     <div class="queue-list" id="queueList">
                         <div class="loading">Loading queue...</div>
                     </div>
@@ -714,32 +775,108 @@
             }
         }
         
-        async function addSampleRestaurant() {
+        // Search restaurants using Yelp API
+        async function searchRestaurants() {
+            const searchTerm = document.getElementById('restaurantSearch').value.trim();
+            if (!searchTerm) {
+                showMessage('Please enter a restaurant name to search', 'error');
+                return;
+            }
+            
+            const resultsContainer = document.getElementById('searchResults');
+            resultsContainer.innerHTML = '<div class="loading">Searching Yelp for restaurants...</div>';
+            
             try {
-                // Add current restaurant to queue as sample
-                const currentRestaurant = await apiCall('/api/restaurants/current');
+                const data = await apiCall(`/api/admin/restaurants/search-yelp?term=${encodeURIComponent(searchTerm)}&limit=5`);
                 
-                await apiCall('/api/admin/queue', {
+                if (!data.restaurants || data.restaurants.length === 0) {
+                    resultsContainer.innerHTML = '<p style="text-align: center; color: #888; padding: 1rem;">No restaurants found. Try a different search term.</p>';
+                    return;
+                }
+                
+                resultsContainer.innerHTML = `
+                    <h4 style="color: #20b2aa; margin-bottom: 1rem;">Search Results (${data.restaurants.length})</h4>
+                    <div class="search-results">
+                        ${data.restaurants.map(restaurant => `
+                            <div class="search-result-item">
+                                <div class="search-result-info">
+                                    <h4>${restaurant.name}</h4>
+                                    <p>📍 ${restaurant.address}</p>
+                                    <div class="search-result-meta">
+                                        <span class="rating-stars">⭐ ${restaurant.rating || 'N/A'}</span>
+                                        <span class="price-range">${restaurant.price || '$'}</span>
+                                        <span class="review-count">${restaurant.reviewCount || 0} reviews</span>
+                                        <span style="color: #20b2aa;">${restaurant.categories || 'Restaurant'}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="btn" onclick="addRestaurantToQueue('${restaurant.yelpId}', '${restaurant.name.replace(/'/g, "\\'")}', ${JSON.stringify(restaurant).replace(/'/g, "\\'")})">
+                                        + Add to Queue
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Search error:', error);
+                resultsContainer.innerHTML = '<div class="error">Failed to search restaurants. Please try again.</div>';
+            }
+        }
+        
+        // Add restaurant from Yelp search to queue
+        async function addRestaurantToQueue(yelpId, restaurantName, restaurantDataStr) {
+            try {
+                const restaurantData = JSON.parse(restaurantDataStr);
+                const notes = prompt(`Add notes for ${restaurantName}:`) || `Added ${restaurantName} from Yelp search`;
+                
+                const data = await apiCall('/api/admin/restaurants/add-from-yelp', {
                     method: 'POST',
                     body: JSON.stringify({
-                        restaurantId: currentRestaurant.id,
-                        notes: 'Sample restaurant added from admin dashboard'
+                        yelpId: yelpId,
+                        notes: notes,
+                        addToQueue: true,
+                        restaurantData: restaurantData
                     })
                 });
                 
-                showMessage('Sample restaurant added to queue!', 'success');
-                loadQueue();
-                loadDashboardStats();
+                showMessage(`${restaurantName} added to queue successfully!`, 'success');
+                
+                // Clear search results and refresh queue
+                document.getElementById('searchResults').innerHTML = '';
+                document.getElementById('restaurantSearch').value = '';
+                await loadCurrentlyFeatured();
+                await loadQueue();
+                await loadDashboardStats();
+                
             } catch (error) {
                 if (error.message.includes('already in queue')) {
-                    showMessage(`${currentRestaurant.name || 'Current restaurant'} is already in the queue!`, 'error');
-                } else if (error.message.includes('currently featured restaurant')) {
-                    showMessage(`${currentRestaurant.name || 'Current restaurant'} is currently featured and cannot be added to queue`, 'error');
+                    showMessage(`${restaurantName} is already in the queue!`, 'error');
+                } else if (error.message.includes('currently featured')) {
+                    showMessage(`${restaurantName} is currently featured and cannot be added to queue`, 'error');
                 } else {
-                    showMessage(`Failed to add restaurant: ${error.message}`, 'error');
+                    showMessage(`Failed to add ${restaurantName}: ${error.message}`, 'error');
                 }
             }
         }
+        
+        // Add Enter key support for search
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Austin Food Club Admin Dashboard Loaded');
+            loadSectionData('overview');
+            
+            // Add Enter key listener to search input
+            setTimeout(() => {
+                const searchInput = document.getElementById('restaurantSearch');
+                if (searchInput) {
+                    searchInput.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            searchRestaurants();
+                        }
+                    });
+                }
+            }, 100);
+        });
         
         async function removeFromQueue(queueId) {
             if (!confirm('Are you sure you want to remove this restaurant from the queue?')) {
@@ -770,11 +907,7 @@
             window.location.href = '/admin.html';
         }
         
-        // Initialize dashboard
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('Austin Food Club Admin Dashboard Loaded');
-            loadSectionData('overview');
-        });
+        // Initialize dashboard (removed duplicate - handled above)
     </script>
 </body>
 </html>
