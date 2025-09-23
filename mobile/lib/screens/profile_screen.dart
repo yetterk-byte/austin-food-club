@@ -1021,6 +1021,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // Create a Restaurant object from the verified visit data
                   final restaurant = Restaurant(
                     id: visit.restaurantId,
+                    yelpId: visit.restaurantId,
                     name: visit.restaurantName,
                     address: visit.restaurantAddress,
                     city: 'Austin',
@@ -1107,7 +1108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 4),
                   Text(
-                    _formatDate(visit.visitDate),
+                    _formatDate(visit.verifiedAt),
                     style: TextStyle(
                       color: Colors.grey[300],
                       fontSize: 10,
