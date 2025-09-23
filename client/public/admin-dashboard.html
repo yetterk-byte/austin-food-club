@@ -534,13 +534,19 @@
         // API helper function
         async function apiCall(endpoint, options = {}) {
             try {
+                const headers = {
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                };
+                
+                // Only add authorization for endpoints that need it
+                if (adminToken && !endpoint.includes('/restaurants/current') && !endpoint.includes('/restaurants/search')) {
+                    headers['Authorization'] = `Bearer ${adminToken}`;
+                }
+                
                 const response = await fetch(`http://localhost:3001${endpoint}`, {
                     ...options,
-                    headers: {
-                        'Authorization': `Bearer ${adminToken}`,
-                        'Content-Type': 'application/json',
-                        ...options.headers
-                    }
+                    headers
                 });
                 
                 if (response.status === 401 || response.status === 403) {
@@ -662,9 +668,16 @@
         // Load currently featured restaurant for queue page
         async function loadCurrentlyFeatured() {
             try {
+                console.log('Loading currently featured restaurant...');
                 const data = await apiCall('/api/restaurants/current');
+                console.log('Restaurant data received:', data);
                 
                 const container = document.getElementById('currentlyFeatured');
+                if (!container) {
+                    console.error('Container with ID "currentlyFeatured" not found');
+                    return;
+                }
+                
                 container.innerHTML = `
                     <div class="featured-restaurant">
                         <img src="${data.imageUrl || '/placeholder-restaurant.jpg'}" alt="${data.name}" class="restaurant-image">
@@ -677,9 +690,13 @@
                         <div class="featured-badge">LIVE NOW</div>
                     </div>
                 `;
+                console.log('Successfully loaded currently featured restaurant');
             } catch (error) {
                 console.error('Error loading currently featured restaurant:', error);
-                document.getElementById('currentlyFeatured').innerHTML = '<div class="error">Failed to load current restaurant</div>';
+                const container = document.getElementById('currentlyFeatured');
+                if (container) {
+                    container.innerHTML = '<div class="error">Failed to load current restaurant</div>';
+                }
             }
         }
 

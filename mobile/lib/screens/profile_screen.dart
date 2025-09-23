@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/restaurant.dart';
 import '../services/mock_data_service.dart';
+import '../services/api_service.dart';
 import '../services/social_service.dart';
 import '../providers/auth_provider.dart';
-import 'test_notifications_screen.dart';
 // import 'photo_verification_screen.dart'; // Temporarily disabled
 
 class ProfileScreen extends StatefulWidget {
@@ -15,7 +15,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final int totalVisits = 12;
   final double averageRating = 4.2;
   int friendCount = 0;
   
@@ -32,33 +31,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _loadVerifiedVisits() async {
     try {
-      // Mock verified visits using mock restaurants directly
-      final restaurants = MockDataService.getAllRestaurantsMock();
-      verifiedVisits = [
-        VerifiedVisit(
-          restaurant: restaurants[0],
-          visitDate: DateTime.now().subtract(const Duration(days: 3)),
-          rating: 5.0,
-          photoUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop',
-          review: 'Amazing handmade tortillas and great atmosphere!',
-        ),
-        VerifiedVisit(
-          restaurant: restaurants[1],
-          visitDate: DateTime.now().subtract(const Duration(days: 10)),
-          rating: 4.5,
-          photoUrl: 'https://images.unsplash.com/photo-1558030006-450675393462?w=400&h=300&fit=crop',
-          review: 'Best brisket in Austin. Worth the wait!',
-        ),
-        VerifiedVisit(
-          restaurant: restaurants[2],
-          visitDate: DateTime.now().subtract(const Duration(days: 18)),
-          rating: 4.0,
-          photoUrl: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop',
-          review: 'Incredible sushi and presentation.',
-        ),
-      ];
+      // Try to get real verified visits from API
+      final data = await ApiService.getVerifiedVisits('demo-user-123');
+      
+      if (data.isNotEmpty) {
+        // Convert API data to VerifiedVisit objects
+        verifiedVisits = data.map((item) => VerifiedVisit.fromJson(item)).toList();
+      } else {
+        // Fallback to mock data if no real data available
+        final restaurants = await MockDataService.getAllRestaurantsMock();
+        verifiedVisits = [
+          VerifiedVisit(
+            restaurant: restaurants[0],
+            visitDate: DateTime.now().subtract(const Duration(days: 3)),
+            rating: 5.0,
+            photoUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop',
+            review: 'Amazing handmade tortillas and great atmosphere!',
+          ),
+          VerifiedVisit(
+            restaurant: restaurants[1],
+            visitDate: DateTime.now().subtract(const Duration(days: 10)),
+            rating: 4.5,
+            photoUrl: 'https://images.unsplash.com/photo-1558030006-450675393462?w=400&h=300&fit=crop',
+            review: 'Best brisket in Austin. Worth the wait!',
+          ),
+          VerifiedVisit(
+            restaurant: restaurants[2],
+            visitDate: DateTime.now().subtract(const Duration(days: 18)),
+            rating: 4.0,
+            photoUrl: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop',
+            review: 'Incredible sushi and presentation.',
+          ),
+        ];
+      }
+      
+      setState(() {
+        // Trigger UI update to show the new verified visits count
+      });
     } catch (e) {
       print('Error loading verified visits: $e');
+      setState(() {
+        verifiedVisits = [];
+      });
     }
   }
 
@@ -79,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _loadFavoriteRestaurant() async {
     try {
       // For now, use mock data - in production this would come from user preferences
-      final restaurants = MockDataService.getAllRestaurantsMock();
+      final restaurants = await MockDataService.getAllRestaurantsMock();
       setState(() {
         favoriteRestaurant = restaurants[2]; // Default to Uchi as favorite
       });
@@ -120,34 +134,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              ...MockDataService.getAllRestaurantsMock().map((restaurant) {
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Colors.orange,
-                    child: Text(
-                      restaurant.name.substring(0, 1),
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  title: Text(restaurant.name),
-                  subtitle: Text(restaurant.categories?.first.title ?? 'Restaurant'),
-                  trailing: favoriteRestaurant?.id == restaurant.id
-                      ? const Icon(Icons.favorite, color: Colors.white) // Filled for current favorite
-                      : const Icon(Icons.favorite_border, color: Colors.white), // Outline for options
-                  onTap: () {
-                    setState(() {
-                      favoriteRestaurant = restaurant;
-                    });
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('${restaurant.name} set as favorite!'),
-                        backgroundColor: Colors.green,
-                      ),
-                    );
-                  },
-                );
-              }).toList(),
+              FutureBuilder<List<Restaurant>>(
+                future: MockDataService.getAllRestaurantsMock(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+                  
+                  final restaurants = snapshot.data ?? [];
+                  return Column(
+                    children: restaurants.map((restaurant) {
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.orange,
+                          child: Text(
+                            restaurant.name.substring(0, 1),
+                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        title: Text(restaurant.name),
+                        subtitle: Text(restaurant.categories?.isNotEmpty == true 
+                            ? restaurant.categories!.first.title 
+                            : 'Restaurant'),
+                        trailing: favoriteRestaurant?.id == restaurant.id
+                            ? const Icon(Icons.favorite, color: Colors.white) // Filled for current favorite
+                            : const Icon(Icons.favorite_border, color: Colors.white), // Outline for options
+                        onTap: () {
+                          setState(() {
+                            favoriteRestaurant = restaurant;
+                          });
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('${restaurant.name} set as favorite!'),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        },
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
               const SizedBox(height: 20),
             ],
           ),
@@ -233,13 +265,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             onSelected: (value) async {
                               if (value == 'settings') {
                                 // TODO: Navigate to settings
-                              } else if (value == 'test_notifications') {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const TestNotificationsScreen(),
-                                  ),
-                                );
                               } else if (value == 'signout') {
                                 final authProvider = Provider.of<AuthProvider>(context, listen: false);
                                 await authProvider.signOut();
@@ -253,16 +278,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     Icon(Icons.settings, size: 20),
                                     SizedBox(width: 12),
                                     Text('Settings'),
-                                  ],
-                                ),
-                              ),
-                              const PopupMenuItem(
-                                value: 'test_notifications',
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.notifications, size: 20),
-                                    SizedBox(width: 12),
-                                    Text('Test Notifications'),
                                   ],
                                 ),
                               ),
@@ -862,5 +877,15 @@ class VerifiedVisit {
     required this.photoUrl,
     required this.review,
   });
+
+  factory VerifiedVisit.fromJson(Map<String, dynamic> json) {
+    return VerifiedVisit(
+      restaurant: Restaurant.fromJson(json['restaurant']),
+      visitDate: DateTime.parse(json['visitDate']),
+      rating: (json['rating'] as num).toDouble(),
+      photoUrl: json['photoUrl'] ?? '',
+      review: json['review'] ?? '',
+    );
+  }
 }
 

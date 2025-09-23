@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "973545899287",
+    "project_id": "austin-food-club-2b7b9",
+    "storage_bucket": "austin-food-club-2b7b9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:973545899287:android:0eeaf2154188997a606352",
+        "android_client_info": {
+          "package_name": "com.austinfoodclub.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpd83GB9KESYkGa0LGh8JwL92RWNb9tAo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

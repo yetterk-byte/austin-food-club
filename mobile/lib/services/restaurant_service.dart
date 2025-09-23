@@ -5,6 +5,16 @@ import '../models/restaurant.dart';
 class RestaurantService {
   static const String baseUrl = 'http://localhost:3001/api';
   
+  static Future<Restaurant?> getFeaturedRestaurant() async {
+    try {
+      final service = RestaurantService();
+      return await service.getCurrentRestaurant();
+    } catch (e) {
+      print('❌ RestaurantService: Failed to get featured restaurant: $e');
+      return null;
+    }
+  }
+  
   Future<Restaurant> getCurrentRestaurant() async {
     try {
       print('🔍 RestaurantService: Attempting to fetch from $baseUrl/restaurants/current');

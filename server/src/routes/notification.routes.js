@@ -1,12 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { PrismaClient } = require('@prisma/client');
 const { requireAuth, optionalAuth } = require('../middleware/auth');
 const { requireAdmin } = require('../middleware/adminAuth');
 const pushNotificationService = require('../services/pushNotificationService');
 const subscriptionManager = require('../services/subscriptionManager');
-
-const prisma = new PrismaClient();
 
 /**
  * Push Notification API Routes
@@ -16,33 +13,11 @@ const prisma = new PrismaClient();
  * Subscription Management
  */
 
-// Handle OPTIONS requests for CORS preflight
-router.options('/subscribe', (req, res) => {
-  console.log('🔄 OPTIONS request received for /subscribe');
-  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
-  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, X-City-Slug');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(200);
-});
-
-// Subscribe to push notifications (public endpoint for testing)
-router.post('/subscribe', optionalAuth, async (req, res) => {
+// Subscribe to push notifications
+router.post('/subscribe', requireAuth, async (req, res) => {
   try {
-    console.log('📥 Subscription request received:');
-    console.log('  Origin:', req.headers.origin);
-    console.log('  User-Agent:', req.headers['user-agent']);
-    console.log('  Headers:', JSON.stringify(req.headers, null, 2));
-    console.log('  Body:', JSON.stringify(req.body, null, 2));
-    
-    // Set CORS headers for the response
-    res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    
     const { subscription, platform, deviceInfo } = req.body;
-    
-    // For testing, use a demo user ID if no authenticated user
-    const userId = req.user?.id || 'demo-user-123';
+    const userId = req.user.id;
 
     const result = await subscriptionManager.subscribe(
       userId, 
@@ -277,7 +252,12 @@ router.get('/admin/logs', requireAdmin, async (req, res) => {
       where,
       orderBy: { createdAt: 'desc' },
       take: parseInt(limit),
-      skip: parseInt(offset)
+      skip: parseInt(offset),
+      include: {
+        user: {
+          select: { id: true, name: true, email: true }
+        }
+      }
     });
 
     const total = await prisma.notificationLog.count({ where });

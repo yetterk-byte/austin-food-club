@@ -75,16 +75,20 @@ class _AuthWrapperState extends State<AuthWrapper> {
           );
         }
 
-        // Show main app if logged in, otherwise show login
+        // Show main app if logged in, otherwise show welcome
+        print('🏠 Main: Checking auth state - isLoggedIn: ${authProvider.isLoggedIn}, currentUser: ${authProvider.currentUser?.name}');
         if (authProvider.isLoggedIn && authProvider.currentUser != null) {
+          print('🏠 Main: Showing MainApp');
           return const MainApp();
         } else {
+          print('🏠 Main: Showing WelcomeScreen');
           return const WelcomeScreen();
         }
       },
     );
   }
 }
+
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -184,7 +188,6 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter++;
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -34,6 +34,7 @@ const adminRoutes = require('./routes/admin.routes'); // Admin routes
 const rotationRoutes = require('./routes/rotation.routes'); // Rotation routes
 const cityRoutes = require('./routes/city.routes'); // City routes for multi-city support
 const notificationRoutes = require('./routes/notification.routes'); // Push notification routes
+const socialRoutes = require('./routes/social.routes'); // Social features routes
 
 const app = express();
 const PORT = 3001;
@@ -44,46 +45,18 @@ const prisma = new PrismaClient();
 // Middleware
 // CORS configuration for Flutter web (dynamic ports)
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    // Allow any localhost port for development
-    if (origin.match(/^http:\/\/localhost:\d+$/)) {
-      return callback(null, true);
-    }
-    
-    // Allow specific origins
-    const allowedOrigins = [
-      'http://localhost:51070',
-      'http://localhost:51121',
-      'http://localhost:8080',
-      'http://localhost:8081',
-      'http://localhost:8082',
-      'http://localhost:3000',
-      'http://localhost:3001'
-    ];
-    
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    
-    callback(new Error('Not allowed by CORS'));
-  },
+  origin: [
+    'http://localhost:51070',  // Current Flutter port
+    'http://localhost:8080',   // Standard Flutter web port
+    'http://localhost:8081',   // Alternative Flutter ports
+    'http://localhost:8082',
+    'http://localhost:3000',   // React dev server
+    /^http:\/\/localhost:\d+$/ // Allow any localhost port
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: [
-    'Content-Type', 
-    'Authorization', 
-    'X-Requested-With', 
-    'Accept',
-    'X-City-Slug',
-    'Access-Control-Allow-Origin',
-    'Access-Control-Allow-Methods',
-    'Access-Control-Allow-Headers'
-  ],
-  optionsSuccessStatus: 200,
-  preflightContinue: false
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  optionsSuccessStatus: 200
 }));
 app.use(express.json());
 
@@ -104,6 +77,7 @@ app.use('/api/cities', cityRoutes);
 
 // Notification routes (push notifications)
 app.use('/api/notifications', notificationRoutes);
+app.use('/api', socialRoutes); // Social features routes (rsvps, friends, verified-visits, social-feed)
 
 // Test endpoint
 app.get('/api/test', (req, res) => {

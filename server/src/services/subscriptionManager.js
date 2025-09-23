@@ -13,16 +13,13 @@ class SubscriptionManager {
   async subscribe(userId, subscriptionData, platform, deviceInfo = null) {
     try {
       // Validate subscription data
-      if (platform === 'web' && !subscriptionData.endpoint) {
-        throw new Error('Invalid web push subscription data - endpoint required');
+      if (platform === 'web' && (!subscriptionData.endpoint || !subscriptionData.keys)) {
+        throw new Error('Invalid web push subscription data');
       }
       
       if (platform !== 'web' && !subscriptionData.fcmToken) {
         throw new Error('Invalid mobile push subscription data');
       }
-
-      // Ensure user exists (create demo user if needed)
-      await this.ensureUserExists(userId);
 
       // Check for existing subscription
       const whereClause = platform === 'web' 
@@ -53,9 +50,9 @@ class SubscriptionManager {
           data: {
             userId,
             platform,
-            endpoint: subscriptionData.endpoint || null,
-            p256dh: subscriptionData.keys?.p256dh || null,
-            auth: subscriptionData.keys?.auth || null,
+            endpoint: subscriptionData.endpoint,
+            p256dh: subscriptionData.keys?.p256dh,
+            auth: subscriptionData.keys?.auth,
             fcmToken: subscriptionData.fcmToken,
             deviceInfo,
             isActive: true
@@ -138,33 +135,6 @@ class SubscriptionManager {
       return updated;
     } catch (error) {
       console.error('❌ Error updating preferences:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Ensure user exists in database
-   */
-  async ensureUserExists(userId) {
-    try {
-      const existing = await prisma.user.findUnique({
-        where: { id: userId }
-      });
-
-      if (!existing) {
-        await prisma.user.create({
-          data: {
-            id: userId,
-            supabaseId: userId,
-            name: 'Demo User',
-            email: 'demo@example.com',
-            provider: 'demo'
-          }
-        });
-        console.log(`✅ Created demo user ${userId}`);
-      }
-    } catch (error) {
-      console.error('❌ Error ensuring user exists:', error);
       throw error;
     }
   }
@@ -264,7 +234,7 @@ class SubscriptionManager {
       friendActivity: true,
       visitReminders: true,
       adminAlerts: false,
-      pushEnabled: true,
+      pushEnabled: false,
       quietHoursStart: "22:00",
       quietHoursEnd: "08:00",
       reminderHoursBefore: 2

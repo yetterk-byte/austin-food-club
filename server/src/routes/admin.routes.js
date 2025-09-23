@@ -6,39 +6,7 @@ const yelpService = require('../services/yelpService');
 const router = express.Router();
 const prisma = new PrismaClient();
 
-// Admin login endpoint (no auth required)
-router.post('/login', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    
-    // Simple demo admin login
-    if (email === 'admin@austinfoodclub.com' && password === 'admin123') {
-      const token = 'demo-admin-token-123';
-      res.json({
-        success: true,
-        token,
-        admin: {
-          id: 'demo-admin',
-          name: 'Austin Food Club Admin',
-          email: 'admin@austinfoodclub.com'
-        }
-      });
-    } else {
-      res.status(401).json({
-        error: 'Invalid credentials',
-        code: 'INVALID_CREDENTIALS'
-      });
-    }
-  } catch (error) {
-    console.error('Admin login error:', error);
-    res.status(500).json({
-      error: 'Login failed',
-      code: 'LOGIN_ERROR'
-    });
-  }
-});
-
-// Apply admin authentication to all other routes
+// Apply admin authentication to all routes
 router.use(requireAdmin);
 
 /**
@@ -1091,19 +1059,38 @@ router.post('/restaurants/quick-add', async (req, res) => {
     if (!restaurant) {
       // Create new restaurant
       try {
+        // First, ensure Austin city exists
+        const austinCity = await prisma.city.upsert({
+          where: { slug: 'austin' },
+          update: {},
+          create: {
+            name: 'Austin',
+            slug: 'austin',
+            state: 'TX',
+            displayName: 'Austin Food Club',
+            timezone: 'America/Chicago',
+            yelpLocation: 'Austin, TX',
+            yelpRadius: 24140,
+            brandColor: '#FF6B35',
+            logoUrl: 'https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=800&h=600&fit=crop',
+            isActive: true
+          }
+        });
+
         restaurant = await prisma.restaurant.create({
           data: {
             yelpId: yelpId || 'quick-' + Date.now(),
             name: name || 'Quick Restaurant',
             slug: (name || 'quick-restaurant').toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Date.now(),
             address: address || 'Austin, TX',
-            city: 'Austin',
+            cityName: 'Austin',
             state: 'TX',
             zipCode: '78701',
             latitude: 30.2672,
             longitude: -97.7431,
             imageUrl: imageUrl,
             price: price || '$$',
+            cityId: austinCity.id,
             rating: rating || 0,
             reviewCount: 0,
             categories: categories ? JSON.stringify([{alias: 'restaurant', title: categories}]) : null,

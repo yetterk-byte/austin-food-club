@@ -4,7 +4,7 @@ import 'restaurant_screen.dart';
 import 'profile_screen.dart';
 import 'friends_screen.dart';
 import '../models/restaurant.dart';
-import '../services/mock_data_service.dart';
+import '../services/restaurant_service.dart';
 import '../widgets/api_status_indicator.dart';
 
 class NavItem {
@@ -42,7 +42,7 @@ class _MainAppState extends State<MainApp> {
 
   Future<void> _loadFeaturedRestaurant() async {
     try {
-      final restaurant = await MockDataService.getFeaturedRestaurant();
+      final restaurant = await RestaurantService.getFeaturedRestaurant();
       setState(() {
         featuredRestaurant = restaurant;
         isLoading = false;
