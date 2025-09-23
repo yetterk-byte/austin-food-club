@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/restaurant.dart';
+import '../models/verified_visit.dart';
 import '../services/mock_data_service.dart';
 import '../services/api_service.dart';
 import '../services/social_service.dart';
 import '../services/restaurant_service.dart';
+import '../services/verified_visits_service.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/restaurant_search_widget.dart';
 import 'photo_verification_screen.dart';
@@ -27,6 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _loadVerifiedVisits();
+    _loadUserVerifiedVisits();
     _loadFriendCount();
     _loadFavoriteRestaurant();
   }

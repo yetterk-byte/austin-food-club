@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/restaurant.dart';
+import '../models/verified_visit.dart';
+import '../services/verified_visits_service.dart';
 
 class PhotoVerificationScreen extends StatefulWidget {
   final Restaurant restaurant;
@@ -401,14 +403,30 @@ class _PhotoVerificationScreenState extends State<PhotoVerificationScreen> {
     setState(() => _isSubmitting = true);
 
     try {
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 2));
+      print('🔍 PhotoVerificationScreen: Submitting verification for ${widget.restaurant.name}');
       
-      // Show success dialog
-      _showSuccessDialog();
+      // Create verified visit
+      final verifiedVisit = await VerifiedVisitsService.createVerifiedVisit(
+        userId: 1, // TODO: Get from auth service
+        restaurantId: widget.restaurant.id,
+        restaurantName: widget.restaurant.name,
+        restaurantAddress: widget.restaurant.address,
+        rating: _rating,
+        imageUrl: _selectedImagePath,
+        citySlug: 'austin',
+      );
+      
+      if (verifiedVisit != null) {
+        print('✅ PhotoVerificationScreen: Visit verified successfully');
+        // Show success dialog
+        _showSuccessDialog();
+      } else {
+        throw Exception('Failed to create verified visit');
+      }
       
     } catch (e) {
       setState(() => _isSubmitting = false);
+      print('❌ PhotoVerificationScreen: Error verifying visit: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error verifying visit: $e'),
