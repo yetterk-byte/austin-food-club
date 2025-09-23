@@ -501,7 +501,8 @@ app.get('/api/restaurants/search',
       cuisine, 
       price, 
       limit = 20,
-      sortBy = 'rating'
+      sortBy = 'rating',
+      term
     } = req.query;
 
     if (!yelpService.isConfigured()) {
@@ -512,9 +513,9 @@ app.get('/api/restaurants/search',
       });
     }
 
-    console.log('Searching restaurants:', { location, cuisine, price, limit });
+    console.log('Searching restaurants:', { location, cuisine, price, limit, term });
 
-    const results = await yelpService.searchRestaurants(location, cuisine, price, parseInt(limit));
+    const results = await yelpService.searchRestaurants(location, cuisine, price, parseInt(limit), term);
     
     // Format results for our app
     const formattedRestaurants = results.businesses.map(restaurant => 
@@ -530,7 +531,8 @@ app.get('/api/restaurants/search',
         location,
         cuisine,
         price,
-        limit: parseInt(limit)
+        limit: parseInt(limit),
+        term
       }
     });
   } catch (error) {
