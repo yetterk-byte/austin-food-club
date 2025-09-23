@@ -37,7 +37,8 @@ const authRoutes = require('./routes/auth.routes'); // Auth routes
 const rotationRoutes = require('./routes/rotation.routes'); // Rotation routes
 const cityRoutes = require('./routes/city.routes'); // City routes for multi-city support
 const notificationRoutes = require('./routes/notification.routes'); // Push notification routes
-const socialRoutes = require('./routes/social.routes'); // Social features routes
+const socialRoutes = require('./routes/social.routes');
+const visitsRoutes = require('./routes/visits.routes'); // Social features routes
 const analyticsRoutes = require('./routes/analytics.routes'); // Analytics routes
 
 const app = express();
@@ -91,7 +92,8 @@ app.use('/api/notifications', notificationRoutes);
 // Analytics routes (protected)
 app.use('/api/analytics', analyticsRoutes);
 
-app.use('/api', socialRoutes); // Social features routes (rsvps, friends, verified-visits, social-feed)
+app.use('/api', socialRoutes); // Social features routes
+app.use('/api/visits', visitsRoutes); // Verified visits routes (rsvps, friends, verified-visits, social-feed)
 
 // Test endpoint
 app.get('/api/test', (req, res) => {

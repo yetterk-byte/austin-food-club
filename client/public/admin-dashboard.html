@@ -1018,7 +1018,7 @@
                             <label style="color: #ccc; display: block; margin-bottom: 0.5rem;">City Name:</label>
                             <input type="text" id="cityName" placeholder="e.g., Denver" required 
                                    style="width: 100%; padding: 0.75rem; border: 1px solid #444; border-radius: 6px; background: #2a2a2a; color: white;">
-                        </div>
+                    </div>
                         <div>
                             <label style="color: #ccc; display: block; margin-bottom: 0.5rem;">State:</label>
                             <input type="text" id="cityState" placeholder="e.g., CO" required 
@@ -1052,7 +1052,7 @@
                         <div style="grid-column: 1 / -1;">
                             <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem;">
                                 🏙️ Create City
-                            </button>
+                    </button>
                         </div>
                     </form>
                 </div>
@@ -1456,24 +1456,24 @@
             switch (sectionName) {
                 case 'overview':
                     try {
-                        await loadDashboardStats();
+                    await loadDashboardStats();
                     } catch (error) {
                         console.error('Error loading dashboard stats:', error);
                     }
                     try {
-                        await loadCurrentRestaurant();
+                    await loadCurrentRestaurant();
                     } catch (error) {
                         console.error('Error loading current restaurant:', error);
                     }
                     break;
                 case 'queue':
                     try {
-                        await loadCurrentlyFeatured();
+                    await loadCurrentlyFeatured();
                     } catch (error) {
                         console.error('Error loading currently featured:', error);
                     }
                     try {
-                        await loadQueue();
+                    await loadQueue();
                     } catch (error) {
                         console.error('Error loading queue:', error);
                     }
@@ -1495,7 +1495,7 @@
                 case 'analytics':
                     console.log('Loading analytics page...');
                     try {
-                        await loadSystemStatus();
+                    await loadSystemStatus();
                     } catch (error) {
                         console.error('Error loading system status:', error);
                     }
@@ -2436,24 +2436,24 @@
                 
                 // Handle case where no featured restaurant exists for this city
                 if (currentData.error) {
-                    container.innerHTML = `
-                        <div class="stat-card">
+                container.innerHTML = `
+                    <div class="stat-card">
                             <h4>📊 ${currentCity.displayName} Analytics</h4>
                             <p><strong>Current Featured:</strong> <span style="color: #888;">No featured restaurant</span></p>
-                            <p><strong>Queue Size:</strong> ${queueSize} restaurants</p>
-                            <p><strong>Avg Rating:</strong> ${avgRating} stars</p>
+                        <p><strong>Queue Size:</strong> ${queueSize} restaurants</p>
+                        <p><strong>Avg Rating:</strong> ${avgRating} stars</p>
                             <p><strong>Status:</strong> <span style="color: #888;">No active restaurant</span></p>
-                            <p><strong>Last Updated:</strong> ${new Date().toLocaleString()}</p>
-                        </div>
-                        <div class="stat-card" style="margin-top: 1rem;">
-                            <h4>🔋 System Health</h4>
-                            <p><strong>Status:</strong> <span style="color: #20b2aa;">✅ Operational</span></p>
-                            <p><strong>Rotation:</strong> 🔄 Automatic (Tuesdays 9:00 AM)</p>
-                            <p><strong>Auto-Queue:</strong> <span style="color: #20b2aa;">✅ Active</span></p>
-                            <p><strong>Yelp API:</strong> <span style="color: #20b2aa;">✅ Connected</span></p>
-                            <p><strong>Database:</strong> <span style="color: #20b2aa;">✅ Online</span></p>
-                        </div>
-                    `;
+                        <p><strong>Last Updated:</strong> ${new Date().toLocaleString()}</p>
+                    </div>
+                    <div class="stat-card" style="margin-top: 1rem;">
+                        <h4>🔋 System Health</h4>
+                        <p><strong>Status:</strong> <span style="color: #20b2aa;">✅ Operational</span></p>
+                        <p><strong>Rotation:</strong> 🔄 Automatic (Tuesdays 9:00 AM)</p>
+                        <p><strong>Auto-Queue:</strong> <span style="color: #20b2aa;">✅ Active</span></p>
+                        <p><strong>Yelp API:</strong> <span style="color: #20b2aa;">✅ Connected</span></p>
+                        <p><strong>Database:</strong> <span style="color: #20b2aa;">✅ Online</span></p>
+                    </div>
+                `;
                 } else {
                     // Extract categories for display
                     let categories = 'Restaurant';

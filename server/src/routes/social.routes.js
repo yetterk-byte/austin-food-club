@@ -4,6 +4,43 @@ const { PrismaClient } = require('@prisma/client');
 const router = express.Router();
 const prisma = new PrismaClient();
 
+// Mock verified visits data
+const mockVerifiedVisits = [
+  {
+    id: 1,
+    userId: 1,
+    restaurantId: 'sundance-bbq-1',
+    restaurantName: 'Sundance BBQ',
+    restaurantAddress: '8116 Thomas Springs Rd and Cir Dr',
+    rating: 5,
+    imageUrl: 'https://example.com/photo1.jpg',
+    verifiedAt: new Date('2024-01-15T18:30:00Z').toISOString(),
+    citySlug: 'austin'
+  },
+  {
+    id: 2,
+    userId: 1,
+    restaurantId: 'terry-blacks-1',
+    restaurantName: 'Terry Black\'s Barbecue',
+    restaurantAddress: '1003 Barton Springs Rd',
+    rating: 4,
+    imageUrl: 'https://example.com/photo2.jpg',
+    verifiedAt: new Date('2024-01-10T19:45:00Z').toISOString(),
+    citySlug: 'austin'
+  },
+  {
+    id: 3,
+    userId: 2,
+    restaurantId: 'franklin-bbq-1',
+    restaurantName: 'Franklin Barbecue',
+    restaurantAddress: '900 E 11th St',
+    rating: 5,
+    imageUrl: 'https://example.com/photo3.jpg',
+    verifiedAt: new Date('2024-01-08T12:15:00Z').toISOString(),
+    citySlug: 'austin'
+  }
+];
+
 // Mock data for friends
 const mockFriends = [
   {
@@ -395,7 +432,39 @@ router.get('/social-feed/user/:userId', async (req, res) => {
     const friendIds = userFriends.map(friend => friend.friendId);
     
     // Filter social feed to only show activities from friends
-    const userSocialFeed = mockSocialFeed.filter(item => friendIds.includes(item.userId));
+    let userSocialFeed = mockSocialFeed.filter(item => friendIds.includes(item.userId));
+    
+    // Add recent verified visits from friends
+    const recentVerifiedVisits = mockVerifiedVisits
+      .filter(visit => friendIds.includes(visit.userId.toString()))
+      .slice(0, 5) // Limit to 5 most recent
+      .map(visit => {
+        const user = mockFriends.find(friend => friend.friendId === visit.userId.toString())?.friendUser;
+        return {
+          id: `visit_${visit.id}`,
+          userId: visit.userId.toString(),
+          type: 'verified_visit',
+          createdAt: visit.verifiedAt,
+          user: user || {
+            id: visit.userId.toString(),
+            email: 'user@example.com',
+            name: 'User',
+            isVerified: false,
+            createdAt: new Date().toISOString(),
+          },
+          restaurant: {
+            id: visit.restaurantId,
+            name: visit.restaurantName,
+            address: visit.restaurantAddress,
+            imageUrl: visit.imageUrl || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop',
+          },
+          rating: visit.rating,
+          citySlug: visit.citySlug,
+        };
+      });
+    
+    // Combine social feed with verified visits
+    userSocialFeed = [...userSocialFeed, ...recentVerifiedVisits];
     
     // Sort by most recent first
     userSocialFeed.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -868,6 +937,83 @@ const mockCityActivity = [
 ];
 
 /**
+ * GET /api/verified-visits/user/:userId
+ * Get verified visits for a user
+ */
+router.get('/verified-visits/user/:userId', (req, res) => {
+  try {
+    const { userId } = req.params;
+    const userVisits = mockVerifiedVisits.filter(visit => visit.userId === parseInt(userId));
+    
+    console.log(`🔍 Social: Getting verified visits for user ${userId}`);
+    console.log(`✅ Social: Found ${userVisits.length} verified visits for user ${userId}`);
+    
+    res.json({
+      success: true,
+      visits: userVisits,
+      total: userVisits.length
+    });
+  } catch (error) {
+    console.error('❌ Social: Error getting verified visits:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to get verified visits',
+      message: error.message
+    });
+  }
+});
+
+/**
+ * POST /api/verified-visits
+ * Create a new verified visit
+ */
+router.post('/verified-visits', (req, res) => {
+  try {
+    const { userId, restaurantId, restaurantName, restaurantAddress, rating, imageUrl, citySlug } = req.body;
+    
+    // Validate required fields
+    if (!userId || !restaurantId || !restaurantName || !rating) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required fields',
+        message: 'userId, restaurantId, restaurantName, and rating are required'
+      });
+    }
+    
+    // Create new visit
+    const newVisit = {
+      id: mockVerifiedVisits.length + 1,
+      userId: parseInt(userId),
+      restaurantId,
+      restaurantName,
+      restaurantAddress: restaurantAddress || '',
+      rating: parseInt(rating),
+      imageUrl: imageUrl || null,
+      verifiedAt: new Date().toISOString(),
+      citySlug: citySlug || 'austin'
+    };
+    
+    mockVerifiedVisits.push(newVisit);
+    
+    console.log(`🔍 Social: Created new verified visit for user ${userId}`);
+    console.log(`✅ Social: Visit ID ${newVisit.id} - ${restaurantName} (${rating} stars)`);
+    
+    res.status(201).json({
+      success: true,
+      visit: newVisit,
+      message: 'Visit verified successfully'
+    });
+  } catch (error) {
+    console.error('❌ Social: Error creating verified visit:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to create verified visit',
+      message: error.message
+    });
+  }
+});
+
+/**
  * GET /api/city-activity/user/:userId
  * Get city-wide public activity feed
  */
@@ -878,9 +1024,38 @@ router.get('/city-activity/user/:userId', async (req, res) => {
     console.log(`🔍 Social: Getting city activity for user ${userId}`);
     
     // Return only verified visits from city activity (filter out RSVPs and new member joins)
-    // Sort by most recent first
     const verifiedVisitsOnly = mockCityActivity.filter(activity => activity.type === 'verified_visit');
-    const sortedCityActivity = [...verifiedVisitsOnly].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+    // Add recent verified visits from all users
+    const recentVerifiedVisits = mockVerifiedVisits
+      .slice(0, 10) // Limit to 10 most recent
+      .map(visit => ({
+        id: `city_visit_${visit.id}`,
+        userId: visit.userId,
+        type: 'verified_visit',
+        createdAt: visit.verifiedAt,
+        restaurant: {
+          id: visit.restaurantId,
+          name: visit.restaurantName,
+          address: visit.restaurantAddress,
+          imageUrl: visit.imageUrl || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop',
+        },
+        rating: visit.rating,
+        citySlug: visit.citySlug,
+        user: {
+          id: visit.userId,
+          name: `User ${visit.userId}`,
+          email: `user${visit.userId}@example.com`,
+          isVerified: true,
+          createdAt: new Date().toISOString(),
+        },
+      }));
+    
+    // Combine with existing activity
+    const allVerifiedVisits = [...verifiedVisitsOnly, ...recentVerifiedVisits];
+    
+    // Sort by most recent first
+    const sortedCityActivity = allVerifiedVisits.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     
     console.log(`✅ Social: Found ${sortedCityActivity.length} city activity items for user ${userId}`);
     
