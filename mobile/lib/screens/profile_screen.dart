@@ -40,58 +40,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final visits = await VerifiedVisitsService.getUserVisits(1); // TODO: Get from auth service
       
       if (visits.isNotEmpty) {
+        // Sort visits by verification date (most recent first)
+        visits.sort((a, b) => b.verifiedAt.compareTo(a.verifiedAt));
+        
         setState(() {
           verifiedVisits = visits;
         });
-        print('✅ ProfileScreen: Loaded ${visits.length} verified visits from API');
+        print('✅ ProfileScreen: Loaded ${visits.length} verified visits from API (sorted by date)');
       } else {
         // Fallback to mock data if no real data available
         final restaurants = await MockDataService.getAllRestaurantsMock();
-        setState(() {
-          verifiedVisits = [
-            VerifiedVisit(
-              id: 1,
-              userId: 1,
-              restaurantId: restaurants[0].id,
-              restaurantName: restaurants[0].name,
-              restaurantAddress: restaurants[0].address,
-              rating: 5,
-              imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop',
-              verifiedAt: DateTime.now().subtract(const Duration(days: 3)),
-              citySlug: 'austin',
-            ),
-            VerifiedVisit(
-              id: 2,
-              userId: 1,
-              restaurantId: restaurants[1].id,
-              restaurantName: restaurants[1].name,
-              restaurantAddress: restaurants[1].address,
-              rating: 4,
-              imageUrl: 'https://images.unsplash.com/photo-1558030006-450675393462?w=400&h=300&fit=crop',
-              verifiedAt: DateTime.now().subtract(const Duration(days: 10)),
-              citySlug: 'austin',
-            ),
-            VerifiedVisit(
-              id: 3,
-              userId: 1,
-              restaurantId: restaurants[2].id,
-              restaurantName: restaurants[2].name,
-              restaurantAddress: restaurants[2].address,
-              rating: 4,
-              imageUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop',
-              verifiedAt: DateTime.now().subtract(const Duration(days: 18)),
-              citySlug: 'austin',
-            ),
-          ];
-        });
-        print('✅ ProfileScreen: Using mock verified visits data');
-      }
-    } catch (e) {
-      print('❌ ProfileScreen: Error loading verified visits: $e');
-      // Fallback to mock data on error
-      final restaurants = await MockDataService.getAllRestaurantsMock();
-      setState(() {
-        verifiedVisits = [
+        final mockVisits = [
           VerifiedVisit(
             id: 1,
             userId: 1,
@@ -126,6 +85,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
             citySlug: 'austin',
           ),
         ];
+        
+        // Sort mock visits by verification date (most recent first)
+        mockVisits.sort((a, b) => b.verifiedAt.compareTo(a.verifiedAt));
+      
+      setState(() {
+          verifiedVisits = mockVisits;
+      });
+        print('✅ ProfileScreen: Using mock verified visits data');
+      }
+    } catch (e) {
+      print('❌ ProfileScreen: Error loading verified visits: $e');
+      // Fallback to mock data on error
+      final restaurants = await MockDataService.getAllRestaurantsMock();
+      final fallbackVisits = [
+        VerifiedVisit(
+          id: 1,
+          userId: 1,
+          restaurantId: restaurants[0].id,
+          restaurantName: restaurants[0].name,
+          restaurantAddress: restaurants[0].address,
+          rating: 5,
+          imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop',
+          verifiedAt: DateTime.now().subtract(const Duration(days: 3)),
+          citySlug: 'austin',
+        ),
+        VerifiedVisit(
+          id: 2,
+          userId: 1,
+          restaurantId: restaurants[1].id,
+          restaurantName: restaurants[1].name,
+          restaurantAddress: restaurants[1].address,
+          rating: 4,
+          imageUrl: 'https://images.unsplash.com/photo-1558030006-450675393462?w=400&h=300&fit=crop',
+          verifiedAt: DateTime.now().subtract(const Duration(days: 10)),
+          citySlug: 'austin',
+        ),
+        VerifiedVisit(
+          id: 3,
+          userId: 1,
+          restaurantId: restaurants[2].id,
+          restaurantName: restaurants[2].name,
+          restaurantAddress: restaurants[2].address,
+          rating: 4,
+          imageUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop',
+          verifiedAt: DateTime.now().subtract(const Duration(days: 18)),
+          citySlug: 'austin',
+        ),
+      ];
+      
+      // Sort fallback visits by verification date (most recent first)
+      fallbackVisits.sort((a, b) => b.verifiedAt.compareTo(a.verifiedAt));
+      
+      setState(() {
+        verifiedVisits = fallbackVisits;
       });
       print('✅ ProfileScreen: Using fallback mock verified visits data');
     }
