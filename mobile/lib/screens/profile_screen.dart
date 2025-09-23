@@ -29,55 +29,105 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _loadVerifiedVisits();
-    _loadUserVerifiedVisits();
     _loadFriendCount();
     _loadFavoriteRestaurant();
   }
 
   Future<void> _loadVerifiedVisits() async {
     try {
-      // Try to get real verified visits from API
-      final data = await ApiService.getVerifiedVisits('demo-user-123');
+      print('🔍 ProfileScreen: Loading verified visits');
+      // Try to get real verified visits from our new API
+      final visits = await VerifiedVisitsService.getUserVisits(1); // TODO: Get from auth service
       
-      if (data.isNotEmpty) {
-        // Convert API data to VerifiedVisit objects
-        verifiedVisits = data.map((item) => VerifiedVisit.fromJson(item)).toList();
+      if (visits.isNotEmpty) {
+        setState(() {
+          verifiedVisits = visits;
+        });
+        print('✅ ProfileScreen: Loaded ${visits.length} verified visits from API');
       } else {
         // Fallback to mock data if no real data available
         final restaurants = await MockDataService.getAllRestaurantsMock();
+        setState(() {
+          verifiedVisits = [
+            VerifiedVisit(
+              id: 1,
+              userId: 1,
+              restaurantId: restaurants[0].id,
+              restaurantName: restaurants[0].name,
+              restaurantAddress: restaurants[0].address,
+              rating: 5,
+              imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop',
+              verifiedAt: DateTime.now().subtract(const Duration(days: 3)),
+              citySlug: 'austin',
+            ),
+            VerifiedVisit(
+              id: 2,
+              userId: 1,
+              restaurantId: restaurants[1].id,
+              restaurantName: restaurants[1].name,
+              restaurantAddress: restaurants[1].address,
+              rating: 4,
+              imageUrl: 'https://images.unsplash.com/photo-1558030006-450675393462?w=400&h=300&fit=crop',
+              verifiedAt: DateTime.now().subtract(const Duration(days: 10)),
+              citySlug: 'austin',
+            ),
+            VerifiedVisit(
+              id: 3,
+              userId: 1,
+              restaurantId: restaurants[2].id,
+              restaurantName: restaurants[2].name,
+              restaurantAddress: restaurants[2].address,
+              rating: 4,
+              imageUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop',
+              verifiedAt: DateTime.now().subtract(const Duration(days: 18)),
+              citySlug: 'austin',
+            ),
+          ];
+        });
+        print('✅ ProfileScreen: Using mock verified visits data');
+      }
+    } catch (e) {
+      print('❌ ProfileScreen: Error loading verified visits: $e');
+      // Fallback to mock data on error
+      final restaurants = await MockDataService.getAllRestaurantsMock();
+      setState(() {
         verifiedVisits = [
           VerifiedVisit(
-            restaurant: restaurants[0],
-            visitDate: DateTime.now().subtract(const Duration(days: 3)),
-            rating: 5.0,
-            photoUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop',
-            review: 'Amazing handmade tortillas and great atmosphere!',
+            id: 1,
+            userId: 1,
+            restaurantId: restaurants[0].id,
+            restaurantName: restaurants[0].name,
+            restaurantAddress: restaurants[0].address,
+            rating: 5,
+            imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop',
+            verifiedAt: DateTime.now().subtract(const Duration(days: 3)),
+            citySlug: 'austin',
           ),
           VerifiedVisit(
-            restaurant: restaurants[1],
-            visitDate: DateTime.now().subtract(const Duration(days: 10)),
-            rating: 4.5,
-            photoUrl: 'https://images.unsplash.com/photo-1558030006-450675393462?w=400&h=300&fit=crop',
-            review: 'Best brisket in Austin. Worth the wait!',
+            id: 2,
+            userId: 1,
+            restaurantId: restaurants[1].id,
+            restaurantName: restaurants[1].name,
+            restaurantAddress: restaurants[1].address,
+            rating: 4,
+            imageUrl: 'https://images.unsplash.com/photo-1558030006-450675393462?w=400&h=300&fit=crop',
+            verifiedAt: DateTime.now().subtract(const Duration(days: 10)),
+            citySlug: 'austin',
           ),
           VerifiedVisit(
-            restaurant: restaurants[2],
-            visitDate: DateTime.now().subtract(const Duration(days: 18)),
-            rating: 4.0,
-            photoUrl: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop',
-            review: 'Incredible sushi and presentation.',
+            id: 3,
+            userId: 1,
+            restaurantId: restaurants[2].id,
+            restaurantName: restaurants[2].name,
+            restaurantAddress: restaurants[2].address,
+            rating: 4,
+            imageUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop',
+            verifiedAt: DateTime.now().subtract(const Duration(days: 18)),
+            citySlug: 'austin',
           ),
         ];
-      }
-      
-      setState(() {
-        // Trigger UI update to show the new verified visits count
       });
-    } catch (e) {
-      print('Error loading verified visits: $e');
-      setState(() {
-        verifiedVisits = [];
-      });
+      print('✅ ProfileScreen: Using fallback mock verified visits data');
     }
   }
 
@@ -943,7 +993,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         image: DecorationImage(
-          image: NetworkImage(visit.photoUrl),
+          image: NetworkImage(visit.imageUrl ?? 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop'),
           fit: BoxFit.cover,
         ),
       ),
@@ -968,12 +1018,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
               right: 0,
               child: GestureDetector(
                 onTap: () {
+                  // Create a Restaurant object from the verified visit data
+                  final restaurant = Restaurant(
+                    id: visit.restaurantId,
+                    name: visit.restaurantName,
+                    address: visit.restaurantAddress,
+                    city: 'Austin',
+                    state: 'TX',
+                    zipCode: '',
+                    latitude: 0.0,
+                    longitude: 0.0,
+                    imageUrl: visit.imageUrl,
+                    rating: visit.rating.toDouble(),
+                    categories: [],
+                  );
                   setState(() {
-                    favoriteRestaurant = visit.restaurant;
+                    favoriteRestaurant = restaurant;
                   });
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('${visit.restaurant.name} set as favorite!'),
+                      content: Text('${visit.restaurantName} set as favorite!'),
                       backgroundColor: Colors.green,
                       duration: const Duration(seconds: 2),
                     ),
@@ -982,7 +1046,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: favoriteRestaurant?.id == visit.restaurant.id
+                    color: favoriteRestaurant?.id == visit.restaurantId
                         ? Colors.red.withOpacity(0.9) // Red background for favorite
                         : Colors.transparent, // Transparent for clickable hearts
                     shape: BoxShape.circle,
@@ -992,7 +1056,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   child: Icon(
-                    favoriteRestaurant?.id == visit.restaurant.id
+                    favoriteRestaurant?.id == visit.restaurantId
                         ? Icons.favorite // Filled heart for current favorite
                         : Icons.favorite_border, // Outline heart for clickable options
                     color: Colors.white,
@@ -1010,7 +1074,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
             Text(
-              visit.restaurant.name,
+              visit.restaurantName,
               style: const TextStyle(
                 fontSize: 14,
                     fontWeight: FontWeight.w400,
@@ -1024,9 +1088,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 ...List.generate(5, (index) {
                   return Icon(
-                    index < visit.rating.floor()
+                    index < visit.rating
                         ? Icons.star
-                        : (index < visit.rating ? Icons.star_half : Icons.star_border),
+                        : Icons.star_border,
                     color: Colors.white,
                     size: 12,
                   );
@@ -1078,30 +1142,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-// Models for verified visits
-class VerifiedVisit {
-  final Restaurant restaurant;
-  final DateTime visitDate;
-  final double rating;
-  final String photoUrl;
-  final String review;
-
-  VerifiedVisit({
-    required this.restaurant,
-    required this.visitDate,
-    required this.rating,
-    required this.photoUrl,
-    required this.review,
-  });
-
-  factory VerifiedVisit.fromJson(Map<String, dynamic> json) {
-    return VerifiedVisit(
-      restaurant: Restaurant.fromJson(json['restaurant']),
-      visitDate: DateTime.parse(json['visitDate']),
-      rating: (json['rating'] as num).toDouble(),
-      photoUrl: json['photoUrl'] ?? '',
-      review: json['review'] ?? '',
-    );
-  }
-}
 
