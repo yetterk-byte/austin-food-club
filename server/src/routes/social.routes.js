@@ -877,9 +877,10 @@ router.get('/city-activity/user/:userId', async (req, res) => {
     
     console.log(`🔍 Social: Getting city activity for user ${userId}`);
     
-    // Return all city activity (public activities from all Austin Food Club members)
+    // Return only verified visits from city activity (filter out RSVPs and new member joins)
     // Sort by most recent first
-    const sortedCityActivity = [...mockCityActivity].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    const verifiedVisitsOnly = mockCityActivity.filter(activity => activity.type === 'verified_visit');
+    const sortedCityActivity = [...verifiedVisitsOnly].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     
     console.log(`✅ Social: Found ${sortedCityActivity.length} city activity items for user ${userId}`);
     
