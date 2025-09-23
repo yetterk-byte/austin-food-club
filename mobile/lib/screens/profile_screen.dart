@@ -252,12 +252,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     );
                                   }
                                   
-                                  final featuredRestaurant = snapshot.data!;
-                                  return _buildRestaurantCard(
-                                    featuredRestaurant,
-                                    isFeatured: true,
-                                    onTap: () => _verifyVisitToRestaurant(featuredRestaurant),
-                                  );
+                              final featuredRestaurant = snapshot.data!;
+                              // Check if user has already verified this restaurant
+                              final hasVerified = verifiedVisits.any(
+                                (visit) => visit.restaurantId == featuredRestaurant.id || 
+                                          visit.restaurantName == featuredRestaurant.name
+                              );
+                              
+                              if (hasVerified) {
+                                return _buildAlreadyVerifiedCard(featuredRestaurant);
+                              } else {
+                                return _buildRestaurantCard(
+                                  featuredRestaurant,
+                                  isFeatured: true,
+                                  onTap: () => _verifyVisitToRestaurant(featuredRestaurant),
+                                );
+                              }
                                 },
                               ),
                             ],
@@ -375,7 +385,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       MaterialPageRoute(
         builder: (context) => PhotoVerificationScreen(restaurant: restaurant),
       ),
-    );
+    ).then((_) {
+      // Refresh verified visits when returning from photo verification
+      _loadVerifiedVisits();
+    });
   }
 
   void _showRestaurantSelector() {
@@ -984,6 +997,78 @@ class _ProfileScreenState extends State<ProfileScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
+      ),
+    );
+  }
+
+  Widget _buildAlreadyVerifiedCard(Restaurant restaurant) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey[800],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.green.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          // Check mark icon
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.green.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Icon(
+              Icons.check_circle,
+              color: Colors.green,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: 12),
+          // Restaurant info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  restaurant.name,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${restaurant.name} has already been verified',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.green[300],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Verified badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.green.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              'VERIFIED',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                color: Colors.green[300],
+                letterSpacing: 0.5,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
