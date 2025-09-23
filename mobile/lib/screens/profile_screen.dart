@@ -6,6 +6,7 @@ import '../services/api_service.dart';
 import '../services/social_service.dart';
 import '../services/restaurant_service.dart';
 import '../providers/auth_provider.dart';
+import '../widgets/restaurant_search_widget.dart';
 import 'photo_verification_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -220,56 +221,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: 12),
                   
-                  // Search field
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[800],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: TextField(
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        hintText: 'Search restaurants...',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        prefixIcon: Icon(Icons.search, color: Colors.grey),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      ),
-                      onChanged: (value) {
-                        // TODO: Implement search functionality
-                      },
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 16),
-                  
-                  // Other restaurants list
+                  // Smart search widget
                   Expanded(
-                    child: FutureBuilder<List<Restaurant>>(
-                      future: MockDataService.getAllRestaurantsMock(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator(color: Colors.orange));
-                        }
-                        
-                        if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        }
-                        
-                        final restaurants = snapshot.data ?? [];
-                        return ListView.builder(
-                          controller: scrollController,
-                          itemCount: restaurants.length,
-                          itemBuilder: (context, index) {
-                            final restaurant = restaurants[index];
-                            return _buildRestaurantCard(
-                              restaurant,
-                              isFeatured: false,
-                              onTap: () => _verifyVisitToRestaurant(restaurant),
-                            );
-                          },
-                        );
-                      },
+                    child: RestaurantSearchWidget(
+                      onRestaurantSelected: _verifyVisitToRestaurant,
                     ),
                   ),
                 ],

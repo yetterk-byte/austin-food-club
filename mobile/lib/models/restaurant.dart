@@ -60,27 +60,49 @@ class Restaurant {
       cityName = json['cityName'];
     }
     
+    // Handle coordinates - can be nested object or direct values
+    double latitude = 0.0;
+    double longitude = 0.0;
+    if (json['coordinates'] is Map) {
+      latitude = (json['coordinates']['latitude'] ?? 0.0).toDouble();
+      longitude = (json['coordinates']['longitude'] ?? 0.0).toDouble();
+    } else {
+      latitude = (json['latitude'] ?? 0.0).toDouble();
+      longitude = (json['longitude'] ?? 0.0).toDouble();
+    }
+    
+    // Handle categories - can be list of strings or list of objects
+    List<Category>? categories;
+    if (json['categories'] != null) {
+      if (json['categories'] is List) {
+        categories = (json['categories'] as List).map((c) {
+          if (c is String) {
+            return Category(alias: c.toLowerCase().replaceAll(' ', '_'), title: c);
+          } else if (c is Map<String, dynamic>) {
+            return Category.fromJson(c);
+          }
+          return Category(alias: 'unknown', title: 'Unknown');
+        }).toList();
+      }
+    }
+    
     return Restaurant(
-      id: json['id'],
-      yelpId: json['yelpId'],
-      name: json['name'],
-      address: json['address'],
+      id: json['id'] ?? json['yelpId'] ?? '',
+      yelpId: json['yelpId'] ?? json['id'] ?? '',
+      name: json['name'] ?? '',
+      address: json['address'] ?? '',
       city: cityName,
       state: json['state'] ?? 'TX',
       zipCode: json['zipCode']?.toString() ?? '',
-      latitude: (json['latitude'] ?? 0.0).toDouble(),
-      longitude: (json['longitude'] ?? 0.0).toDouble(),
+      latitude: latitude,
+      longitude: longitude,
       phone: json['phone'],
-      imageUrl: json['imageUrl'],
-      yelpUrl: json['yelpUrl'],
-      price: json['price'],
+      imageUrl: json['imageUrl'] ?? json['image_url'],
+      yelpUrl: json['yelpUrl'] ?? json['url'],
+      price: json['price'] ?? json['priceRange'],
       rating: json['rating']?.toDouble(),
-      reviewCount: json['reviewCount'],
-      categories: json['categories'] != null
-          ? (json['categories'] as List)
-              .map((c) => Category.fromJson(c))
-              .toList()
-          : null,
+      reviewCount: json['reviewCount'] ?? json['review_count'],
+      categories: categories,
       hours: _parseHours(json['hours']),
       specialNotes: json['specialNotes'],
       expectedWait: json['expectedWait'],
