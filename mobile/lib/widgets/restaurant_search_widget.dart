@@ -135,76 +135,86 @@ class _RestaurantSearchWidgetState extends State<RestaurantSearchWidget> {
         const SizedBox(height: 16),
 
         // Search results
-        if (_isSearching)
-          const Center(
-            child: Padding(
-              padding: EdgeInsets.all(20),
-              child: CircularProgressIndicator(color: Colors.orange),
-            ),
-          )
-        else if (_searchResults.isEmpty && _searchController.text.isNotEmpty)
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.grey[800],
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Center(
-              child: Text(
-                'No restaurants found',
-                style: TextStyle(color: Colors.grey),
-              ),
-            ),
-          )
-        else if (_searchResults.isNotEmpty)
-          Container(
-            constraints: const BoxConstraints(maxHeight: 400),
-            decoration: BoxDecoration(
-              color: Colors.grey[800],
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey[700]!),
-            ),
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: _searchResults.length,
-              itemBuilder: (context, index) {
-                final restaurant = _searchResults[index];
-                return _buildRestaurantTile(restaurant);
-              },
-            ),
-          )
-        else
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.grey[800],
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Center(
-              child: Column(
-                children: [
-                  Icon(Icons.search, size: 48, color: Colors.grey),
-                  SizedBox(height: 12),
-                  Text(
-                    'Search for restaurants',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 16,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Type a restaurant name to find it',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+        Expanded(
+          child: _buildSearchResults(),
+        ),
       ],
+    );
+  }
+
+  Widget _buildSearchResults() {
+    if (_isSearching) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: CircularProgressIndicator(color: Colors.orange),
+        ),
+      );
+    }
+    
+    if (_searchResults.isEmpty && _searchController.text.isNotEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.grey[800],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Center(
+          child: Text(
+            'No restaurants found',
+            style: TextStyle(color: Colors.grey),
+          ),
+        ),
+      );
+    }
+    
+    if (_searchResults.isNotEmpty) {
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[800],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey[700]!),
+        ),
+        child: ListView.builder(
+          itemCount: _searchResults.length,
+          itemBuilder: (context, index) {
+            final restaurant = _searchResults[index];
+            return _buildRestaurantTile(restaurant);
+          },
+        ),
+      );
+    }
+    
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.grey[800],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.search, size: 48, color: Colors.grey),
+            SizedBox(height: 12),
+            Text(
+              'Search for restaurants',
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 16,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Type a restaurant name to find it',
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

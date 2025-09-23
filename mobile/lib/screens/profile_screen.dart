@@ -105,135 +105,141 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _showVerifyVisitModal() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.grey[900],
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.7,
-          minChildSize: 0.5,
-          maxChildSize: 0.9,
-          expand: false,
-          builder: (context, scrollController) {
-            return Container(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Header
-                  Row(
-                    children: [
-                      const Icon(Icons.camera_alt, color: Colors.orange, size: 24),
-                      const SizedBox(width: 12),
-                      const Text(
-                        'Verify Visit',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      const Spacer(),
-                      IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.close, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  
-                  // Featured Restaurant Section
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.orange.withOpacity(0.3)),
-                    ),
+        showModalBottomSheet(
+          context: context,
+          backgroundColor: Colors.grey[900],
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          builder: (context) {
+            return DraggableScrollableSheet(
+              initialChildSize: 0.75,
+              minChildSize: 0.5,
+              maxChildSize: 0.95,
+              expand: false,
+              builder: (context, scrollController) {
+                return Container(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                  child: SingleChildScrollView(
+                    controller: scrollController,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Header
                         Row(
                           children: [
-                            const Icon(Icons.star, color: Colors.orange, size: 20),
-                            const SizedBox(width: 8),
+                            const Icon(Icons.camera_alt, color: Colors.orange, size: 24),
+                            const SizedBox(width: 12),
                             const Text(
-                              'This Week\'s Featured Restaurant',
+                              'Verify Visit',
                               style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.orange,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w400,
                               ),
+                            ),
+                            const Spacer(),
+                            IconButton(
+                              onPressed: () => Navigator.pop(context),
+                              icon: const Icon(Icons.close, color: Colors.grey),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
-                        FutureBuilder<Restaurant?>(
-                          future: RestaurantService.getFeaturedRestaurant(citySlug: 'austin'),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return const Center(
-                                child: Padding(
-                                  padding: EdgeInsets.all(20),
-                                  child: CircularProgressIndicator(color: Colors.orange),
-                                ),
-                              );
-                            }
-                            
-                            if (snapshot.hasError || snapshot.data == null) {
-                              return Container(
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[800],
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const Text(
-                                  'No featured restaurant this week',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              );
-                            }
-                            
-                            final featuredRestaurant = snapshot.data!;
-                            return _buildRestaurantCard(
-                              featuredRestaurant,
-                              isFeatured: true,
-                              onTap: () => _verifyVisitToRestaurant(featuredRestaurant),
-                            );
-                          },
+                        const SizedBox(height: 20),
+                        
+                        // Featured Restaurant Section
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(Icons.star, color: Colors.orange, size: 20),
+                                  const SizedBox(width: 8),
+                                  const Text(
+                                    'This Week\'s Featured Restaurant',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.orange,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              FutureBuilder<Restaurant?>(
+                                future: RestaurantService.getFeaturedRestaurant(citySlug: 'austin'),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return const Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(20),
+                                        child: CircularProgressIndicator(color: Colors.orange),
+                                      ),
+                                    );
+                                  }
+                                  
+                                  if (snapshot.hasError || snapshot.data == null) {
+                                    return Container(
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[800],
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: const Text(
+                                        'No featured restaurant this week',
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                    );
+                                  }
+                                  
+                                  final featuredRestaurant = snapshot.data!;
+                                  return _buildRestaurantCard(
+                                    featuredRestaurant,
+                                    isFeatured: true,
+                                    onTap: () => _verifyVisitToRestaurant(featuredRestaurant),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
+                        
+                        const SizedBox(height: 24),
+                        
+                        // Other Restaurants Section
+                        const Text(
+                          'Other Restaurants',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        
+                        // Smart search widget with fixed height
+                        SizedBox(
+                          height: 400, // Fixed height to prevent overflow
+                          child: RestaurantSearchWidget(
+                            onRestaurantSelected: _verifyVisitToRestaurant,
+                          ),
+                        ),
+                        
+                        const SizedBox(height: 20), // Extra bottom padding
                       ],
                     ),
                   ),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // Other Restaurants Section
-                  const Text(
-                    'Other Restaurants',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  
-                  // Smart search widget
-                  Expanded(
-                    child: RestaurantSearchWidget(
-                      onRestaurantSelected: _verifyVisitToRestaurant,
-                    ),
-                  ),
-                ],
-              ),
+                );
+              },
             );
           },
         );
-      },
-    );
   }
 
   Widget _buildRestaurantCard(Restaurant restaurant, {required bool isFeatured, required VoidCallback onTap}) {
