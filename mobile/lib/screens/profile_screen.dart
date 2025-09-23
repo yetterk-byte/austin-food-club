@@ -6,7 +6,7 @@ import '../services/api_service.dart';
 import '../services/social_service.dart';
 import '../services/restaurant_service.dart';
 import '../providers/auth_provider.dart';
-// import 'photo_verification_screen.dart'; // Temporarily disabled
+import 'photo_verification_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -355,33 +355,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _verifyVisitToRestaurant(Restaurant restaurant) {
     Navigator.pop(context); // Close the modal
     
-    // Show confirmation dialog
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.grey[900],
-        title: const Text('Verify Visit'),
-        content: Text('Are you ready to verify your visit to ${restaurant.name}?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // TODO: Implement actual photo verification
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Visit verification for ${restaurant.name} coming soon!'),
-                  backgroundColor: Colors.orange,
-                ),
-              );
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-            child: const Text('Verify'),
-          ),
-        ],
+    // Navigate directly to photo verification screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PhotoVerificationScreen(restaurant: restaurant),
       ),
     );
   }
