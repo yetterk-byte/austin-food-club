@@ -12,29 +12,46 @@ class SearchService {
     int limit = 10,
   }) async {
     try {
+      print('🔍 SearchService: Searching for "$query"');
+      
+      final uri = Uri.parse('$baseUrl/restaurants/search').replace(
+        queryParameters: {
+          'term': query,
+          'location': location,
+          'limit': limit.toString(),
+          'sort_by': 'rating',
+        },
+      );
+      
+      print('🔍 SearchService: Making request to ${uri.toString()}');
+      
       final response = await http.get(
-        Uri.parse('$baseUrl/restaurants/search').replace(
-          queryParameters: {
-            'term': query,
-            'location': location,
-            'limit': limit.toString(),
-            'sort_by': 'rating',
-          },
-        ),
+        uri,
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
       );
       
+      print('🔍 SearchService: Response status: ${response.statusCode}');
+      print('🔍 SearchService: Response body length: ${response.body.length}');
+      
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         
         if (data['success'] == true && data['restaurants'] != null) {
           final List<dynamic> restaurantsData = data['restaurants'];
-          return restaurantsData.map((json) => Restaurant.fromJson(json)).toList();
+          print('✅ SearchService: Found ${restaurantsData.length} restaurants');
+          
+          final restaurants = restaurantsData.map((json) => Restaurant.fromJson(json)).toList();
+          
+          for (final restaurant in restaurants) {
+            print('🍽️ SearchService: Found restaurant: ${restaurant.name}');
+          }
+          
+          return restaurants;
         } else {
-          print('❌ SearchService: API returned unsuccessful response');
+          print('❌ SearchService: API returned unsuccessful response: ${data}');
           return [];
         }
       } else {

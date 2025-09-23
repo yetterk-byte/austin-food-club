@@ -66,6 +66,8 @@ class _RestaurantSearchWidgetState extends State<RestaurantSearchWidget> {
   Future<void> _performSearch(String query) async {
     if (query == _lastSearchQuery) return;
     
+    print('🔍 RestaurantSearchWidget: Performing search for "$query"');
+    
     setState(() {
       _isSearching = true;
       _lastSearchQuery = query;
@@ -77,13 +79,17 @@ class _RestaurantSearchWidgetState extends State<RestaurantSearchWidget> {
         limit: 10,
       );
 
+      print('🔍 RestaurantSearchWidget: Received ${results.length} results');
+
       if (mounted && query == _lastSearchQuery) {
         setState(() {
           _searchResults = results;
           _isSearching = false;
         });
+        print('✅ RestaurantSearchWidget: Updated UI with ${results.length} results');
       }
     } catch (e) {
+      print('❌ RestaurantSearchWidget: Search error: $e');
       if (mounted && query == _lastSearchQuery) {
         setState(() {
           _searchResults = [];
