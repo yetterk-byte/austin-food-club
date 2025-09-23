@@ -4,6 +4,7 @@ import '../models/friend.dart';
 import '../models/user.dart';
 import '../services/social_service.dart';
 import '../providers/auth_provider.dart';
+import 'friend_profile_screen.dart';
 
 class FriendsScreen extends StatefulWidget {
   const FriendsScreen({super.key});
@@ -16,6 +17,7 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
   late TabController _tabController;
   List<Friend> friends = [];
   List<SocialFeedItem> socialFeed = [];
+  List<SocialFeedItem> cityActivity = [];
   List<User> searchResults = [];
   bool isLoading = true;
   bool isSearching = false;
@@ -25,7 +27,7 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this, initialIndex: 0);
+    _tabController = TabController(length: 3, vsync: this, initialIndex: 0);
     _loadData();
   }
 
@@ -47,10 +49,12 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
 
       final loadedFriends = await SocialService.getFriends(userId);
       final loadedFeed = await SocialService.getSocialFeed(userId);
+      final loadedCityActivity = await SocialService.getCityActivity(userId);
 
       setState(() {
         friends = loadedFriends;
         socialFeed = loadedFeed;
+        cityActivity = loadedCityActivity;
         isLoading = false;
       });
     } catch (e) {
@@ -175,7 +179,8 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
           labelColor: Colors.orange,
           unselectedLabelColor: Colors.grey[400],
           tabs: const [
-            Tab(text: 'Activity'),
+            Tab(text: 'Following'),
+            Tab(text: 'City Activity'),
             Tab(text: 'My Friends'),
           ],
         ),
@@ -184,7 +189,57 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
         controller: _tabController,
         children: [
           _buildActivityTab(),
+          _buildCityActivityTab(),
           _buildFriendsTab(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCityActivityTab() {
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator(color: Colors.orange));
+    }
+
+    if (cityActivity.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.location_city, size: 80, color: Colors.grey[600]),
+            const SizedBox(height: 24),
+            Text(
+              'No city activity yet',
+              style: TextStyle(fontSize: 20, color: Colors.grey[400]),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Public activity from Austin Food Club members\nwill appear here! Discover new restaurants and connect with fellow foodies.',
+              style: TextStyle(color: Colors.grey[500]),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: _loadData,
+      color: Colors.orange,
+      child: CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 120), // Extra bottom padding for floating buttons
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final item = cityActivity[index];
+                  return _buildModernFeedItem(item);
+                },
+                childCount: cityActivity.length,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -378,9 +433,15 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
             style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
-        title: Text(
-          friend.friendUser.name,
-          style: const TextStyle(fontWeight: FontWeight.w600),
+        title: GestureDetector(
+          onTap: () => _navigateToFriendProfile(friend.friendUser),
+          child: Text(
+            friend.friendUser.name,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Colors.orange,
+            ),
+          ),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -401,9 +462,21 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
               _showRemoveFriendDialog(friend);
             } else if (value == 'view_visits') {
               _showFriendVisits(friend);
+            } else if (value == 'view_profile') {
+              _navigateToFriendProfile(friend.friendUser);
             }
           },
           itemBuilder: (context) => [
+            const PopupMenuItem(
+              value: 'view_profile',
+              child: Row(
+                children: [
+                  Icon(Icons.person, size: 20),
+                  SizedBox(width: 12),
+                  Text('View Profile'),
+                ],
+              ),
+            ),
             const PopupMenuItem(
               value: 'view_visits',
               child: Row(
@@ -426,7 +499,7 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
             ),
           ],
         ),
-        onTap: () => _showFriendVisits(friend),
+        onTap: () => _navigateToFriendProfile(friend.friendUser),
       ),
     );
   }
@@ -530,23 +603,26 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
               ),
             ),
           ),
-          // Top-left: Friend name
+          // Top-left: Friend name (clickable)
           Positioned(
             top: 20,
             left: 20,
-            child: Text(
-              item.user.name,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w400,
-                shadows: [
-                  Shadow(
-                    color: Colors.black54,
-                    blurRadius: 2,
-                    offset: Offset(1, 1),
-                  ),
-                ],
+            child: GestureDetector(
+              onTap: () => _navigateToFriendProfile(item.user),
+              child: Text(
+                item.user.name,
+                style: const TextStyle(
+                  color: Colors.orange,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black54,
+                      blurRadius: 2,
+                      offset: Offset(1, 1),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -667,33 +743,39 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RichText(
-                  text: TextSpan(
-                    style: const TextStyle(color: Colors.white, fontSize: 14),
-                    children: [
-                      TextSpan(
-                        text: item.user.name,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const TextSpan(text: ' is going to '),
-                      TextSpan(
-                        text: item.restaurant?.name ?? 'a restaurant',
-                        style: const TextStyle(
-                          color: Colors.orange,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      if (item.rsvpDay != null) ...[
-                        const TextSpan(text: ' on '),
+                GestureDetector(
+                  onTap: () => _navigateToFriendProfile(item.user),
+                  child: RichText(
+                    text: TextSpan(
+                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                      children: [
                         TextSpan(
-                          text: item.rsvpDay!,
+                          text: item.user.name,
                           style: const TextStyle(
-                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange,
+                          ),
+                        ),
+                        const TextSpan(text: ' is going to '),
+                        TextSpan(
+                          text: item.restaurant?.name ?? 'a restaurant',
+                          style: const TextStyle(
+                            color: Colors.orange,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
+                        if (item.rsvpDay != null) ...[
+                          const TextSpan(text: ' on '),
+                          TextSpan(
+                            text: item.rsvpDay!,
+                            style: const TextStyle(
+                              color: Colors.green,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -1099,5 +1181,14 @@ class _FriendsScreenState extends State<FriendsScreen> with TickerProviderStateM
       default:
         return 'Never';
     }
+  }
+
+  void _navigateToFriendProfile(User friend) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FriendProfileScreen(friend: friend),
+      ),
+    );
   }
 }

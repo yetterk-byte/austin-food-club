@@ -17,12 +17,97 @@ import Wishlist from './pages/Wishlist';
 import Login from './pages/Login';
 import StaticMapTest from './components/StaticMapTest';
 
-// Admin Components
-import AdminGuard from './components/Admin/AdminGuard';
-import AdminLayout from './components/Admin/AdminLayout';
-import AdminLogin from './pages/Admin/AdminLogin';
-import AdminDashboard from './pages/Admin/Dashboard';
-import RestaurantQueue from './pages/Admin/RestaurantQueue';
+// Admin Components - Removed (using HTML admin dashboard instead)
+const CatchAllRoute = () => {
+  const location = useLocation();
+  
+  // Don't redirect admin-dashboard.html - let it be served as static file
+  if (location.pathname === '/admin-dashboard.html') {
+    return <div>Loading admin dashboard...</div>;
+  }
+  
+  // Redirect everything else to /current
+  return <Navigate to="/current" replace />;
+};
+
+const AdminStaticPage = () => {
+  // For now, just show a message with direct links
+  return (
+    <div style={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      height: '100vh',
+      background: '#0a0a0a',
+      color: 'white',
+      fontFamily: 'Arial, sans-serif',
+      padding: '2rem'
+    }}>
+      <div style={{ textAlign: 'center', maxWidth: '600px' }}>
+        <h1 style={{ color: '#20b2aa', marginBottom: '1rem' }}>Austin Food Club</h1>
+        <h2 style={{ marginBottom: '2rem' }}>Admin Dashboard</h2>
+        <p style={{ marginBottom: '2rem', opacity: 0.8 }}>
+          React Router is intercepting the static HTML files. Please use these direct links:
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <button 
+            onClick={() => window.open('http://localhost:3000/admin-dashboard.html', '_blank')}
+            style={{ 
+              color: '#20b2aa', 
+              textDecoration: 'none', 
+              padding: '1rem', 
+              border: '1px solid #20b2aa', 
+              borderRadius: '8px',
+              transition: 'all 0.3s ease',
+              background: 'transparent',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              width: '100%'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.background = '#20b2aa';
+              e.target.style.color = '#0a0a0a';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.background = 'transparent';
+              e.target.style.color = '#20b2aa';
+            }}
+          >
+            🍽️ Admin Dashboard (Full Features) - Opens in New Tab
+          </button>
+          <button 
+            onClick={() => window.open('http://localhost:3000/admin-redirect.html', '_blank')}
+            style={{ 
+              color: '#20b2aa', 
+              textDecoration: 'none', 
+              padding: '1rem', 
+              border: '1px solid #20b2aa', 
+              borderRadius: '8px',
+              transition: 'all 0.3s ease',
+              background: 'transparent',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              width: '100%'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.background = '#20b2aa';
+              e.target.style.color = '#0a0a0a';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.background = 'transparent';
+              e.target.style.color = '#20b2aa';
+            }}
+          >
+            🔗 Admin Redirect Page - Opens in New Tab
+          </button>
+        </div>
+        <p style={{ marginTop: '2rem', fontSize: '0.9rem', opacity: 0.6 }}>
+          Login: admin@austinfoodclub.com / admin123
+        </p>
+      </div>
+    </div>
+  );
+};
 
 const AppContent = () => {
   const location = useLocation();
@@ -108,22 +193,16 @@ const AppContent = () => {
         } />
         <Route path="/restaurant/:restaurantId" element={<RestaurantDetail />} />
         
-        {/* Admin routes */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin" element={
-          <AdminGuard>
-            <AdminLayout />
-          </AdminGuard>
-        }>
-          <Route index element={<AdminDashboard />} />
-          <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="queue" element={<RestaurantQueue />} />
-          {/* Add more admin routes here as needed */}
-        </Route>
+        {/* Admin redirect to HTML admin dashboard */}
+        <Route path="/admin" element={<AdminStaticPage />} />
+        
+        {/* Admin HTML files - serve as static content */}
+        <Route path="/admin.html" element={<AdminStaticPage />} />
+        <Route path="/admin-redirect.html" element={<AdminStaticPage />} />
         
         {/* Default redirects */}
         <Route path="/" element={<Navigate to="/current" replace />} />
-        <Route path="*" element={<Navigate to="/current" replace />} />
+        <Route path="*" element={<CatchAllRoute />} />
       </Routes>
       
       {/* Only show bottom nav on protected routes (exclude admin pages) */}

@@ -5,22 +5,30 @@ import '../models/restaurant.dart';
 class RestaurantService {
   static const String baseUrl = 'http://localhost:3001/api';
   
-  static Future<Restaurant?> getFeaturedRestaurant() async {
+  static Future<Restaurant?> getFeaturedRestaurant({String? citySlug}) async {
     try {
       final service = RestaurantService();
-      return await service.getCurrentRestaurant();
+      // Default to Austin if no city specified (backward compatibility)
+      final effectiveCitySlug = citySlug ?? 'austin';
+      return await service.getCurrentRestaurant(citySlug: effectiveCitySlug);
     } catch (e) {
       print('❌ RestaurantService: Failed to get featured restaurant: $e');
       return null;
     }
   }
   
-  Future<Restaurant> getCurrentRestaurant() async {
+  Future<Restaurant> getCurrentRestaurant({String? citySlug}) async {
     try {
-      print('🔍 RestaurantService: Attempting to fetch from $baseUrl/restaurants/current');
+      // Build URL with city context if provided
+      String url = '$baseUrl/restaurants/current';
+      if (citySlug != null) {
+        url += '?citySlug=$citySlug';
+      }
+      
+      print('🔍 RestaurantService: Attempting to fetch from $url');
       
       final response = await http.get(
-        Uri.parse('$baseUrl/restaurants/current'),
+        Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',

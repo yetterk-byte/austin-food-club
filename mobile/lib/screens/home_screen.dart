@@ -22,7 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _loadFeaturedRestaurant() async {
     try {
-      final restaurant = await RestaurantService.getFeaturedRestaurant();
+      // For now, always use Austin (future: could be dynamic based on user location/preference)
+      final restaurant = await RestaurantService.getFeaturedRestaurant(citySlug: 'austin');
       setState(() {
         featuredRestaurant = restaurant;
         isLoading = false;

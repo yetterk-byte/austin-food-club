@@ -50,12 +50,22 @@ class Restaurant {
   });
 
   factory Restaurant.fromJson(Map<String, dynamic> json) {
+    // Handle city field - it can be either a string or an object
+    String cityName = 'Austin';
+    if (json['city'] is String) {
+      cityName = json['city'];
+    } else if (json['city'] is Map && json['city']['name'] != null) {
+      cityName = json['city']['name'];
+    } else if (json['cityName'] != null) {
+      cityName = json['cityName'];
+    }
+    
     return Restaurant(
       id: json['id'],
       yelpId: json['yelpId'],
       name: json['name'],
       address: json['address'],
-      city: json['city'] ?? 'Austin',
+      city: cityName,
       state: json['state'] ?? 'TX',
       zipCode: json['zipCode']?.toString() ?? '',
       latitude: (json['latitude'] ?? 0.0).toDouble(),

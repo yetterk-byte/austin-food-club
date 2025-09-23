@@ -1,6 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const { logAdminAction } = require('../middleware/adminAuth');
 const notificationService = require('./notificationService');
+const websocketService = require('./websocketService');
 const cron = require('node-cron');
 
 const prisma = new PrismaClient();
@@ -21,17 +22,20 @@ class RotationService {
       if (!config) {
         await prisma.rotationConfig.create({
           data: {
-            mode: 'MANUAL',
-            rotationDay: 'monday',
-            rotationTime: '09:00',
+            rotationDay: 'tuesday',
+            rotationTime: '10:00',
             isActive: true,
-            nextRotationDate: this.calculateNextRotationDate('monday', '09:00')
+            nextRotationDate: this.calculateNextRotationDate('tuesday', '10:00'),
+            notifyAdmins: true,
+            notifyUsers: false,
+            skipWeekends: false,
+            minQueueSize: 20
           }
         });
-        console.log('✅ Rotation configuration initialized');
+        console.log('✅ Rotation configuration initialized for Tuesday 10:00am');
       }
       
-      // Start cron job if automatic mode is enabled
+      // Start cron job for automatic rotation
       await this.updateCronJob();
     } catch (error) {
       console.error('❌ Error initializing rotation config:', error);
@@ -58,7 +62,7 @@ class RotationService {
 
       // Calculate next rotation date if schedule changed
       let nextRotationDate = config.nextRotationDate;
-      if (updates.rotationDay || updates.rotationTime || updates.mode === 'AUTOMATIC') {
+      if (updates.rotationDay || updates.rotationTime) {
         const day = updates.rotationDay || config.rotationDay;
         const time = updates.rotationTime || config.rotationTime;
         nextRotationDate = this.calculateNextRotationDate(day, time);
@@ -138,16 +142,16 @@ class RotationService {
 
       const config = await this.getRotationConfig();
       
-      if (config && config.mode === 'AUTOMATIC' && config.isActive) {
+      if (config && config.isActive) {
         // Run every hour to check if rotation is needed
         this.cronJob = cron.schedule('0 * * * *', async () => {
           await this.checkRotationSchedule();
         }, {
           scheduled: true,
-          timezone: config.timezone || 'America/Chicago'
+          timezone: 'America/Chicago'
         });
 
-        console.log('🕐 Automatic rotation cron job started');
+        console.log('🕐 Automatic rotation cron job started for Tuesday 10:00am');
       } else {
         console.log('🕐 Automatic rotation disabled');
       }
@@ -168,7 +172,7 @@ class RotationService {
     try {
       const config = await this.getRotationConfig();
       
-      if (!config || config.mode !== 'AUTOMATIC' || !config.isActive) {
+      if (!config || !config.isActive) {
         return;
       }
 
@@ -298,13 +302,27 @@ class RotationService {
           data: { status: 'ACTIVE' }
         });
 
-        // Reorder remaining queue items
-        await tx.restaurantQueue.updateMany({
+        // Reorder remaining queue items - decrement positions by 1
+        const remainingItems = await tx.restaurantQueue.findMany({
           where: {
             position: { gt: nextRestaurant.position },
             status: 'PENDING'
           },
-          data: { position: { decrement: 1 } }
+          orderBy: { position: 'asc' }
+        });
+
+        // Update each item's position
+        for (const item of remainingItems) {
+          await tx.restaurantQueue.update({
+            where: { id: item.id },
+            data: { position: item.position - 1 }
+          });
+        }
+
+        // Also update the rotated restaurant's position to 0 (or remove it from queue)
+        await tx.restaurantQueue.update({
+          where: { id: nextRestaurant.id },
+          data: { position: 0 }
         });
       });
 
@@ -333,6 +351,32 @@ class RotationService {
       });
 
       console.log(`✅ Rotation complete: ${nextRestaurant.restaurant.name} is now featured`);
+
+      // Broadcast real-time updates via WebSocket
+      const rotationData = {
+        type: 'restaurant_rotation',
+        previousRestaurant: currentRestaurant ? {
+          id: currentRestaurant.id,
+          name: currentRestaurant.name,
+          cityId: currentRestaurant.cityId
+        } : null,
+        newRestaurant: {
+          id: nextRestaurant.restaurant.id,
+          name: nextRestaurant.restaurant.name,
+          cityId: nextRestaurant.restaurant.cityId
+        },
+        rotationType,
+        timestamp: new Date().toISOString(),
+        adminId
+      };
+
+      // Broadcast to admin dashboard
+      websocketService.broadcastToAdmin('restaurant_rotation', rotationData);
+
+      // Broadcast to specific city if applicable
+      if (nextRestaurant.restaurant.cityId) {
+        websocketService.broadcastToCity(nextRestaurant.restaurant.cityId, 'restaurant_rotation', rotationData);
+      }
 
       // Auto-add new restaurant to queue after successful rotation
       try {
@@ -641,18 +685,41 @@ class RotationService {
         where: { status: 'PENDING' }
       });
 
-      if (queueCount === 0) {
+      // Auto-maintain queue size at 20 restaurants
+      if (queueCount < 20) {
+        console.log(`🏥 Queue health check: ${queueCount} restaurants, auto-adding to reach 20...`);
+        
+        try {
+          const autoQueueService = require('./autoQueueService');
+          const result = await autoQueueService.maintainQueueSize(20);
+          
+          if (result.success && result.restaurantsAdded > 0) {
+            console.log(`✅ Auto-queue: Added ${result.restaurantsAdded} restaurants to maintain queue size`);
+            
+            await this.sendNotification('QUEUE_AUTO_FILLED', {
+              title: 'Restaurant Queue Auto-Maintained',
+              message: `Automatically added ${result.restaurantsAdded} restaurants to maintain queue size of 20.`,
+              recipientType: 'admin'
+            });
+          }
+        } catch (autoQueueError) {
+          console.error('❌ Auto-queue failed during health check:', autoQueueError);
+          
+          // Fallback to manual notification
+          await this.sendNotification('QUEUE_LOW', {
+            title: 'Restaurant Queue Running Low',
+            message: `Only ${queueCount} restaurants remaining in queue. Auto-fill failed, please add manually.`,
+            recipientType: 'admin'
+          });
+        }
+      } else if (queueCount === 0) {
         await this.sendNotification('QUEUE_EMPTY', {
           title: 'Restaurant Queue Empty',
           message: 'The restaurant queue is empty. Please add restaurants to maintain rotation.',
           recipientType: 'admin'
         });
-      } else if (queueCount <= (config?.minQueueSize || 2)) {
-        await this.sendNotification('QUEUE_LOW', {
-          title: 'Restaurant Queue Running Low',
-          message: `Only ${queueCount} restaurants remaining in queue. Consider adding more.`,
-          recipientType: 'admin'
-        });
+      } else {
+        console.log(`✅ Queue health check: ${queueCount} restaurants - healthy`);
       }
     } catch (error) {
       console.error('❌ Error checking queue health:', error);

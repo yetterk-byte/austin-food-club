@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const yelpService = require('./yelpService');
+const websocketService = require('./websocketService');
 
 const prisma = new PrismaClient();
 
@@ -174,12 +175,30 @@ class AutoQueueService {
       // Create a unique slug from name and ID
       const slug = `${newBusiness.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${newBusiness.id}`.substring(0, 50);
 
+      // Ensure Austin city exists
+      const austinCity = await prisma.city.upsert({
+        where: { slug: 'austin' },
+        update: {},
+        create: {
+          name: 'Austin',
+          slug: 'austin',
+          state: 'TX',
+          displayName: 'Austin Food Club',
+          timezone: 'America/Chicago',
+          yelpLocation: 'Austin, TX',
+          yelpRadius: 24140,
+          brandColor: '#20b2aa',
+          logoUrl: 'https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=800&h=600&fit=crop',
+          isActive: true
+        }
+      });
+
       const restaurantData = {
         yelpId: newBusiness.id,
         name: newBusiness.name,
         slug: slug,
         address: newBusiness.location.address1 || newBusiness.location.display_address?.[0] || '',
-        city: newBusiness.location.city || 'Austin',
+        cityName: newBusiness.location.city || 'Austin',
         state: newBusiness.location.state || 'TX',
         zipCode: newBusiness.location.zip_code || '78701',
         latitude: newBusiness.coordinates?.latitude || 30.2672,
@@ -192,6 +211,7 @@ class AutoQueueService {
         reviewCount: newBusiness.review_count || null,
         categories: JSON.stringify(categories),
         hours: JSON.stringify(hours),
+        cityId: austinCity.id,
         lastSyncedAt: new Date()
       };
 
@@ -241,6 +261,32 @@ class AutoQueueService {
 
       console.log(`📍 Added to queue at position ${nextPosition}: ${restaurant.name}`);
 
+      // Broadcast real-time updates via WebSocket
+      const queueUpdateData = {
+        type: 'restaurant_added_to_queue',
+        restaurant: {
+          id: restaurant.id,
+          name: restaurant.name,
+          rating: restaurant.rating,
+          reviewCount: restaurant.reviewCount,
+          categories: categories.map(c => c.title).join(', '),
+          address: restaurant.address,
+          cityId: restaurant.cityId
+        },
+        queuePosition: nextPosition,
+        queueItemId: queueItem.id,
+        timestamp: new Date().toISOString(),
+        source: 'auto_queue'
+      };
+
+      // Broadcast to admin dashboard
+      websocketService.broadcastToAdmin('queue_update', queueUpdateData);
+
+      // Broadcast to specific city if applicable
+      if (restaurant.cityId) {
+        websocketService.broadcastToCity(restaurant.cityId, 'queue_update', queueUpdateData);
+      }
+
       return {
         restaurant: {
           id: restaurant.id,
@@ -263,23 +309,36 @@ class AutoQueueService {
   /**
    * Check if queue needs refilling and add restaurant if needed
    */
-  async checkAndRefillQueue(minQueueSize = 15) {
+  async checkAndRefillQueue(minQueueSize = 20) {
     try {
       const queueCount = await prisma.restaurantQueue.count({
         where: { status: 'PENDING' }
       });
 
-      console.log(`📊 Current queue size: ${queueCount}, minimum: ${minQueueSize}`);
+      console.log(`📊 Current queue size: ${queueCount}, target: ${minQueueSize}`);
 
       if (queueCount < minQueueSize) {
-        console.log('🔄 Queue below minimum size, adding new restaurant...');
-        const result = await this.addNewRestaurantToQueue();
+        const restaurantsNeeded = minQueueSize - queueCount;
+        console.log(`🔄 Queue below target size, adding ${restaurantsNeeded} restaurant(s)...`);
+        
+        const results = [];
+        for (let i = 0; i < restaurantsNeeded; i++) {
+          try {
+            const result = await this.addNewRestaurantToQueue();
+            results.push(result);
+            console.log(`✅ Added restaurant ${i + 1}/${restaurantsNeeded}: ${result.restaurant.name}`);
+          } catch (error) {
+            console.error(`❌ Failed to add restaurant ${i + 1}/${restaurantsNeeded}:`, error.message);
+            // Continue trying to add other restaurants even if one fails
+          }
+        }
         
         return {
           added: true,
-          restaurant: result.restaurant,
-          queuePosition: result.queuePosition,
-          newQueueSize: queueCount + 1
+          restaurantsAdded: results.length,
+          restaurantsNeeded,
+          results,
+          newQueueSize: queueCount + results.length
         };
       } else {
         console.log('✅ Queue size sufficient, no action needed');
@@ -312,6 +371,63 @@ class AutoQueueService {
       
     } catch (error) {
       console.error('❌ Weekly queue maintenance error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Ensure queue maintains exactly 20 restaurants (target size)
+   */
+  async maintainQueueSize(targetSize = 20) {
+    try {
+      console.log(`🎯 Maintaining queue size at ${targetSize} restaurants...`);
+      
+      const queueCount = await prisma.restaurantQueue.count({
+        where: { status: 'PENDING' }
+      });
+
+      console.log(`📊 Current queue size: ${queueCount}, target: ${targetSize}`);
+
+      if (queueCount < targetSize) {
+        const restaurantsNeeded = targetSize - queueCount;
+        console.log(`🔄 Queue below target, adding ${restaurantsNeeded} restaurant(s)...`);
+        
+        const results = [];
+        for (let i = 0; i < restaurantsNeeded; i++) {
+          try {
+            const result = await this.addNewRestaurantToQueue();
+            results.push(result);
+            console.log(`✅ Added restaurant ${i + 1}/${restaurantsNeeded}: ${result.restaurant.name}`);
+            
+            // Small delay between additions to avoid overwhelming the API
+            if (i < restaurantsNeeded - 1) {
+              await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+          } catch (error) {
+            console.error(`❌ Failed to add restaurant ${i + 1}/${restaurantsNeeded}:`, error.message);
+            // Continue trying to add other restaurants even if one fails
+          }
+        }
+        
+        return {
+          success: true,
+          restaurantsAdded: results.length,
+          restaurantsNeeded,
+          results,
+          newQueueSize: queueCount + results.length,
+          message: `Successfully added ${results.length}/${restaurantsNeeded} restaurants to queue`
+        };
+      } else {
+        console.log('✅ Queue size is at or above target, no action needed');
+        return {
+          success: true,
+          currentQueueSize: queueCount,
+          message: 'Queue size is sufficient'
+        };
+      }
+
+    } catch (error) {
+      console.error('❌ Queue maintenance error:', error);
       throw error;
     }
   }

@@ -71,6 +71,27 @@ class MockDataService {
           Category(alias: 'meat', title: 'Meat'),
         ],
       ),
+      Restaurant(
+        id: '3',
+        yelpId: 'mock-yelp-3',
+        name: 'Uchi',
+        address: '801 S Lamar Blvd',
+        city: 'Austin',
+        state: 'TX',
+        zipCode: '78704',
+        latitude: 30.2500,
+        longitude: -97.7667,
+        phone: '+1-512-916-4808',
+        price: r'$$$$',
+        rating: 4.7,
+        reviewCount: 1800,
+        imageUrl: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=800&h=600&fit=crop',
+        categories: [
+          Category(alias: 'japanese', title: 'Japanese'),
+          Category(alias: 'sushi', title: 'Sushi'),
+          Category(alias: 'asian_fusion', title: 'Asian Fusion'),
+        ],
+      ),
     ];
   }
 

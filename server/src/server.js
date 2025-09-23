@@ -1,7 +1,9 @@
 require('dotenv').config();
 const express = require('express');
+const http = require('http');
 const cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
+const websocketService = require('./services/websocketService');
 const { verifySupabaseToken, requireAuth, optionalAuth } = require('./middleware/auth');
 const twilioService = require('./services/twilioService');
 const yelpService = require('./services/yelpService');
@@ -31,10 +33,12 @@ const notificationJobs = require('./jobs/notificationJobs');
 const apiRouter = require('./routes/apiRouter');
 const simpleRestaurantRoutes = require('./routes/simpleRestaurantRoutes');
 const adminRoutes = require('./routes/admin.routes'); // Admin routes
+const authRoutes = require('./routes/auth.routes'); // Auth routes
 const rotationRoutes = require('./routes/rotation.routes'); // Rotation routes
 const cityRoutes = require('./routes/city.routes'); // City routes for multi-city support
 const notificationRoutes = require('./routes/notification.routes'); // Push notification routes
 const socialRoutes = require('./routes/social.routes'); // Social features routes
+const analyticsRoutes = require('./routes/analytics.routes'); // Analytics routes
 
 const app = express();
 const PORT = 3001;
@@ -43,6 +47,9 @@ const prisma = new PrismaClient();
 // Database storage via Prisma (in-memory storage removed)
 
 // Middleware
+// Serve static files from client/public directory
+app.use(express.static('../client/public'));
+
 // CORS configuration for Flutter web (dynamic ports)
 app.use(cors({
   origin: [
@@ -66,6 +73,9 @@ app.use('/api/v1', apiRouter);
 // Simple restaurant routes (working version)
 app.use('/api/restaurants', simpleRestaurantRoutes);
 
+// Auth routes (public)
+app.use('/api/auth', authRoutes);
+
 // Admin routes (protected)
 app.use('/api/admin', adminRoutes);
 
@@ -77,6 +87,10 @@ app.use('/api/cities', cityRoutes);
 
 // Notification routes (push notifications)
 app.use('/api/notifications', notificationRoutes);
+
+// Analytics routes (protected)
+app.use('/api/analytics', analyticsRoutes);
+
 app.use('/api', socialRoutes); // Social features routes (rsvps, friends, verified-visits, social-feed)
 
 // Test endpoint
@@ -1986,8 +2000,14 @@ app.delete('/api/wishlist/:restaurantId', verifySupabaseToken, requireAuth, asyn
   }
 });
 
+// Create HTTP server
+const server = http.createServer(app);
+
+// Initialize WebSocket service
+websocketService.initialize(server);
+
 // Start server
-app.listen(PORT, async () => {
+server.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);
   console.log(`Test endpoint: http://localhost:${PORT}/api/test`);
   

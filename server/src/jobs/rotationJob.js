@@ -18,23 +18,23 @@ class RotationJobManager {
     }
 
     try {
-      // Job 1: Check rotation schedule (every hour)
-      this.jobs.set('rotation_check', cron.schedule('0 * * * *', async () => {
+      // Job 1: Weekly rotation (Tuesdays at 10:00 AM)
+      this.jobs.set('rotation_check', cron.schedule('0 10 * * 2', async () => {
         try {
-          console.log('🔍 Checking rotation schedule...');
-          await rotationService.checkRotationSchedule();
+          console.log('🔄 Tuesday 10:00 AM - Executing weekly rotation...');
+          await rotationService.rotateToNextRestaurant('automatic', null, 'Weekly Tuesday rotation');
         } catch (error) {
-          console.error('❌ Rotation check failed:', error);
+          console.error('❌ Weekly rotation failed:', error);
         }
       }, {
         scheduled: true,
         timezone: 'America/Chicago'
       }));
 
-      // Job 2: Queue health check (every 6 hours)
-      this.jobs.set('queue_health', cron.schedule('0 */6 * * *', async () => {
+      // Job 2: Queue health check (every 2 hours for automatic maintenance)
+      this.jobs.set('queue_health', cron.schedule('0 */2 * * *', async () => {
         try {
-          console.log('🏥 Checking queue health...');
+          console.log('🏥 Checking queue health and auto-maintaining...');
           await rotationService.checkQueueHealth();
           
           // Validate queue integrity

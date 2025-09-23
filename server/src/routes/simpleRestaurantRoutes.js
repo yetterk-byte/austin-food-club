@@ -9,15 +9,50 @@ router.get('/current', async (req, res) => {
   try {
     console.log('🔍 Simple route: Getting featured restaurant...');
     
+    const { cityId, citySlug } = req.query;
+    
+    let whereClause = { isFeatured: true };
+    
+    // If cityId is provided, filter by city ID
+    if (cityId) {
+      whereClause.cityId = cityId;
+    }
+    // If citySlug is provided, find city by slug first
+    else if (citySlug) {
+      const city = await prisma.city.findUnique({
+        where: { slug: citySlug }
+      });
+      
+      if (!city) {
+        console.log('❌ City not found for slug:', citySlug);
+        return res.status(404).json({ error: 'City not found' });
+      }
+      
+      if (!city.isActive) {
+        console.log('❌ City is inactive:', citySlug);
+        return res.status(404).json({ error: 'City is not active' });
+      }
+      
+      whereClause.cityId = city.id;
+    }
+    
     const restaurant = await prisma.restaurant.findFirst({
-      where: { isFeatured: true },
+      where: whereClause,
       include: {
-        rsvps: true
+        rsvps: true,
+        city: {
+          select: {
+            id: true,
+            name: true,
+            displayName: true,
+            isActive: true
+          }
+        }
       }
     });
 
     if (!restaurant) {
-      console.log('❌ No featured restaurant found');
+      console.log('❌ No featured restaurant found for city:', citySlug || cityId || 'default');
       return res.status(404).json({ error: 'No featured restaurant this week' });
     }
 

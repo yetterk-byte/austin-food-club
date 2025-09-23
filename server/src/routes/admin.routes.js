@@ -2,6 +2,7 @@ const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const { requireAdmin, logAdminActionMiddleware, logAdminAction } = require('../middleware/adminAuth');
 const yelpService = require('../services/yelpService');
+const websocketService = require('../services/websocketService');
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -15,7 +16,26 @@ router.use(requireAdmin);
  */
 router.get('/dashboard', logAdminActionMiddleware('view_dashboard', 'dashboard'), async (req, res) => {
   try {
-    // Get comprehensive dashboard stats
+    const { cityId } = req.query;
+    
+    if (!cityId) {
+      return res.status(400).json({ error: 'City ID is required' });
+    }
+    
+    // Verify city exists
+    const city = await prisma.city.findUnique({
+      where: { id: cityId }
+    });
+    
+    if (!city) {
+      return res.status(404).json({ error: 'City not found' });
+    }
+    
+    // Build city-specific filters
+    const cityFilter = { cityId };
+    const restaurantFilter = { restaurant: { cityId } };
+    
+    // Get comprehensive dashboard stats for the specific city
     const [
       totalUsers,
       totalRestaurants,
@@ -27,18 +47,24 @@ router.get('/dashboard', logAdminActionMiddleware('view_dashboard', 'dashboard')
       thisWeekRSVPs,
       recentAdminActions
     ] = await Promise.all([
-      prisma.user.count(),
-      prisma.restaurant.count(),
-      prisma.rSVP.count(),
-      prisma.verifiedVisit.count(),
-      prisma.friendship.count({ where: { status: 'accepted' } }),
-      prisma.restaurantQueue.count({ where: { status: 'PENDING' } }),
-      prisma.restaurant.findFirst({ where: { isFeatured: true } }),
+      prisma.user.count({ where: cityFilter }),
+      prisma.restaurant.count({ where: cityFilter }),
+      prisma.rSVP.count({ where: restaurantFilter }),
+      prisma.verifiedVisit.count({ where: restaurantFilter }),
+      prisma.friendship.count({ where: { status: 'accepted' } }), // Friendships are global
+      prisma.restaurantQueue.count({ 
+        where: { 
+          status: 'PENDING',
+          restaurant: { cityId }
+        } 
+      }),
+      prisma.restaurant.findFirst({ where: { isFeatured: true, cityId } }),
       prisma.rSVP.count({
         where: {
           createdAt: {
             gte: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
-          }
+          },
+          restaurant: { cityId }
         }
       }),
       prisma.adminLog.findMany({
@@ -55,7 +81,8 @@ router.get('/dashboard', logAdminActionMiddleware('view_dashboard', 'dashboard')
       where: {
         createdAt: {
           gte: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
-        }
+        },
+        restaurant: { cityId }
       }
     });
 
@@ -88,7 +115,26 @@ router.get('/dashboard', logAdminActionMiddleware('view_dashboard', 'dashboard')
  */
 router.get('/queue', logAdminActionMiddleware('view_queue', 'queue'), async (req, res) => {
   try {
+    const { cityId } = req.query;
+    
+    if (!cityId) {
+      return res.status(400).json({ error: 'City ID is required' });
+    }
+    
+    // Verify city exists
+    const city = await prisma.city.findUnique({
+      where: { id: cityId }
+    });
+    
+    if (!city) {
+      return res.status(404).json({ error: 'City not found' });
+    }
+    
     const queue = await prisma.restaurantQueue.findMany({
+      where: {
+        restaurant: { cityId },
+        status: 'PENDING'
+      },
       orderBy: { position: 'asc' },
       include: {
         restaurant: {
@@ -100,7 +146,8 @@ router.get('/queue', logAdminActionMiddleware('view_queue', 'queue'), async (req
             rating: true,
             price: true,
             categories: true,
-            yelpUrl: true
+            yelpUrl: true,
+            cityId: true
           }
         },
         admin: {
@@ -1212,6 +1259,84 @@ router.post('/queue/auto-add', async (req, res) => {
 });
 
 /**
+ * POST /api/admin/queue/maintain
+ * Manually trigger queue maintenance to ensure 20 restaurants
+ */
+router.post('/queue/maintain', async (req, res) => {
+  try {
+    const autoQueueService = require('../services/autoQueueService');
+    const { targetSize = 20 } = req.body;
+    
+    console.log(`🎯 Manual trigger: Maintaining queue size at ${targetSize} restaurants...`);
+    
+    const result = await autoQueueService.maintainQueueSize(targetSize);
+    
+    await logAdminAction(req.admin.id, 'maintain_queue', null, 'queue', {
+      targetSize,
+      restaurantsAdded: result.restaurantsAdded || 0,
+      newQueueSize: result.newQueueSize || result.currentQueueSize
+    }, req);
+
+    res.json({
+      success: true,
+      message: result.message,
+      restaurantsAdded: result.restaurantsAdded || 0,
+      newQueueSize: result.newQueueSize || result.currentQueueSize,
+      results: result.results || []
+    });
+
+  } catch (error) {
+    console.error('❌ Manual queue maintenance error:', error);
+    res.status(500).json({ error: 'Failed to maintain queue: ' + error.message });
+  }
+});
+
+/**
+ * POST /api/admin/queue/fix-positions
+ * Fix queue positions to ensure they start from 1 and are sequential
+ */
+router.post('/queue/fix-positions', async (req, res) => {
+  try {
+    console.log('🔧 Fixing queue positions...');
+    
+    // Get all pending queue items ordered by current position
+    const queueItems = await prisma.restaurantQueue.findMany({
+      where: { status: 'PENDING' },
+      orderBy: { position: 'asc' },
+      include: { restaurant: true }
+    });
+
+    console.log(`Found ${queueItems.length} queue items to reorder`);
+
+    // Update positions to be sequential starting from 1
+    await prisma.$transaction(async (tx) => {
+      for (let i = 0; i < queueItems.length; i++) {
+        const newPosition = i + 1;
+        await tx.restaurantQueue.update({
+          where: { id: queueItems[i].id },
+          data: { position: newPosition }
+        });
+        console.log(`Updated ${queueItems[i].restaurant.name} from position ${queueItems[i].position} to ${newPosition}`);
+      }
+    });
+
+    await logAdminAction(req.admin.id, 'fix_queue_positions', null, 'queue', {
+      itemsFixed: queueItems.length
+    }, req);
+
+    res.json({
+      success: true,
+      message: `Fixed positions for ${queueItems.length} queue items`,
+      itemsFixed: queueItems.length
+    });
+
+  } catch (error) {
+    console.error('❌ Queue position fix error:', error);
+    res.status(500).json({ error: 'Failed to fix queue positions: ' + error.message });
+  }
+});
+
+/**
  * GET /api/admin/queue/stats
  * Get queue statistics and insights
  */
@@ -1228,6 +1353,309 @@ router.get('/queue/stats', async (req, res) => {
   } catch (error) {
     console.error('❌ Queue stats error:', error);
     res.status(500).json({ error: 'Failed to get queue stats: ' + error.message });
+  }
+});
+
+/**
+ * GET /api/admin/rotation/config
+ * Get current rotation configuration
+ */
+router.get('/rotation/config', async (req, res) => {
+  try {
+    const rotationService = require('../services/rotationService');
+    const config = await rotationService.getRotationConfig();
+    
+    res.json({
+      success: true,
+      config: config || null
+    });
+  } catch (error) {
+    console.error('❌ Error getting rotation config:', error);
+    res.status(500).json({ error: 'Failed to get rotation config: ' + error.message });
+  }
+});
+
+/**
+ * GET /api/admin/cities
+ * Get all available cities for admin dashboard
+ */
+router.get('/cities', async (req, res) => {
+  try {
+    const cities = await prisma.city.findMany({
+      orderBy: { name: 'asc' },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        state: true,
+        displayName: true,
+        timezone: true,
+        yelpLocation: true,
+        yelpRadius: true,
+        brandColor: true,
+        logoUrl: true,
+        rotationDay: true,
+        rotationTime: true,
+        minQueueSize: true,
+        isActive: true,
+        launchDate: true,
+        createdAt: true
+      }
+    });
+
+    res.json({
+      success: true,
+      cities: cities
+    });
+
+  } catch (error) {
+    console.error('❌ Error getting cities:', error);
+    res.status(500).json({ error: 'Failed to get cities: ' + error.message });
+  }
+});
+
+/**
+ * PUT /api/admin/cities/:cityId/toggle
+ * Toggle city activation status
+ */
+router.put('/cities/:cityId/toggle', async (req, res) => {
+  try {
+    const { cityId } = req.params;
+    
+    const city = await prisma.city.findUnique({
+      where: { id: cityId }
+    });
+    
+    if (!city) {
+      return res.status(404).json({ error: 'City not found' });
+    }
+    
+    const updatedCity = await prisma.city.update({
+      where: { id: cityId },
+      data: { isActive: !city.isActive }
+    });
+    
+    await logAdminAction(req.admin.id, 'toggle_city_status', cityId, 'city', {
+      cityName: city.name,
+      newStatus: updatedCity.isActive ? 'active' : 'inactive'
+    }, req);
+    
+    res.json({
+      success: true,
+      city: updatedCity,
+      message: `${city.displayName} ${updatedCity.isActive ? 'activated' : 'deactivated'} successfully`
+    });
+    
+  } catch (error) {
+    console.error('❌ Error toggling city status:', error);
+    res.status(500).json({ error: 'Failed to toggle city status: ' + error.message });
+  }
+});
+
+/**
+ * POST /api/admin/cities
+ * Create a new city
+ */
+router.post('/cities', async (req, res) => {
+  try {
+    const {
+      name,
+      slug,
+      state,
+      displayName,
+      timezone,
+      yelpLocation,
+      yelpRadius = 24140,
+      brandColor = '#20b2aa',
+      logoUrl,
+      rotationDay = 'tuesday',
+      rotationTime = '10:00',
+      minQueueSize = 3,
+      isActive = true
+    } = req.body;
+
+    // Validate required fields
+    if (!name || !slug || !state || !displayName || !timezone || !yelpLocation) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // Check if city already exists
+    const existingCity = await prisma.city.findFirst({
+      where: {
+        OR: [
+          { slug: slug },
+          { name: name }
+        ]
+      }
+    });
+
+    if (existingCity) {
+      return res.status(400).json({ error: 'City with this name or slug already exists' });
+    }
+
+    const city = await prisma.city.create({
+      data: {
+        name,
+        slug,
+        state,
+        displayName,
+        timezone,
+        yelpLocation,
+        yelpRadius,
+        brandColor,
+        logoUrl,
+        rotationDay,
+        rotationTime,
+        minQueueSize,
+        isActive,
+        launchDate: new Date()
+      }
+    });
+
+    await logAdminAction(req.admin.id, 'create_city', city.id, 'city', {
+      cityName: city.name,
+      citySlug: city.slug
+    }, req);
+
+    res.json({
+      success: true,
+      city: city,
+      message: `${city.displayName} created successfully`
+    });
+
+  } catch (error) {
+    console.error('❌ Error creating city:', error);
+    res.status(500).json({ error: 'Failed to create city: ' + error.message });
+  }
+});
+
+/**
+ * GET /api/admin/past-featured
+ * Get past featured restaurants with performance data
+ */
+router.get('/past-featured', async (req, res) => {
+  try {
+    const { page = 1, limit = 10, sortBy = 'endDate', sortOrder = 'desc' } = req.query;
+    const offset = (page - 1) * limit;
+
+    // Get past featured restaurants from rotation history
+    const pastFeatured = await prisma.rotationHistory.findMany({
+      where: {
+        endDate: { not: null } // Only restaurants that have been unfeatured
+      },
+      include: {
+        restaurant: {
+          include: {
+            verifiedVisits: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    avatar: true
+                  }
+                }
+              },
+              orderBy: { createdAt: 'desc' }
+            },
+            rsvps: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    avatar: true
+                  }
+                }
+              },
+              orderBy: { createdAt: 'desc' }
+            }
+          }
+        }
+      },
+      orderBy: { [sortBy]: sortOrder },
+      skip: offset,
+      take: parseInt(limit)
+    });
+
+    // Get total count for pagination
+    const totalCount = await prisma.rotationHistory.count({
+      where: {
+        endDate: { not: null }
+      }
+    });
+
+    // Format the response with additional analytics
+    const formattedData = pastFeatured.map(history => {
+      const restaurant = history.restaurant;
+      const verifiedVisits = restaurant.verifiedVisits || [];
+      const rsvps = restaurant.rsvps || [];
+
+      // Calculate additional metrics
+      const totalPhotos = verifiedVisits.length;
+      const avgRating = verifiedVisits.length > 0 
+        ? verifiedVisits.reduce((sum, visit) => sum + visit.rating, 0) / verifiedVisits.length 
+        : null;
+
+      // Group RSVPs by status
+      const rsvpStats = rsvps.reduce((acc, rsvp) => {
+        acc[rsvp.status] = (acc[rsvp.status] || 0) + 1;
+        return acc;
+      }, {});
+
+      return {
+        id: history.id,
+        restaurant: {
+          id: restaurant.id,
+          name: restaurant.name,
+          address: restaurant.address,
+          imageUrl: restaurant.imageUrl,
+          rating: restaurant.rating,
+          price: restaurant.price,
+          categories: restaurant.categories
+        },
+        featuredPeriod: {
+          startDate: history.startDate,
+          endDate: history.endDate,
+          duration: history.endDate ? 
+            Math.ceil((new Date(history.endDate) - new Date(history.startDate)) / (1000 * 60 * 60 * 24)) : 
+            null
+        },
+        performance: {
+          totalRsvps: history.totalRsvps,
+          totalVisits: history.totalVisits,
+          averageRating: history.averageRating,
+          rsvpBreakdown: rsvpStats
+        },
+        userEngagement: {
+          totalPhotos: totalPhotos,
+          avgRatingFromVisits: avgRating,
+          uniqueVisitors: [...new Set(verifiedVisits.map(v => v.userId))].length,
+          uniqueRsvpers: [...new Set(rsvps.map(r => r.userId))].length
+        },
+        recentActivity: {
+          latestVisit: verifiedVisits[0] || null,
+          latestRsvp: rsvps[0] || null
+        },
+        rotationType: history.rotationType,
+        notes: history.notes
+      };
+    });
+
+    res.json({
+      success: true,
+      data: formattedData,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total: totalCount,
+        pages: Math.ceil(totalCount / limit)
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Error getting past featured restaurants:', error);
+    res.status(500).json({ error: 'Failed to get past featured restaurants: ' + error.message });
   }
 });
 
@@ -1301,6 +1729,32 @@ router.post('/rotation/trigger', async (req, res) => {
       newRestaurant: nextInQueue.restaurant.name,
       rotationType: 'manual_test'
     }, req);
+
+    // Broadcast real-time updates via WebSocket
+    const rotationData = {
+      type: 'manual_restaurant_rotation',
+      previousRestaurant: currentFeatured ? {
+        id: currentFeatured.id,
+        name: currentFeatured.name,
+        cityId: currentFeatured.cityId
+      } : null,
+      newRestaurant: {
+        id: nextInQueue.restaurant.id,
+        name: nextInQueue.restaurant.name,
+        cityId: nextInQueue.restaurant.cityId
+      },
+      rotationType: 'manual_test',
+      timestamp: new Date().toISOString(),
+      adminId: req.admin.id
+    };
+
+    // Broadcast to admin dashboard
+    websocketService.broadcastToAdmin('restaurant_rotation', rotationData);
+
+    // Broadcast to specific city if applicable
+    if (nextInQueue.restaurant.cityId) {
+      websocketService.broadcastToCity(nextInQueue.restaurant.cityId, 'restaurant_rotation', rotationData);
+    }
 
     res.json({
       success: true,

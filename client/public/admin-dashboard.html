@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Austin Food Club - Admin Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -125,6 +126,185 @@
             color: #20b2aa;
             margin-bottom: 1rem;
             font-size: 1.4rem;
+        }
+        
+        /* Advanced Analytics Styles */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .metric-card h4 {
+            color: #20b2aa;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .metric-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 0.25rem;
+        }
+        
+        .metric-card .change {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        
+        .metric-card .change.positive {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+        
+        .metric-card .change.negative {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        
+        .metric-card .change.neutral {
+            background: rgba(156, 163, 175, 0.2);
+            color: #9ca3af;
+        }
+        
+        .insight-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .insight-card .icon {
+            font-size: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .insight-card.success .icon {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+        
+        .insight-card.warning .icon {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+        
+        .insight-card.info .icon {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+        
+        .insight-card .content h4 {
+            color: white;
+            margin-bottom: 0.25rem;
+        }
+        
+        .insight-card .content p {
+            color: #888;
+            margin-bottom: 0.25rem;
+        }
+        
+        .insight-card .value {
+            color: #20b2aa;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .performance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .performance-table th,
+        .performance-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+        
+        .performance-table th {
+            background: #1a1a1a;
+            color: #20b2aa;
+            font-weight: 600;
+        }
+        
+        .performance-table td {
+            color: white;
+        }
+        
+        .performance-table tr:hover {
+            background: rgba(32, 178, 170, 0.1);
+        }
+        
+        .score-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .score-excellent {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+        
+        .score-good {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+        
+        .score-fair {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+        
+        .score-poor {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        
+        .chart-container {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .chart-placeholder {
+            height: 200px;
+            background: rgba(32, 178, 170, 0.1);
+            border: 2px dashed #20b2aa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #20b2aa;
+            font-size: 1.1rem;
         }
         
         .current-restaurant {
@@ -386,18 +566,307 @@
             text-align: center;
             margin-bottom: 1rem;
         }
+
+        /* Past Featured Styles */
+        .past-featured-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #2a2a2a;
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            color: #ccc;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .filter-group select {
+            padding: 0.5rem;
+            border: 1px solid #444;
+            border-radius: 4px;
+            background: #1e1e1e;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .past-featured-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .past-featured-item {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .past-featured-item:hover {
+            border-color: #20b2aa;
+            box-shadow: 0 4px 12px rgba(32, 178, 170, 0.1);
+        }
+
+        .past-featured-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .past-featured-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid #444;
+        }
+
+        .past-featured-info h3 {
+            color: #20b2aa;
+            margin: 0 0 0.5rem 0;
+            font-size: 1.2rem;
+        }
+
+        .past-featured-info p {
+            color: #888;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .past-featured-period {
+            background: #1e1e1e;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .past-featured-period h4 {
+            color: #20b2aa;
+            margin: 0 0 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        .period-dates {
+            display: flex;
+            gap: 1rem;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .past-featured-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric-card {
+            background: #1e1e1e;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        .metric-card h4 {
+            color: #20b2aa;
+            margin: 0 0 0.5rem 0;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-label {
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        .rsvp-breakdown {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .rsvp-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .rsvp-status.confirmed {
+            background: #28a745;
+            color: white;
+        }
+
+        .rsvp-status.pending {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .rsvp-status.cancelled {
+            background: #dc3545;
+            color: white;
+        }
+
+        .recent-activity {
+            background: #1e1e1e;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        .recent-activity h4 {
+            color: #20b2aa;
+            margin: 0 0 1rem 0;
+            font-size: 1rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+
+        .activity-details {
+            flex: 1;
+        }
+
+        .activity-details .user-name {
+            color: #20b2aa;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .activity-details .activity-text {
+            color: #ccc;
+            font-size: 0.8rem;
+        }
+
+        .activity-details .activity-date {
+            color: #888;
+            font-size: 0.7rem;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding: 1rem;
+        }
+
+        .pagination button {
+            padding: 0.5rem 1rem;
+            border: 1px solid #444;
+            border-radius: 4px;
+            background: #2a2a2a;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            border-color: #20b2aa;
+            background: #20b2aa;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination span {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
+    <!-- Login Form (shown when not authenticated) -->
+    <div id="loginContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; display: flex; justify-content: center; align-items: center;">
+        <div style="background: #1e1e1e; padding: 2rem; border-radius: 12px; border: 1px solid #444; max-width: 400px; width: 90%;">
+            <h2 style="color: #20b2aa; text-align: center; margin-bottom: 1rem;">Admin Login</h2>
+            <form id="adminLoginForm">
+                <div id="loginMessageContainer" style="margin-bottom: 1rem;"></div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="color: #ccc; display: block; margin-bottom: 0.5rem;">Email:</label>
+                    <input type="email" id="adminEmail" required style="width: 100%; padding: 0.75rem; background: #2a2a2a; border: 1px solid #444; border-radius: 6px; color: white; font-size: 1rem;" value="admin@austinfoodclub.com">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="color: #ccc; display: block; margin-bottom: 0.5rem;">Password:</label>
+                    <input type="password" id="adminPassword" required style="width: 100%; padding: 0.75rem; background: #2a2a2a; border: 1px solid #444; border-radius: 6px; color: white; font-size: 1rem;" value="admin123">
+                </div>
+                <button type="submit" style="width: 100%; padding: 0.75rem; background: #20b2aa; color: white; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; transition: background 0.3s;" onmouseover="this.style.background='#1a9a8a'" onmouseout="this.style.background='#20b2aa'">
+                    Sign In to Admin Dashboard
+                </button>
+            </form>
+        </div>
+    </div>
+
     <div class="admin-dashboard">
         <div class="sidebar">
-            <h1>Austin Food Club</h1>
+            <h1>🍽️ Food Club</h1>
             <p>Admin Dashboard</p>
+            
+            <!-- City Selector -->
+            <div class="city-selector" style="margin-bottom: 2rem;">
+                <label for="citySelect" style="color: #ccc; font-size: 0.9rem; margin-bottom: 0.5rem; display: block;">Select City:</label>
+                <select id="citySelect" onchange="switchToCity(this.value)" style="width: 100%; padding: 0.75rem; border: 1px solid #444; border-radius: 6px; background: #2a2a2a; color: white; font-size: 0.9rem;">
+                    <option value="">Loading cities...</option>
+                </select>
+            </div>
+            
+            <!-- Connection Status -->
+            <div class="connection-status" style="margin-bottom: 2rem; padding: 0.75rem; background: #1a1a1a; border-radius: 6px; border: 1px solid #333;">
+                <div style="color: #ccc; font-size: 0.8rem; margin-bottom: 0.25rem;">Real-time Updates:</div>
+                <div id="connectionStatus" style="font-size: 0.9rem; font-weight: 500;">🔴 Disconnected</div>
+            </div>
             
             <button class="nav-item active" onclick="showSection('overview')">📊 Overview</button>
             <button class="nav-item" onclick="showSection('queue')">🍽️ Restaurant Queue</button>
-            <button class="nav-item" onclick="showSection('current')">⭐ Current Week</button>
+            <button class="nav-item" onclick="showSection('past-featured')">📚 Past Featured</button>
+            <button class="nav-item" onclick="showSection('cities')">🏙️ Cities</button>
             <button class="nav-item" onclick="showSection('analytics')">📈 Analytics</button>
+            <button class="nav-item" onclick="showSection('advanced-analytics')">🔬 Advanced Analytics</button>
             
             <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #333;">
                 <button class="nav-item" onclick="logout()" style="color: #dc3545;">
@@ -468,7 +937,9 @@
                                style="flex: 1; padding: 0.75rem; border: 1px solid #444; border-radius: 6px; background: #2a2a2a; color: white;">
                         <button class="btn" onclick="searchRestaurants()">🔍 Search Yelp</button>
                         <button class="btn btn-secondary" onclick="refreshQueue()">🔄 Refresh Queue</button>
+                        <button class="btn btn-warning" onclick="fixQueuePositions()">🔧 Fix Positions</button>
                         <button class="btn btn-success" onclick="autoAddRestaurant()">🎯 Auto-Discover Restaurant</button>
+                        <button class="btn btn-primary" onclick="maintainQueue()">🎯 Maintain Queue (20)</button>
                     </div>
                     
                     <div id="searchResults" style="margin-bottom: 1rem;"></div>
@@ -483,25 +954,115 @@
             </div>
             
             
-            <!-- Current Week Section -->
-            <div id="current" class="section-content" style="display: none;">
+            
+            <!-- Past Featured Section -->
+            <div id="past-featured" class="section-content" style="display: none;">
                 <div class="dashboard-header">
-                    <h2>Current Week Management</h2>
-                    <p>Override current restaurant and view stats</p>
+                    <h2>📚 Past Featured Restaurants</h2>
+                    <p>View historical performance data for previously featured restaurants</p>
                 </div>
                 
-                <div class="section">
-                    <h3>Current Featured Restaurant</h3>
-                    <div id="currentFeaturedRestaurant">
-                        <div class="loading">Loading current restaurant...</div>
+                <!-- Filters and Controls -->
+                <div class="past-featured-controls">
+                    <div class="filter-group">
+                        <label for="sortBy">Sort by:</label>
+                        <select id="sortBy" onchange="loadPastFeatured()">
+                            <option value="endDate">End Date</option>
+                            <option value="totalRsvps">Total RSVPs</option>
+                            <option value="totalVisits">Total Visits</option>
+                            <option value="averageRating">Average Rating</option>
+                        </select>
                     </div>
-                    <p style="color: #888; margin-top: 1rem;">
-                        Restaurants rotate automatically every Tuesday at 9:00 AM. 
-                        Use the queue management to control the order.
-                    </p>
-                    <button class="btn btn-warning" onclick="testRotationAndAutoQueue()" style="margin-top: 1rem;">
-                        🧪 Test Rotation + Auto-Queue
-                    </button>
+                    <div class="filter-group">
+                        <label for="sortOrder">Order:</label>
+                        <select id="sortOrder" onchange="loadPastFeatured()">
+                            <option value="desc">Newest First</option>
+                            <option value="asc">Oldest First</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="pageSize">Per Page:</label>
+                        <select id="pageSize" onchange="loadPastFeatured()">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Past Featured List -->
+                <div id="pastFeaturedList" class="past-featured-list">
+                    <div class="loading">Loading past featured restaurants...</div>
+                </div>
+
+                <!-- Pagination -->
+                <div id="pastFeaturedPagination" class="pagination" style="display: none;">
+                    <button id="prevPage" onclick="changePage(-1)" disabled>← Previous</button>
+                    <span id="pageInfo">Page 1 of 1</span>
+                    <button id="nextPage" onclick="changePage(1)" disabled>Next →</button>
+                </div>
+            </div>
+            
+            <!-- Cities Section -->
+            <div id="cities" class="section-content" style="display: none;">
+                <div class="dashboard-header">
+                    <h2>🏙️ City Management</h2>
+                    <p>Manage cities and their configurations</p>
+                </div>
+                
+                <!-- Add New City Form -->
+                <div class="section">
+                    <h3>Add New City</h3>
+                    <form id="addCityForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                        <div>
+                            <label style="color: #ccc; display: block; margin-bottom: 0.5rem;">City Name:</label>
+                            <input type="text" id="cityName" placeholder="e.g., Denver" required 
+                                   style="width: 100%; padding: 0.75rem; border: 1px solid #444; border-radius: 6px; background: #2a2a2a; color: white;">
+                        </div>
+                        <div>
+                            <label style="color: #ccc; display: block; margin-bottom: 0.5rem;">State:</label>
+                            <input type="text" id="cityState" placeholder="e.g., CO" required 
+                                   style="width: 100%; padding: 0.75rem; border: 1px solid #444; border-radius: 6px; background: #2a2a2a; color: white;">
+                        </div>
+                        <div>
+                            <label style="color: #ccc; display: block; margin-bottom: 0.5rem;">Display Name:</label>
+                            <input type="text" id="cityDisplayName" placeholder="e.g., Denver Food Club" required 
+                                   style="width: 100%; padding: 0.75rem; border: 1px solid #444; border-radius: 6px; background: #2a2a2a; color: white;">
+                        </div>
+                        <div>
+                            <label style="color: #ccc; display: block; margin-bottom: 0.5rem;">Timezone:</label>
+                            <select id="cityTimezone" required 
+                                    style="width: 100%; padding: 0.75rem; border: 1px solid #444; border-radius: 6px; background: #2a2a2a; color: white;">
+                                <option value="America/New_York">Eastern Time</option>
+                                <option value="America/Chicago">Central Time</option>
+                                <option value="America/Denver">Mountain Time</option>
+                                <option value="America/Los_Angeles">Pacific Time</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="color: #ccc; display: block; margin-bottom: 0.5rem;">Yelp Location:</label>
+                            <input type="text" id="cityYelpLocation" placeholder="e.g., Denver, CO" required 
+                                   style="width: 100%; padding: 0.75rem; border: 1px solid #444; border-radius: 6px; background: #2a2a2a; color: white;">
+                        </div>
+                        <div>
+                            <label style="color: #ccc; display: block; margin-bottom: 0.5rem;">Brand Color:</label>
+                            <input type="color" id="cityBrandColor" value="#20b2aa" 
+                                   style="width: 100%; padding: 0.75rem; border: 1px solid #444; border-radius: 6px; background: #2a2a2a;">
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                            <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem;">
+                                🏙️ Create City
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Cities List -->
+                <div class="section">
+                    <h3>Existing Cities</h3>
+                    <div id="citiesList" class="cities-list">
+                        <div class="loading">Loading cities...</div>
+                    </div>
                 </div>
             </div>
             
@@ -519,17 +1080,294 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Advanced Analytics Section -->
+            <div id="advanced-analytics" class="section-content" style="display: none;">
+                <div class="dashboard-header">
+                    <h2>🔬 Advanced Analytics</h2>
+                    <p>Deep insights into restaurant performance, user engagement, and system metrics</p>
+                    
+                    <!-- Time Range Selector -->
+                    <div style="margin-top: 1rem; display: flex; gap: 1rem; align-items: center;">
+                        <label style="color: #ccc; font-size: 0.9rem;">Time Range:</label>
+                        <select id="analyticsTimeRange" onchange="loadAdvancedAnalytics()" style="padding: 0.5rem; border: 1px solid #444; border-radius: 4px; background: #2a2a2a; color: white;">
+                            <option value="7d">Last 7 days</option>
+                            <option value="30d" selected>Last 30 days</option>
+                            <option value="90d">Last 90 days</option>
+                        </select>
+                        <button onclick="loadAdvancedAnalytics()" class="btn btn-primary" style="padding: 0.5rem 1rem;">🔄 Refresh</button>
+                        <button onclick="clearAnalyticsCache()" class="btn btn-secondary" style="padding: 0.5rem 1rem;">🗑️ Clear Cache</button>
+                    </div>
+                </div>
+                
+                <!-- Real-time Metrics -->
+                <div class="section">
+                    <h3>⚡ Real-time Metrics</h3>
+                    <div id="realTimeMetrics" class="metrics-grid">
+                        <div class="loading">Loading real-time metrics...</div>
+                    </div>
+                </div>
+                
+                <!-- Overview Metrics -->
+                <div class="section">
+                    <h3>📊 Overview Metrics</h3>
+                    <div id="overviewMetrics" class="metrics-grid">
+                        <div class="loading">Loading overview metrics...</div>
+                    </div>
+                </div>
+                
+                <!-- Performance Insights -->
+                <div class="section">
+                    <h3>💡 Performance Insights</h3>
+                    <div id="performanceInsights">
+                        <div class="loading">Loading performance insights...</div>
+                    </div>
+                </div>
+                
+                <!-- Restaurant Performance -->
+                <div class="section">
+                    <h3>🍽️ Restaurant Performance</h3>
+                    <div id="restaurantPerformance">
+                        <div class="loading">Loading restaurant performance...</div>
+                    </div>
+                </div>
+                
+                <!-- User Engagement -->
+                <div class="section">
+                    <h3>👥 User Engagement</h3>
+                    <div id="userEngagement">
+                        <div class="loading">Loading user engagement...</div>
+                    </div>
+                </div>
+                
+                <!-- Trends Charts -->
+                <div class="section">
+                    <h3>📈 Trends & Patterns</h3>
+                    <div id="trendsCharts">
+                        <div class="loading">Loading trend data...</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
         let adminToken = localStorage.getItem('adminToken');
         let currentSection = 'overview';
+        let currentCity = null; // Current selected city
+        let cities = []; // Available cities
+        
+        // WebSocket connection
+        let socket = null;
+        let isConnected = false;
+        
+        // WebSocket Functions
+        function initializeWebSocket() {
+            try {
+                socket = io('http://localhost:3001', {
+                    transports: ['websocket', 'polling']
+                });
+
+                socket.on('connect', () => {
+                    console.log('🔌 WebSocket connected:', socket.id);
+                    isConnected = true;
+                    updateConnectionStatus(true);
+                    
+                    // Join admin dashboard room
+                    socket.emit('join-admin');
+                    
+                    // Join current city room if available
+                    if (currentCity) {
+                        socket.emit('join-city', currentCity.id);
+                    }
+                });
+
+                socket.on('disconnect', () => {
+                    console.log('🔌 WebSocket disconnected');
+                    isConnected = false;
+                    updateConnectionStatus(false);
+                });
+
+                socket.on('restaurant_rotation', (data) => {
+                    console.log('🔄 Received restaurant rotation update:', data);
+                    handleRestaurantRotation(data);
+                });
+
+                socket.on('queue_update', (data) => {
+                    console.log('📋 Received queue update:', data);
+                    handleQueueUpdate(data);
+                });
+
+                socket.on('connect_error', (error) => {
+                    console.error('❌ WebSocket connection error:', error);
+                    isConnected = false;
+                    updateConnectionStatus(false);
+                });
+
+            } catch (error) {
+                console.error('❌ Failed to initialize WebSocket:', error);
+            }
+        }
+
+        function updateConnectionStatus(connected) {
+            const statusElement = document.getElementById('connectionStatus');
+            if (statusElement) {
+                statusElement.textContent = connected ? '🟢 Connected' : '🔴 Disconnected';
+                statusElement.style.color = connected ? '#20b2aa' : '#ff6b6b';
+            }
+        }
+
+        function handleRestaurantRotation(data) {
+            // Show notification
+            showMessage(`🔄 Restaurant rotated: ${data.newRestaurant.name} is now featured!`, 'success');
+            
+            // Reload current section if it's queue or overview
+            if (currentSection === 'queue' || currentSection === 'overview') {
+                loadSectionData(currentSection);
+            }
+        }
+
+        function handleQueueUpdate(data) {
+            // Show notification
+            showMessage(`📋 New restaurant added to queue: ${data.restaurant.name}`, 'info');
+            
+            // Reload queue section if it's currently active
+            if (currentSection === 'queue') {
+                loadQueue();
+            }
+        }
+
+        // City Management Functions
+        async function loadCities() {
+            try {
+                console.log('Loading cities...');
+                const response = await apiCall('/api/admin/cities');
+                
+                if (response.success) {
+                    cities = response.cities;
+                    populateCitySelector();
+                    
+                    // Set default city to Austin if available
+                    const austinCity = cities.find(city => city.slug === 'austin');
+                    if (austinCity) {
+                        currentCity = austinCity;
+                        document.getElementById('citySelect').value = austinCity.id;
+                        updateCityDisplay();
+                    }
+                } else {
+                    console.error('Failed to load cities:', response.error);
+                    showMessage('Failed to load cities', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading cities:', error);
+                showMessage('Failed to load cities: ' + error.message, 'error');
+            }
+        }
+        
+        function populateCitySelector() {
+            const select = document.getElementById('citySelect');
+            select.innerHTML = '';
+            
+            cities.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city.id;
+                option.textContent = `${city.displayName} (${city.name}, ${city.state})`;
+                select.appendChild(option);
+            });
+        }
+        
+        function switchCity() {
+            const cityId = document.getElementById('citySelect').value;
+            const city = cities.find(c => c.id === cityId);
+            
+            if (city) {
+                currentCity = city;
+                updateCityDisplay();
+                showMessage(`Switched to ${city.displayName}`, 'success');
+                
+                // Reload current section data for new city
+                loadSectionData(currentSection);
+            }
+        }
+        
+        function updateCityDisplay() {
+            if (currentCity) {
+                // Update page title
+                document.title = `${currentCity.displayName} - Admin Dashboard`;
+                
+                // Update any city-specific displays
+                const cityElements = document.querySelectorAll('.city-name');
+                cityElements.forEach(el => el.textContent = currentCity.displayName);
+            }
+        }
         
         // Check if user is logged in
         if (!adminToken) {
-            window.location.href = '/admin.html';
+            showLoginForm();
+        } else {
+            hideLoginForm();
         }
+        
+        // Show login form
+        function showLoginForm() {
+            const loginContainer = document.getElementById('loginContainer');
+            if (loginContainer) {
+                loginContainer.style.display = 'flex';
+            }
+        }
+        
+        // Hide login form
+        function hideLoginForm() {
+            const loginContainer = document.getElementById('loginContainer');
+            if (loginContainer) {
+                loginContainer.style.display = 'none';
+            }
+        }
+        
+        // Handle login form submission
+        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
+            const messageContainer = document.getElementById('loginMessageContainer');
+            const loginBtn = document.querySelector('#adminLoginForm button[type="submit"]');
+            
+            loginBtn.textContent = 'Signing In...';
+            loginBtn.disabled = true;
+            
+            try {
+                const response = await fetch('http://localhost:3001/api/auth/admin-login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('adminToken', data.token);
+                    adminToken = data.token;
+                    
+                    messageContainer.innerHTML = '<div style="color: #20b2aa; text-align: center;">Login successful! Loading dashboard...</div>';
+                    
+                    setTimeout(() => {
+                        hideLoginForm();
+                        loadDashboardStats(); // Reload dashboard stats
+                    }, 1000);
+                } else {
+                    throw new Error(data.error || 'Login failed');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                messageContainer.innerHTML = `<div style="color: #dc3545; text-align: center;">Login failed: ${error.message}</div>`;
+            } finally {
+                loginBtn.textContent = 'Sign In to Admin Dashboard';
+                loginBtn.disabled = false;
+            }
+        });
         
         // API helper function
         async function apiCall(endpoint, options = {}) {
@@ -540,7 +1378,7 @@
                 };
                 
                 // Only add authorization for endpoints that need it
-                if (adminToken && !endpoint.includes('/restaurants/current') && !endpoint.includes('/restaurants/search')) {
+                if (adminToken && !endpoint.includes('/restaurants/current')) {
                     headers['Authorization'] = `Bearer ${adminToken}`;
                 }
                 
@@ -551,7 +1389,7 @@
                 
                 if (response.status === 401 || response.status === 403) {
                     localStorage.removeItem('adminToken');
-                    window.location.href = '/admin.html';
+                    // Redirect removed - stay on admin dashboard
                     return;
                 }
                 
@@ -602,37 +1440,682 @@
         
         // Load data for specific section
         async function loadSectionData(sectionName) {
+            if (!currentCity) {
+                console.log('No city selected, skipping data load');
+                return;
+            }
+            
+            console.log(`Loading ${sectionName} data for ${currentCity.displayName}...`);
+            
+        // Check if city is inactive for certain sections
+        if (!currentCity.isActive && sectionName === 'queue') {
+            showInactiveCityMessage(sectionName);
+            return;
+        }
+            
             switch (sectionName) {
                 case 'overview':
-                    await loadDashboardStats();
-                    await loadCurrentRestaurant();
+                    try {
+                        await loadDashboardStats();
+                    } catch (error) {
+                        console.error('Error loading dashboard stats:', error);
+                    }
+                    try {
+                        await loadCurrentRestaurant();
+                    } catch (error) {
+                        console.error('Error loading current restaurant:', error);
+                    }
                     break;
                 case 'queue':
-                    await loadCurrentlyFeatured();
-                    await loadQueue();
+                    try {
+                        await loadCurrentlyFeatured();
+                    } catch (error) {
+                        console.error('Error loading currently featured:', error);
+                    }
+                    try {
+                        await loadQueue();
+                    } catch (error) {
+                        console.error('Error loading queue:', error);
+                    }
+                    break;
+                case 'past-featured':
+                    try {
+                        await loadPastFeatured();
+                    } catch (error) {
+                        console.error('Error loading past featured:', error);
+                    }
+                    break;
+                case 'cities':
+                    try {
+                        await loadCitiesList();
+                    } catch (error) {
+                        console.error('Error loading cities list:', error);
+                    }
                     break;
                 case 'analytics':
                     console.log('Loading analytics page...');
-                    await loadSystemStatus();
+                    try {
+                        await loadSystemStatus();
+                    } catch (error) {
+                        console.error('Error loading system status:', error);
+                    }
+                    break;
+                case 'advanced-analytics':
+                    console.log('Loading advanced analytics page...');
+                    try {
+                        await loadAdvancedAnalytics();
+                    } catch (error) {
+                        console.error('Error loading advanced analytics:', error);
+                    }
                     break;
             }
         }
         
+        function showInactiveCityMessage(sectionName) {
+            const sectionNameMap = {
+                'queue': 'Restaurant Queue'
+            };
+            
+            const containerId = sectionName === 'queue' ? 'queueList' : 'currentRestaurant';
+            const container = document.getElementById(containerId);
+            
+            if (container) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; background: #2a2a2a; border-radius: 12px; border: 1px solid #444;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">⏸️</div>
+                        <h3 style="color: #20b2aa; margin-bottom: 1rem;">${currentCity.displayName} is not activated</h3>
+                        <p style="color: #888; margin-bottom: 1.5rem;">
+                            This city is currently inactive. Activate it in the Cities section to manage restaurants and view data.
+                        </p>
+                        <button class="btn btn-primary" onclick="showSection('cities')" style="padding: 0.75rem 1.5rem;">
+                            🏙️ Go to Cities
+                        </button>
+                    </div>
+                `;
+            }
+        }
+        
+        // Cities Management Functions
+        async function loadCitiesList() {
+            try {
+                const response = await apiCall('/api/admin/cities');
+                
+                if (response.success) {
+                    displayCitiesList(response.cities);
+                } else {
+                    throw new Error(response.error || 'Failed to load cities');
+                }
+            } catch (error) {
+                console.error('Error loading cities list:', error);
+                document.getElementById('citiesList').innerHTML = `
+                    <div class="error">
+                        Failed to load cities: ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        function displayCitiesList(cities) {
+            const container = document.getElementById('citiesList');
+            
+            if (!cities || cities.length === 0) {
+                container.innerHTML = `
+                    <div class="no-data">
+                        <h3>No Cities Found</h3>
+                        <p>Create your first city using the form above.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const html = cities.map(city => {
+                const launchDate = city.launchDate ? new Date(city.launchDate).toLocaleDateString() : 'Not launched';
+                const createdAt = new Date(city.createdAt).toLocaleDateString();
+                
+                return `
+                    <div class="city-item" style="background: #2a2a2a; border: 1px solid #444; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div style="width: 40px; height: 40px; background: ${city.brandColor}; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                                🏙️
+                            </div>
+                            <div style="flex: 1;">
+                                <h3 style="color: #20b2aa; margin: 0 0 0.25rem 0;">${city.displayName}</h3>
+                                <p style="color: #888; margin: 0; font-size: 0.9rem;">${city.name}, ${city.state}</p>
+                            </div>
+                            <div style="text-align: right;">
+                                <span style="background: ${city.isActive ? '#28a745' : '#dc3545'}; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">
+                                    ${city.isActive ? 'Active' : 'Inactive'}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                            <div>
+                                <strong style="color: #ccc;">Timezone:</strong><br>
+                                <span style="color: #888;">${city.timezone}</span>
+                            </div>
+                            <div>
+                                <strong style="color: #ccc;">Yelp Location:</strong><br>
+                                <span style="color: #888;">${city.yelpLocation}</span>
+                            </div>
+                            <div>
+                                <strong style="color: #ccc;">Rotation:</strong><br>
+                                <span style="color: #888;">${city.rotationDay} at ${city.rotationTime}</span>
+                            </div>
+                            <div>
+                                <strong style="color: #ccc;">Min Queue:</strong><br>
+                                <span style="color: #888;">${city.minQueueSize} restaurants</span>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                            <button class="btn" onclick="switchToCity('${city.id}')" style="padding: 0.5rem 1rem;">
+                                🔄 Switch to ${city.name}
+                            </button>
+                            <button class="btn btn-secondary" onclick="viewCityStats('${city.id}')" style="padding: 0.5rem 1rem;">
+                                📊 View Stats
+                            </button>
+                            <button class="btn ${city.isActive ? 'btn-warning' : 'btn-success'}" onclick="toggleCityStatus('${city.id}', ${city.isActive})" style="padding: 0.5rem 1rem;">
+                                ${city.isActive ? '⏸️ Deactivate' : '▶️ Activate'}
+                            </button>
+                        </div>
+                        
+                        <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #666;">
+                            Created: ${createdAt} • Launched: ${launchDate}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = html;
+        }
+        
+        function switchToCity(cityId) {
+            const city = cities.find(c => c.id === cityId);
+            if (city) {
+                // Leave previous city room if connected
+                if (socket && isConnected && currentCity) {
+                    socket.emit('leave-city', currentCity.id);
+                }
+                
+                currentCity = city;
+                document.getElementById('citySelect').value = cityId;
+                updateCityDisplay();
+                showMessage(`Switched to ${city.displayName}`, 'success');
+                
+                // Join new city room if connected
+                if (socket && isConnected) {
+                    socket.emit('join-city', city.id);
+                }
+                
+                // Reload the current section to show city-specific data
+                if (currentSection) {
+                    loadSectionData(currentSection);
+                } else {
+                    showSection('overview'); // Default to overview if no current section
+                }
+            }
+        }
+        
+        function viewCityStats(cityId) {
+            const city = cities.find(c => c.id === cityId);
+            if (city) {
+                switchToCity(cityId);
+                showSection('analytics');
+            }
+        }
+        
+        async function toggleCityStatus(cityId, currentStatus) {
+            try {
+                const response = await apiCall(`/api/admin/cities/${cityId}/toggle`, {
+                    method: 'PUT'
+                });
+                
+                if (response.success) {
+                    showMessage(response.message, 'success');
+                    await loadCitiesList(); // Reload cities list
+                    await loadCities(); // Reload city selector
+                    
+                    // If we're currently viewing this city, update the currentCity object
+                    if (currentCity && currentCity.id === cityId) {
+                        currentCity.isActive = response.city.isActive;
+                        loadSectionData(currentSection); // Reload current section to show updated state
+                    }
+                } else {
+                    throw new Error(response.error || 'Failed to toggle city status');
+                }
+            } catch (error) {
+                console.error('Error toggling city status:', error);
+                showMessage('Failed to toggle city status: ' + error.message, 'error');
+            }
+        }
+        
+        // Advanced Analytics Functions
+        async function loadAdvancedAnalytics() {
+            if (!currentCity) {
+                console.log('No city selected for advanced analytics');
+                return;
+            }
+            
+            if (!currentCity.isActive) {
+                showMessage(`${currentCity.displayName} is not active. Analytics require an active city.`, 'warning');
+                return;
+            }
+            
+            const timeRange = document.getElementById('analyticsTimeRange')?.value || '30d';
+            
+            try {
+                // Load all analytics data in parallel
+                await Promise.all([
+                    loadRealTimeMetrics(),
+                    loadOverviewMetrics(timeRange),
+                    loadPerformanceInsights(timeRange),
+                    loadRestaurantPerformance(timeRange),
+                    loadUserEngagement(timeRange),
+                    loadTrendsCharts(timeRange)
+                ]);
+                
+                console.log('✅ Advanced analytics loaded successfully');
+            } catch (error) {
+                console.error('❌ Error loading advanced analytics:', error);
+                showMessage('Failed to load advanced analytics: ' + error.message, 'error');
+            }
+        }
+        
+        async function loadRealTimeMetrics() {
+            try {
+                const response = await apiCall(`/api/analytics/${currentCity.id}/realtime`);
+                
+                if (response.success) {
+                    const metrics = response.metrics;
+                    const container = document.getElementById('realTimeMetrics');
+                    
+                    container.innerHTML = `
+                        <div class="metric-card">
+                            <h4>RSVPs (24h)</h4>
+                            <div class="value">${metrics.rsvps24h}</div>
+                            <div class="change neutral">Last 24 hours</div>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Visits (24h)</h4>
+                            <div class="value">${metrics.visits24h}</div>
+                            <div class="change neutral">Last 24 hours</div>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Active Users (24h)</h4>
+                            <div class="value">${metrics.activeUsers24h}</div>
+                            <div class="change neutral">Last 24 hours</div>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Last Updated</h4>
+                            <div class="value" style="font-size: 1rem;">${new Date(metrics.timestamp).toLocaleTimeString()}</div>
+                            <div class="change neutral">Real-time</div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading real-time metrics:', error);
+                document.getElementById('realTimeMetrics').innerHTML = '<div class="error">Failed to load real-time metrics</div>';
+            }
+        }
+        
+        async function loadOverviewMetrics(timeRange) {
+            try {
+                const response = await apiCall(`/api/analytics/${currentCity.id}?timeRange=${timeRange}`);
+                
+                if (response.success) {
+                    const analytics = response.analytics;
+                    const container = document.getElementById('overviewMetrics');
+                    
+                    container.innerHTML = `
+                        <div class="metric-card">
+                            <h4>Total Restaurants</h4>
+                            <div class="value">${analytics.overview.totalRestaurants}</div>
+                            <div class="change neutral">${analytics.overview.activeRestaurants} active</div>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Total Users</h4>
+                            <div class="value">${analytics.overview.totalUsers}</div>
+                            <div class="change ${analytics.trends.userGrowth >= 0 ? 'positive' : 'negative'}">
+                                ${analytics.trends.userGrowth >= 0 ? '+' : ''}${analytics.trends.userGrowth}%
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Total RSVPs</h4>
+                            <div class="value">${analytics.overview.totalRsvps}</div>
+                            <div class="change neutral">${timeRange}</div>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Total Visits</h4>
+                            <div class="value">${analytics.overview.totalVisits}</div>
+                            <div class="change neutral">${timeRange}</div>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Queue Length</h4>
+                            <div class="value">${analytics.overview.queueLength}</div>
+                            <div class="change neutral">Restaurants</div>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Avg Rating</h4>
+                            <div class="value">${analytics.overview.avgRating}⭐</div>
+                            <div class="change neutral">All restaurants</div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading overview metrics:', error);
+                document.getElementById('overviewMetrics').innerHTML = '<div class="error">Failed to load overview metrics</div>';
+            }
+        }
+        
+        async function loadPerformanceInsights(timeRange) {
+            try {
+                const response = await apiCall(`/api/analytics/${currentCity.id}?timeRange=${timeRange}`);
+                
+                if (response.success) {
+                    const insights = response.analytics.insights;
+                    const container = document.getElementById('performanceInsights');
+                    
+                    if (insights.length === 0) {
+                        container.innerHTML = '<div class="no-data">No insights available for this time period</div>';
+                        return;
+                    }
+                    
+                    const insightsHtml = insights.map(insight => `
+                        <div class="insight-card ${insight.type}">
+                            <div class="icon">
+                                ${insight.type === 'success' ? '✅' : insight.type === 'warning' ? '⚠️' : 'ℹ️'}
+                            </div>
+                            <div class="content">
+                                <h4>${insight.title}</h4>
+                                <p>${insight.message}</p>
+                            </div>
+                            <div class="value">${insight.value}</div>
+                        </div>
+                    `).join('');
+                    
+                    container.innerHTML = insightsHtml;
+                }
+            } catch (error) {
+                console.error('Error loading performance insights:', error);
+                document.getElementById('performanceInsights').innerHTML = '<div class="error">Failed to load performance insights</div>';
+            }
+        }
+        
+        async function loadRestaurantPerformance(timeRange) {
+            try {
+                const response = await apiCall(`/api/analytics/${currentCity.id}/restaurants?timeRange=${timeRange}`);
+                
+                if (response.success) {
+                    const restaurants = response.restaurants.slice(0, 10); // Top 10
+                    const container = document.getElementById('restaurantPerformance');
+                    
+                    if (restaurants.length === 0) {
+                        container.innerHTML = '<div class="no-data">No restaurant data available</div>';
+                        return;
+                    }
+                    
+                    const tableHtml = `
+                        <table class="performance-table">
+                            <thead>
+                                <tr>
+                                    <th>Restaurant</th>
+                                    <th>RSVPs</th>
+                                    <th>Visits</th>
+                                    <th>Avg Rating</th>
+                                    <th>Engagement</th>
+                                    <th>Satisfaction</th>
+                                    <th>Popularity</th>
+                                    <th>Total Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${restaurants.map(restaurant => `
+                                    <tr>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                ${restaurant.imageUrl ? `<img src="${restaurant.imageUrl}" alt="${restaurant.name}" style="width: 30px; height: 30px; border-radius: 4px; object-fit: cover;">` : ''}
+                                                <div>
+                                                    <div style="font-weight: 600;">${restaurant.name}</div>
+                                                    <div style="font-size: 0.8rem; color: #888;">${restaurant.address}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>${restaurant.metrics.totalRsvps}</td>
+                                        <td>${restaurant.metrics.totalVisits}</td>
+                                        <td>${restaurant.metrics.avgRating}⭐</td>
+                                        <td><span class="score-badge score-${getScoreClass(restaurant.metrics.engagementScore)}">${restaurant.metrics.engagementScore}</span></td>
+                                        <td><span class="score-badge score-${getScoreClass(restaurant.metrics.satisfactionScore)}">${restaurant.metrics.satisfactionScore}</span></td>
+                                        <td><span class="score-badge score-${getScoreClass(restaurant.metrics.popularityScore)}">${restaurant.metrics.popularityScore}</span></td>
+                                        <td><span class="score-badge score-${getScoreClass(restaurant.metrics.totalScore)}">${restaurant.metrics.totalScore}</span></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                    
+                    container.innerHTML = tableHtml;
+                }
+            } catch (error) {
+                console.error('Error loading restaurant performance:', error);
+                document.getElementById('restaurantPerformance').innerHTML = '<div class="error">Failed to load restaurant performance</div>';
+            }
+        }
+        
+        async function loadUserEngagement(timeRange) {
+            try {
+                const response = await apiCall(`/api/analytics/${currentCity.id}/users?timeRange=${timeRange}`);
+                
+                if (response.success) {
+                    const users = response.users.slice(0, 10); // Top 10
+                    const engagementDistribution = response.engagementDistribution;
+                    const container = document.getElementById('userEngagement');
+                    
+                    const engagementHtml = `
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: #20b2aa; margin-bottom: 1rem;">Engagement Distribution</h4>
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <h4>High Engagement</h4>
+                                    <div class="value">${engagementDistribution.high}</div>
+                                    <div class="change positive">Active users</div>
+                                </div>
+                                <div class="metric-card">
+                                    <h4>Medium Engagement</h4>
+                                    <div class="value">${engagementDistribution.medium}</div>
+                                    <div class="change neutral">Moderate users</div>
+                                </div>
+                                <div class="metric-card">
+                                    <h4>Low Engagement</h4>
+                                    <div class="value">${engagementDistribution.low}</div>
+                                    <div class="change negative">Inactive users</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h4 style="color: #20b2aa; margin-bottom: 1rem;">Top Engaged Users</h4>
+                        <table class="performance-table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>RSVPs</th>
+                                    <th>Visits</th>
+                                    <th>Avg Rating</th>
+                                    <th>Engagement Level</th>
+                                    <th>Total Activity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${users.map(user => `
+                                    <tr>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                ${user.avatar ? `<img src="${user.avatar}" alt="${user.name}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">` : '<div style="width: 30px; height: 30px; border-radius: 50%; background: #20b2aa; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">' + (user.name?.charAt(0) || 'U') + '</div>'}
+                                                <div>
+                                                    <div style="font-weight: 600;">${user.name || 'Anonymous'}</div>
+                                                    <div style="font-size: 0.8rem; color: #888;">${user.email}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>${user.metrics.totalRsvps}</td>
+                                        <td>${user.metrics.totalVisits}</td>
+                                        <td>${user.metrics.avgRating}⭐</td>
+                                        <td><span class="score-badge score-${user.metrics.engagementLevel === 'high' ? 'excellent' : user.metrics.engagementLevel === 'medium' ? 'good' : 'fair'}">${user.metrics.engagementLevel}</span></td>
+                                        <td>${user.metrics.totalEngagement}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                    
+                    container.innerHTML = engagementHtml;
+                }
+            } catch (error) {
+                console.error('Error loading user engagement:', error);
+                document.getElementById('userEngagement').innerHTML = '<div class="error">Failed to load user engagement</div>';
+            }
+        }
+        
+        async function loadTrendsCharts(timeRange) {
+            try {
+                const response = await apiCall(`/api/analytics/${currentCity.id}/trends?timeRange=${timeRange}`);
+                
+                if (response.success) {
+                    const trends = response.trends;
+                    const container = document.getElementById('trendsCharts');
+                    
+                    const chartsHtml = `
+                        <div class="chart-container">
+                            <h4 style="color: #20b2aa; margin-bottom: 1rem;">RSVP Trends</h4>
+                            <div class="chart-placeholder">
+                                📊 RSVP Activity Over Time<br>
+                                <small style="color: #888;">Chart visualization would go here</small>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <h4 style="color: #20b2aa; margin-bottom: 1rem;">Visit Trends</h4>
+                            <div class="chart-placeholder">
+                                📈 Visit Activity Over Time<br>
+                                <small style="color: #888;">Chart visualization would go here</small>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <h4 style="color: #20b2aa; margin-bottom: 1rem;">User Growth</h4>
+                            <div class="chart-placeholder">
+                                👥 User Registration Trends<br>
+                                <small style="color: #888;">Chart visualization would go here</small>
+                            </div>
+                        </div>
+                    `;
+                    
+                    container.innerHTML = chartsHtml;
+                }
+            } catch (error) {
+                console.error('Error loading trends charts:', error);
+                document.getElementById('trendsCharts').innerHTML = '<div class="error">Failed to load trend data</div>';
+            }
+        }
+        
+        async function clearAnalyticsCache() {
+            try {
+                const response = await apiCall('/api/analytics/clear-cache', {
+                    method: 'POST'
+                });
+                
+                if (response.success) {
+                    showMessage('Analytics cache cleared successfully', 'success');
+                    // Reload analytics if currently viewing
+                    if (currentSection === 'advanced-analytics') {
+                        await loadAdvancedAnalytics();
+                    }
+                } else {
+                    throw new Error(response.error || 'Failed to clear cache');
+                }
+            } catch (error) {
+                console.error('Error clearing analytics cache:', error);
+                showMessage('Failed to clear analytics cache: ' + error.message, 'error');
+            }
+        }
+        
+        function getScoreClass(score) {
+            if (score >= 80) return 'excellent';
+            if (score >= 60) return 'good';
+            if (score >= 40) return 'fair';
+            return 'poor';
+        }
+        
+        // Handle add city form submission
+        document.addEventListener('DOMContentLoaded', () => {
+            const addCityForm = document.getElementById('addCityForm');
+            if (addCityForm) {
+                addCityForm.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                    
+                    const cityData = {
+                        name: document.getElementById('cityName').value,
+                        slug: document.getElementById('cityName').value.toLowerCase().replace(/[^a-z0-9]/g, ''),
+                        state: document.getElementById('cityState').value,
+                        displayName: document.getElementById('cityDisplayName').value,
+                        timezone: document.getElementById('cityTimezone').value,
+                        yelpLocation: document.getElementById('cityYelpLocation').value,
+                        brandColor: document.getElementById('cityBrandColor').value
+                    };
+                    
+                    try {
+                        const response = await apiCall('/api/admin/cities', {
+                            method: 'POST',
+                            body: JSON.stringify(cityData)
+                        });
+                        
+                        if (response.success) {
+                            showMessage(response.message, 'success');
+                            addCityForm.reset();
+                            await loadCitiesList(); // Reload cities list
+                            await loadCities(); // Reload city selector
+                        } else {
+                            throw new Error(response.error || 'Failed to create city');
+                        }
+                    } catch (error) {
+                        console.error('Error creating city:', error);
+                        showMessage('Failed to create city: ' + error.message, 'error');
+                    }
+                });
+            }
+        });
+        
         // Load dashboard statistics
         async function loadDashboardStats() {
             try {
-                const data = await apiCall('/api/admin/dashboard');
+                if (!currentCity) {
+                    console.log('No city selected for dashboard stats');
+                    return;
+                }
                 
-                document.getElementById('totalUsers').textContent = data.stats.totalUsers;
-                document.getElementById('thisWeekRSVPs').textContent = data.stats.thisWeekRSVPs;
-                document.getElementById('totalRestaurants').textContent = data.stats.totalRestaurants;
-                document.getElementById('queueLength').textContent = data.stats.queueLength;
+                const data = await apiCall(`/api/admin/dashboard?cityId=${currentCity.id}`);
                 
-                // Update change text
-                document.querySelector('#totalUsers').nextElementSibling.textContent = `+${data.stats.newUsersThisWeek || 0} this week`;
-                document.querySelector('#thisWeekRSVPs').nextElementSibling.textContent = 'Active RSVPs';
-                document.querySelector('#totalRestaurants').nextElementSibling.textContent = 'In database';
-                document.querySelector('#queueLength').nextElementSibling.textContent = 'Pending restaurants';
+                // Safely update elements if they exist
+                const totalUsersEl = document.getElementById('totalUsers');
+                const thisWeekRSVPsEl = document.getElementById('thisWeekRSVPs');
+                const totalRestaurantsEl = document.getElementById('totalRestaurants');
+                const queueLengthEl = document.getElementById('queueLength');
+                
+                if (totalUsersEl) totalUsersEl.textContent = data.stats.totalUsers;
+                if (thisWeekRSVPsEl) thisWeekRSVPsEl.textContent = data.stats.thisWeekRSVPs;
+                if (totalRestaurantsEl) totalRestaurantsEl.textContent = data.stats.totalRestaurants;
+                if (queueLengthEl) queueLengthEl.textContent = data.stats.queueLength;
+                
+                // Update change text safely
+                const totalUsersNext = document.querySelector('#totalUsers')?.nextElementSibling;
+                const thisWeekRSVPsNext = document.querySelector('#thisWeekRSVPs')?.nextElementSibling;
+                const totalRestaurantsNext = document.querySelector('#totalRestaurants')?.nextElementSibling;
+                const queueLengthNext = document.querySelector('#queueLength')?.nextElementSibling;
+                
+                if (totalUsersNext) totalUsersNext.textContent = `+${data.stats.newUsersThisWeek || 0} this week`;
+                if (thisWeekRSVPsNext) thisWeekRSVPsNext.textContent = 'Active RSVPs';
+                if (totalRestaurantsNext) totalRestaurantsNext.textContent = 'In database';
+                if (queueLengthNext) queueLengthNext.textContent = 'Pending restaurants';
                 
             } catch (error) {
                 console.error('Error loading dashboard stats:', error);
@@ -643,39 +2126,179 @@
         // Load current restaurant
         async function loadCurrentRestaurant() {
             try {
-                const data = await apiCall('/api/restaurants/current');
+                if (!currentCity) {
+                    console.log('No city selected for current restaurant');
+                    const container = document.getElementById('currentRestaurant');
+                    if (container) {
+                        container.innerHTML = '<div class="error">No city selected</div>';
+                    }
+                    return;
+                }
+                
+                console.log(`🔄 Loading current restaurant for ${currentCity.displayName}...`);
                 
                 const container = document.getElementById('currentRestaurant');
+                if (!container) {
+                    console.error('❌ Container with ID "currentRestaurant" not found');
+                    return;
+                }
+                
+                // Check if city is inactive
+                if (!currentCity.isActive) {
+                    showInactiveCityMessage('current');
+                    return;
+                }
+                
+                // Show loading state
+                container.innerHTML = '<div class="loading">Loading current restaurant...</div>';
+                
+                const data = await apiCall(`/api/restaurants/current?cityId=${currentCity.id}`);
+                console.log('✅ API Response:', data);
+                
+                // Check if we got an error response (no featured restaurant)
+                if (data.error) {
+                    console.log('❌ No featured restaurant found for this city');
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 3rem; background: #2a2a2a; border-radius: 12px; border: 1px solid #444;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🍽️</div>
+                            <h3 style="color: #20b2aa; margin-bottom: 1rem;">No Featured Restaurant</h3>
+                            <p style="color: #888; margin-bottom: 1.5rem;">
+                                ${currentCity.displayName} doesn't have a featured restaurant this week.
+                            </p>
+                            <p style="color: #666; font-size: 0.9rem;">
+                                Check the restaurant queue to see upcoming restaurants or activate the city if it's inactive.
+                            </p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Extract categories for display
+                let categories = 'Restaurant';
+                if (data.categories) {
+                    try {
+                        // Check if categories is already an object or a string
+                        const categoryData = typeof data.categories === 'string' ? 
+                            JSON.parse(data.categories) : 
+                            data.categories;
+                        
+                        if (Array.isArray(categoryData)) {
+                            categories = categoryData.map(cat => cat.title || cat).join(', ');
+                        } else if (categoryData.title) {
+                            categories = categoryData.title;
+                        }
+                    } catch (error) {
+                        console.warn('Error parsing categories:', error);
+                        categories = 'Restaurant';
+                    }
+                }
+                
                 container.innerHTML = `
                     <div class="current-restaurant">
                         <img src="${data.imageUrl || '/placeholder-restaurant.jpg'}" alt="${data.name}" class="restaurant-image">
                         <div class="restaurant-info">
-                            <h4>${data.name}</h4>
-                            <p>${data.address}</p>
-                            <p>⭐ ${data.rating} • ${data.price} • ${data.expectedWait}</p>
+                            <h4>⭐ ${data.name}</h4>
+                            <p>📍 ${data.address}</p>
+                            <p>⭐ ${data.rating || 'N/A'} • ${data.price || 'N/A'} • ${categories}</p>
+                            <p style="font-size: 0.9rem; color: #888;">This restaurant is currently featured to users</p>
                             <div style="margin-top: 1rem;">
                                 <button class="btn btn-secondary" onclick="manualRotation()">Change Restaurant</button>
                             </div>
                         </div>
+                        <div class="featured-badge">LIVE NOW</div>
                     </div>
                 `;
+                console.log('✅ Successfully loaded current restaurant');
             } catch (error) {
-                console.error('Error loading current restaurant:', error);
-                document.getElementById('currentRestaurant').innerHTML = '<div class="error">Failed to load current restaurant</div>';
+                console.error('❌ Error loading current restaurant:', error);
+                const container = document.getElementById('currentRestaurant');
+                if (container) {
+                    if (error.message && error.message.includes('No featured restaurant')) {
+                        container.innerHTML = `
+                            <div style="text-align: center; padding: 2rem; background: #2a2a2a; border-radius: 12px; border: 1px solid #444;">
+                                <div style="font-size: 2rem; margin-bottom: 1rem;">🍽️</div>
+                                <h3 style="color: #20b2aa; margin-bottom: 1rem;">No Featured Restaurant</h3>
+                                <p style="color: #888;">${currentCity ? currentCity.displayName : 'This city'} doesn't have a featured restaurant this week.</p>
+                            </div>
+                        `;
+                    } else {
+                        container.innerHTML = `<div class="error">Failed to load current restaurant: ${error.message || 'Unknown error'}</div>`;
+                    }
+                }
             }
         }
         
         // Load currently featured restaurant for queue page
         async function loadCurrentlyFeatured() {
             try {
-                console.log('Loading currently featured restaurant...');
-                const data = await apiCall('/api/restaurants/current');
-                console.log('Restaurant data received:', data);
+                if (!currentCity) {
+                    console.log('No city selected for current restaurant');
+                    const container = document.getElementById('currentlyFeatured');
+                    if (container) {
+                        container.innerHTML = '<div class="error">No city selected</div>';
+                    }
+                    return;
+                }
+                
+                console.log(`🔄 Loading currently featured restaurant for ${currentCity.displayName}...`);
+                console.log('🔍 Making API call to /api/restaurants/current...');
                 
                 const container = document.getElementById('currentlyFeatured');
                 if (!container) {
-                    console.error('Container with ID "currentlyFeatured" not found');
+                    console.error('❌ Container with ID "currentlyFeatured" not found');
                     return;
+                }
+                
+                // Check if city is inactive
+                if (!currentCity.isActive) {
+                    showInactiveCityMessage('queue');
+                    return;
+                }
+                
+                // Show loading state
+                container.innerHTML = '<div class="loading">Loading current restaurant...</div>';
+                
+                const data = await apiCall(`/api/restaurants/current?cityId=${currentCity.id}`);
+                console.log('✅ Restaurant data received:', data);
+                
+                console.log('📦 Container found, updating HTML...');
+                
+                // Check if we got an error response (no featured restaurant)
+                if (data.error) {
+                    console.log('❌ No featured restaurant found for this city');
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 3rem; background: #2a2a2a; border-radius: 12px; border: 1px solid #444;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🍽️</div>
+                            <h3 style="color: #20b2aa; margin-bottom: 1rem;">No Featured Restaurant</h3>
+                            <p style="color: #888; margin-bottom: 1.5rem;">
+                                ${currentCity.displayName} doesn't have a featured restaurant this week.
+                            </p>
+                            <p style="color: #666; font-size: 0.9rem;">
+                                Check the restaurant queue to see upcoming restaurants or activate the city if it's inactive.
+                            </p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Extract categories for display
+                let categories = 'Restaurant';
+                if (data.categories) {
+                    try {
+                        // Check if categories is already an object or a string
+                        const categoryData = typeof data.categories === 'string' ? 
+                            JSON.parse(data.categories) : 
+                            data.categories;
+                        
+                        if (Array.isArray(categoryData)) {
+                            categories = categoryData.map(cat => cat.title || cat).join(', ');
+                        } else if (categoryData.title) {
+                            categories = categoryData.title;
+                        }
+                    } catch (error) {
+                        console.warn('Error parsing categories:', error);
+                        categories = 'Restaurant';
+                    }
                 }
                 
                 container.innerHTML = `
@@ -684,18 +2307,29 @@
                         <div class="restaurant-info">
                             <h4>⭐ ${data.name}</h4>
                             <p>📍 ${data.address}</p>
-                            <p>⭐ ${data.rating} • ${data.price} • ${data.expectedWait || 'N/A wait'}</p>
+                            <p>⭐ ${data.rating || 'N/A'} • ${data.price || 'N/A'} • ${data.expectedWait || 'N/A wait'}</p>
+                            <p>🍽️ ${categories}</p>
                             <p style="font-size: 0.9rem; color: #888;">This restaurant is currently featured to users</p>
                         </div>
                         <div class="featured-badge">LIVE NOW</div>
                     </div>
                 `;
-                console.log('Successfully loaded currently featured restaurant');
+                console.log('✅ Successfully loaded currently featured restaurant:', data.name);
             } catch (error) {
-                console.error('Error loading currently featured restaurant:', error);
+                console.error('❌ Error loading currently featured restaurant:', error);
                 const container = document.getElementById('currentlyFeatured');
                 if (container) {
-                    container.innerHTML = '<div class="error">Failed to load current restaurant</div>';
+                    if (error.message && error.message.includes('No featured restaurant')) {
+                        container.innerHTML = `
+                            <div style="text-align: center; padding: 2rem; background: #2a2a2a; border-radius: 12px; border: 1px solid #444;">
+                                <div style="font-size: 2rem; margin-bottom: 1rem;">🍽️</div>
+                                <h3 style="color: #20b2aa; margin-bottom: 1rem;">No Featured Restaurant</h3>
+                                <p style="color: #888;">${currentCity ? currentCity.displayName : 'This city'} doesn't have a featured restaurant this week.</p>
+                            </div>
+                        `;
+                    } else {
+                        container.innerHTML = `<div class="error">Failed to load current restaurant: ${error.message || 'Unknown error'}</div>`;
+                    }
                 }
             }
         }
@@ -703,7 +2337,12 @@
         // Load queue
         async function loadQueue() {
             try {
-                const data = await apiCall('/api/admin/queue');
+                if (!currentCity) {
+                    console.log('No city selected for queue');
+                    return;
+                }
+                
+                const data = await apiCall(`/api/admin/queue?cityId=${currentCity.id}`);
                 
                 const container = document.getElementById('queueList');
                 if (data.queue.length === 0) {
@@ -743,14 +2382,38 @@
                 return;
             }
             
+            // Check if city is selected
+            if (!currentCity) {
+                console.log('No city selected for analytics');
+                container.innerHTML = '<div class="error">No city selected</div>';
+                return;
+            }
+            
+            // Check if city is inactive
+            if (!currentCity.isActive) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; background: #2a2a2a; border-radius: 12px; border: 1px solid #444;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">⏸️</div>
+                        <h3 style="color: #20b2aa; margin-bottom: 1rem;">${currentCity.displayName} is not activated</h3>
+                        <p style="color: #888; margin-bottom: 1.5rem;">
+                            This city is currently inactive. Activate it in the Cities section to view analytics.
+                        </p>
+                        <button class="btn btn-primary" onclick="showSection('cities')" style="padding: 0.75rem 1.5rem;">
+                            🏙️ Go to Cities
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
             console.log('📊 Setting loading state...');
             container.innerHTML = '<div class="loading">Loading analytics...</div>';
             
             try {
                 console.log('🌐 Starting API calls...');
                 
-                // Try to load current restaurant data (public endpoint)
-                const currentData = await apiCall('/api/restaurants/current');
+                // Try to load current restaurant data (public endpoint) with city filtering
+                const currentData = await apiCall(`/api/restaurants/current?cityId=${currentCity.id}`);
                 console.log('Current restaurant data:', currentData);
                 
                 let queueData = [];
@@ -758,8 +2421,8 @@
                 let avgRating = 'N/A';
                 
                 try {
-                    // Try to load queue data (requires auth)
-                    queueData = await apiCall('/api/admin/queue');
+                    // Try to load queue data (requires auth) with city filtering
+                    queueData = await apiCall(`/api/admin/queue?cityId=${currentCity.id}`);
                     queueSize = queueData.length;
                     avgRating = queueData.length > 0 
                         ? (queueData.reduce((sum, item) => sum + (item.restaurant?.rating || 0), 0) / queueData.length).toFixed(1)
@@ -767,40 +2430,80 @@
                     console.log('Queue data loaded:', queueData.length, 'restaurants');
                 } catch (queueError) {
                     console.log('Queue data not available (auth required):', queueError.message);
-                    queueSize = '20+';  // Fallback estimate
-                    avgRating = '4.2';  // Fallback estimate
+                    queueSize = '0';  // No restaurants for inactive cities
+                    avgRating = 'N/A';  // No data available
                 }
                 
-                container.innerHTML = `
-                    <div class="stat-card">
-                        <h4>📊 System Analytics</h4>
-                        <p><strong>Current Featured:</strong> ${currentData.name || 'Sundance BBQ'}</p>
-                        <p><strong>Rating:</strong> ${currentData.rating || '5.0'}⭐ ${currentData.price || '$'}</p>
-                        <p><strong>Categories:</strong> ${currentData.categories?.map(c => c.title).join(', ') || 'BBQ, Tacos'}</p>
-                        <p><strong>Queue Size:</strong> ${queueSize} restaurants</p>
-                        <p><strong>Avg Rating:</strong> ${avgRating} stars</p>
-                        <p><strong>Last Updated:</strong> ${new Date().toLocaleString()}</p>
-                    </div>
-                    <div class="stat-card" style="margin-top: 1rem;">
-                        <h4>🔋 System Health</h4>
-                        <p><strong>Status:</strong> <span style="color: #20b2aa;">✅ Operational</span></p>
-                        <p><strong>Rotation:</strong> 🔄 Automatic (Tuesdays 9:00 AM)</p>
-                        <p><strong>Auto-Queue:</strong> <span style="color: #20b2aa;">✅ Active</span></p>
-                        <p><strong>Yelp API:</strong> <span style="color: #20b2aa;">✅ Connected</span></p>
-                        <p><strong>Database:</strong> <span style="color: #20b2aa;">✅ Online</span></p>
-                    </div>
-                `;
+                // Handle case where no featured restaurant exists for this city
+                if (currentData.error) {
+                    container.innerHTML = `
+                        <div class="stat-card">
+                            <h4>📊 ${currentCity.displayName} Analytics</h4>
+                            <p><strong>Current Featured:</strong> <span style="color: #888;">No featured restaurant</span></p>
+                            <p><strong>Queue Size:</strong> ${queueSize} restaurants</p>
+                            <p><strong>Avg Rating:</strong> ${avgRating} stars</p>
+                            <p><strong>Status:</strong> <span style="color: #888;">No active restaurant</span></p>
+                            <p><strong>Last Updated:</strong> ${new Date().toLocaleString()}</p>
+                        </div>
+                        <div class="stat-card" style="margin-top: 1rem;">
+                            <h4>🔋 System Health</h4>
+                            <p><strong>Status:</strong> <span style="color: #20b2aa;">✅ Operational</span></p>
+                            <p><strong>Rotation:</strong> 🔄 Automatic (Tuesdays 9:00 AM)</p>
+                            <p><strong>Auto-Queue:</strong> <span style="color: #20b2aa;">✅ Active</span></p>
+                            <p><strong>Yelp API:</strong> <span style="color: #20b2aa;">✅ Connected</span></p>
+                            <p><strong>Database:</strong> <span style="color: #20b2aa;">✅ Online</span></p>
+                        </div>
+                    `;
+                } else {
+                    // Extract categories for display
+                    let categories = 'Restaurant';
+                    if (currentData.categories) {
+                        try {
+                            const categoryData = typeof currentData.categories === 'string' ? 
+                                JSON.parse(currentData.categories) : 
+                                currentData.categories;
+                            
+                            if (Array.isArray(categoryData)) {
+                                categories = categoryData.map(cat => cat.title || cat).join(', ');
+                            } else if (categoryData.title) {
+                                categories = categoryData.title;
+                            }
+                        } catch (error) {
+                            console.warn('Error parsing categories:', error);
+                            categories = 'Restaurant';
+                        }
+                    }
+                    
+                    container.innerHTML = `
+                        <div class="stat-card">
+                            <h4>📊 ${currentCity.displayName} Analytics</h4>
+                            <p><strong>Current Featured:</strong> ${currentData.name}</p>
+                            <p><strong>Rating:</strong> ${currentData.rating || 'N/A'}⭐ ${currentData.price || 'N/A'}</p>
+                            <p><strong>Categories:</strong> ${categories}</p>
+                            <p><strong>Queue Size:</strong> ${queueSize} restaurants</p>
+                            <p><strong>Avg Rating:</strong> ${avgRating} stars</p>
+                            <p><strong>Last Updated:</strong> ${new Date().toLocaleString()}</p>
+                        </div>
+                        <div class="stat-card" style="margin-top: 1rem;">
+                            <h4>🔋 System Health</h4>
+                            <p><strong>Status:</strong> <span style="color: #20b2aa;">✅ Operational</span></p>
+                            <p><strong>Rotation:</strong> 🔄 Automatic (Tuesdays 9:00 AM)</p>
+                            <p><strong>Auto-Queue:</strong> <span style="color: #20b2aa;">✅ Active</span></p>
+                            <p><strong>Yelp API:</strong> <span style="color: #20b2aa;">✅ Connected</span></p>
+                            <p><strong>Database:</strong> <span style="color: #20b2aa;">✅ Online</span></p>
+                        </div>
+                    `;
+                }
                 
             } catch (error) {
                 console.error('Error loading analytics:', error);
                 container.innerHTML = `
                     <div class="stat-card">
-                        <h4>📊 System Analytics</h4>
-                        <p><strong>Current Featured:</strong> Sundance BBQ</p>
-                        <p><strong>Rating:</strong> 5.0⭐ $</p>
-                        <p><strong>Categories:</strong> BBQ, Tacos</p>
-                        <p><strong>Queue Size:</strong> 22+ restaurants</p>
-                        <p><strong>Avg Rating:</strong> 4.2 stars</p>
+                        <h4>📊 ${currentCity.displayName} Analytics</h4>
+                        <p><strong>Current Featured:</strong> <span style="color: #888;">Unable to load</span></p>
+                        <p><strong>Queue Size:</strong> <span style="color: #888;">Unable to load</span></p>
+                        <p><strong>Avg Rating:</strong> <span style="color: #888;">Unable to load</span></p>
+                        <p><strong>Status:</strong> <span style="color: #ff6b6b;">❌ Error loading data</span></p>
                         <p><strong>Last Updated:</strong> ${new Date().toLocaleString()}</p>
                     </div>
                     <div class="stat-card" style="margin-top: 1rem;">
@@ -941,9 +2644,17 @@
         }
         
         // Add Enter key support for search
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('Austin Food Club Admin Dashboard Loaded');
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('Food Club Admin Dashboard Loaded');
+            
+            // Initialize WebSocket connection
+            initializeWebSocket();
+            
+            // Load cities first, then load overview data
+            await loadCities();
+            if (currentCity) {
             loadSectionData('overview');
+            }
             
             // Add Enter key listener to search input
             setTimeout(() => {
@@ -984,7 +2695,195 @@
         
         function logout() {
             localStorage.removeItem('adminToken');
-            window.location.href = '/admin.html';
+            // Redirect removed - stay on admin dashboard
+        }
+
+        // Past Featured Restaurants Functions
+        let currentPage = 1;
+        let totalPages = 1;
+
+        async function loadPastFeatured() {
+            try {
+                const sortBy = document.getElementById('sortBy').value;
+                const sortOrder = document.getElementById('sortOrder').value;
+                const pageSize = document.getElementById('pageSize').value;
+
+                console.log('Loading past featured restaurants...', { sortBy, sortOrder, pageSize, page: currentPage });
+
+                const response = await apiCall(`/api/admin/past-featured?page=${currentPage}&limit=${pageSize}&sortBy=${sortBy}&sortOrder=${sortOrder}`);
+                
+                if (response.success) {
+                    displayPastFeatured(response.data);
+                    updatePagination(response.pagination);
+                } else {
+                    throw new Error(response.error || 'Failed to load past featured restaurants');
+                }
+
+            } catch (error) {
+                console.error('Error loading past featured restaurants:', error);
+                document.getElementById('pastFeaturedList').innerHTML = `
+                    <div class="error">
+                        Failed to load past featured restaurants: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function displayPastFeatured(restaurants) {
+            const container = document.getElementById('pastFeaturedList');
+            
+            if (!restaurants || restaurants.length === 0) {
+                container.innerHTML = `
+                    <div class="no-data">
+                        <h3>No Past Featured Restaurants</h3>
+                        <p>No restaurants have been featured yet. Once restaurants are rotated, they will appear here.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const html = restaurants.map(item => {
+                const restaurant = item.restaurant;
+                const period = item.featuredPeriod;
+                const performance = item.performance;
+                const engagement = item.userEngagement;
+                const recentActivity = item.recentActivity;
+
+                // Format dates
+                const startDate = new Date(period.startDate).toLocaleDateString();
+                const endDate = new Date(period.endDate).toLocaleDateString();
+                const duration = period.duration ? `${period.duration} days` : 'Unknown';
+
+                // Format RSVP breakdown
+                const rsvpBreakdown = Object.entries(performance.rsvpBreakdown || {})
+                    .map(([status, count]) => `<span class="rsvp-status ${status}">${status}: ${count}</span>`)
+                    .join('');
+
+                // Format recent activity
+                const activityItems = [];
+                if (recentActivity.latestVisit) {
+                    const visit = recentActivity.latestVisit;
+                    activityItems.push(`
+                        <div class="activity-item">
+                            <div class="activity-avatar">📸</div>
+                            <div class="activity-details">
+                                <div class="user-name">${visit.user.name || 'User'}</div>
+                                <div class="activity-text">Uploaded photo and rated ${visit.rating}⭐</div>
+                                <div class="activity-date">${new Date(visit.createdAt).toLocaleDateString()}</div>
+                            </div>
+                        </div>
+                    `);
+                }
+                if (recentActivity.latestRsvp) {
+                    const rsvp = recentActivity.latestRsvp;
+                    activityItems.push(`
+                        <div class="activity-item">
+                            <div class="activity-avatar">📅</div>
+                            <div class="activity-details">
+                                <div class="user-name">${rsvp.user.name || 'User'}</div>
+                                <div class="activity-text">RSVP'd ${rsvp.status} for ${rsvp.day}</div>
+                                <div class="activity-date">${new Date(rsvp.createdAt).toLocaleDateString()}</div>
+                            </div>
+                        </div>
+                    `);
+                }
+
+                return `
+                    <div class="past-featured-item">
+                        <div class="past-featured-header">
+                            <img src="${restaurant.imageUrl || '/placeholder-restaurant.jpg'}" 
+                                 alt="${restaurant.name}" 
+                                 class="past-featured-image">
+                            <div class="past-featured-info">
+                                <h3>${restaurant.name}</h3>
+                                <p>📍 ${restaurant.address}</p>
+                                <p>⭐ ${restaurant.rating || 'N/A'} • ${restaurant.price || 'N/A'}</p>
+                            </div>
+                        </div>
+
+                        <div class="past-featured-period">
+                            <h4>Featured Period</h4>
+                            <div class="period-dates">
+                                <span>📅 Started: ${startDate}</span>
+                                <span>📅 Ended: ${endDate}</span>
+                                <span>⏱️ Duration: ${duration}</span>
+                            </div>
+                        </div>
+
+                        <div class="past-featured-metrics">
+                            <div class="metric-card">
+                                <h4>RSVPs</h4>
+                                <div class="metric-value">${performance.totalRsvps || 0}</div>
+                                <div class="metric-label">Total RSVPs</div>
+                                ${rsvpBreakdown ? `<div class="rsvp-breakdown">${rsvpBreakdown}</div>` : ''}
+                            </div>
+
+                            <div class="metric-card">
+                                <h4>Visits</h4>
+                                <div class="metric-value">${performance.totalVisits || 0}</div>
+                                <div class="metric-label">Verified Visits</div>
+                            </div>
+
+                            <div class="metric-card">
+                                <h4>Photos</h4>
+                                <div class="metric-value">${engagement.totalPhotos || 0}</div>
+                                <div class="metric-label">User Photos</div>
+                            </div>
+
+                            <div class="metric-card">
+                                <h4>Rating</h4>
+                                <div class="metric-value">${engagement.avgRatingFromVisits ? engagement.avgRatingFromVisits.toFixed(1) : 'N/A'}</div>
+                                <div class="metric-label">Avg from Visits</div>
+                            </div>
+
+                            <div class="metric-card">
+                                <h4>Engagement</h4>
+                                <div class="metric-value">${engagement.uniqueVisitors || 0}</div>
+                                <div class="metric-label">Unique Visitors</div>
+                            </div>
+
+                            <div class="metric-card">
+                                <h4>RSVPers</h4>
+                                <div class="metric-value">${engagement.uniqueRsvpers || 0}</div>
+                                <div class="metric-label">Unique RSVPers</div>
+                            </div>
+                        </div>
+
+                        ${activityItems.length > 0 ? `
+                            <div class="recent-activity">
+                                <h4>Recent Activity</h4>
+                                ${activityItems.join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = html;
+        }
+
+        function updatePagination(pagination) {
+            const paginationContainer = document.getElementById('pastFeaturedPagination');
+            const prevButton = document.getElementById('prevPage');
+            const nextButton = document.getElementById('nextPage');
+            const pageInfo = document.getElementById('pageInfo');
+
+            currentPage = pagination.page;
+            totalPages = pagination.pages;
+
+            prevButton.disabled = currentPage <= 1;
+            nextButton.disabled = currentPage >= totalPages;
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+
+            paginationContainer.style.display = totalPages > 1 ? 'flex' : 'none';
+        }
+
+        function changePage(direction) {
+            const newPage = currentPage + direction;
+            if (newPage >= 1 && newPage <= totalPages) {
+                currentPage = newPage;
+                loadPastFeatured();
+            }
         }
         
         // Drag and Drop Queue Reordering
@@ -1157,6 +3056,74 @@
             }
         }
 
+        // Maintain queue size at 20 restaurants
+        async function maintainQueue() {
+            try {
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = '🎯 Maintaining...';
+                button.disabled = true;
+
+                console.log('Maintaining queue size at 20 restaurants...');
+
+                const response = await apiCall('/api/admin/queue/maintain', {
+                    method: 'POST',
+                    body: JSON.stringify({ targetSize: 20 })
+                });
+
+                if (response.success) {
+                    if (response.restaurantsAdded > 0) {
+                        showMessage(`🎉 Queue maintained! Added ${response.restaurantsAdded} restaurants. Queue now has ${response.newQueueSize} restaurants.`, 'success');
+                    } else {
+                        showMessage(`✅ Queue is already at target size (${response.newQueueSize} restaurants).`, 'success');
+                    }
+                    await loadQueue();
+                    await loadDashboardStats();
+                } else {
+                    showMessage('Failed to maintain queue', 'error');
+                }
+
+            } catch (error) {
+                console.error('Maintain queue error:', error);
+                showMessage('Failed to maintain queue: ' + error.message, 'error');
+            } finally {
+                const button = event.target;
+                button.textContent = '🎯 Maintain Queue (20)';
+                button.disabled = false;
+            }
+        }
+
+        // Fix queue positions to ensure they start from 1 and are sequential
+        async function fixQueuePositions() {
+            try {
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = '🔧 Fixing...';
+                button.disabled = true;
+
+                console.log('Fixing queue positions...');
+
+                const response = await apiCall('/api/admin/queue/fix-positions', {
+                    method: 'POST'
+                });
+
+                if (response.success) {
+                    showMessage(`✅ Fixed positions for ${response.itemsFixed} queue items. Positions now start from 1.`, 'success');
+                    await loadQueue();
+                } else {
+                    showMessage('Failed to fix queue positions', 'error');
+                }
+
+            } catch (error) {
+                console.error('Fix queue positions error:', error);
+                showMessage('Failed to fix queue positions: ' + error.message, 'error');
+            } finally {
+                const button = event.target;
+                button.textContent = '🔧 Fix Positions';
+                button.disabled = false;
+            }
+        }
+
         // Test rotation and auto-queue functionality
         async function testRotationAndAutoQueue() {
             try {
@@ -1175,10 +3142,6 @@
                     showMessage(`🎉 Rotation complete! ${response.newRestaurant} is now featured. New restaurant auto-added to queue!`, 'success');
                     await loadQueue();
                     await loadDashboardStats();
-                    // Refresh current featured restaurant if that section exists
-                    if (document.getElementById('currentFeaturedRestaurant')) {
-                        loadCurrentFeaturedRestaurant();
-                    }
                 } else {
                     showMessage('Failed to trigger rotation: ' + response.error, 'error');
                 }
@@ -1193,83 +3156,6 @@
             }
         }
 
-        // Navigation function
-        function showSection(sectionName) {
-            // Hide all sections
-            document.querySelectorAll('.section-content').forEach(section => {
-                section.style.display = 'none';
-            });
-            
-            // Remove active class from all nav items
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // Show selected section
-            document.getElementById(sectionName).style.display = 'block';
-            document.querySelector(`[onclick="showSection('${sectionName}')"]`).classList.add('active');
-            
-            // Load section-specific data
-            if (sectionName === 'overview') {
-                loadDashboardStats();
-            } else if (sectionName === 'queue') {
-                loadQueue();
-            } else if (sectionName === 'current') {
-                loadCurrentFeaturedRestaurant();
-            }
-        }
-        
-        // Load current featured restaurant for Current Week page
-        async function loadCurrentFeaturedRestaurant() {
-            try {
-                const data = await apiCall('/api/restaurants/current');
-                const container = document.getElementById('currentFeaturedRestaurant');
-                
-                if (data) {
-                    const categories = data.categories ? (Array.isArray(data.categories) ? data.categories : JSON.parse(data.categories)) : [];
-                    const categoryText = Array.isArray(categories) ? categories.map(c => c.title || c).join(', ') : 'Restaurant';
-                    
-                    container.innerHTML = `
-                        <div style="display: flex; align-items: center; gap: 1.5rem; background: #2a2a2a; padding: 1.5rem; border-radius: 12px; border: 2px solid #20b2aa;">
-                            <img src="${data.imageUrl || '/placeholder.jpg'}" alt="${data.name}" 
-                                 style="width: 120px; height: 120px; object-fit: cover; border-radius: 12px; border: 2px solid #444;">
-                            <div style="flex: 1;">
-                                <h3 style="margin: 0; color: #20b2aa; font-size: 1.5rem;">${data.name}</h3>
-                                <p style="margin: 0.5rem 0; color: #ccc; font-size: 1.1rem;">${data.address}</p>
-                                <p style="margin: 0.5rem 0; color: #888;">${categoryText}</p>
-                                <div style="display: flex; gap: 1rem; margin-top: 0.75rem;">
-                                    <span style="background: #20b2aa; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: bold;">
-                                        ⭐ ${data.rating || 'N/A'}
-                                    </span>
-                                    <span style="background: #28a745; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: bold;">
-                                        ${data.price || 'N/A'}
-                                    </span>
-                                    <span style="background: #6c757d; color: white; padding: 0.25rem 0.75rem; border-radius: 20px;">
-                                        ${data.reviewCount || 0} reviews
-                                    </span>
-                                </div>
-                                <p style="margin: 0.75rem 0 0 0; color: #20b2aa; font-size: 0.9rem;">
-                                    📍 Featured since ${new Date(data.featuredDate || data.createdAt).toLocaleDateString()}
-                                </p>
-                            </div>
-                            <div style="text-align: center;">
-                                <div style="background: linear-gradient(135deg, #20b2aa, #17a2b8); color: white; padding: 1rem; border-radius: 50%; margin-bottom: 0.5rem;">
-                                    <span style="font-size: 2rem;">🍽️</span>
-                                </div>
-                                <p style="margin: 0; color: #20b2aa; font-weight: bold;">FEATURED</p>
-                                <p style="margin: 0; color: #888; font-size: 0.8rem;">This Week</p>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    container.innerHTML = '<p style="color: #888; text-align: center; padding: 2rem;">No restaurant currently featured</p>';
-                }
-            } catch (error) {
-                console.error('Error loading current featured restaurant:', error);
-                document.getElementById('currentFeaturedRestaurant').innerHTML = 
-                    '<div class="error" style="text-align: center; padding: 2rem; color: #dc3545;">Failed to load current restaurant</div>';
-            }
-        }
 
         // Initialize dashboard (removed duplicate - handled above)
     </script>

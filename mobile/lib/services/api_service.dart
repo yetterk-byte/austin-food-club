@@ -140,4 +140,27 @@ class ApiService {
       return [];
     }
   }
+
+  static Future<List<Map<String, dynamic>>> getCityActivity(String userId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/city-activity/user/$userId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+      
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        return data.cast<Map<String, dynamic>>();
+      } else {
+        print('❌ Failed to get city activity: ${response.statusCode}');
+        return [];
+      }
+    } catch (e) {
+      print('❌ Error getting city activity: $e');
+      return [];
+    }
+  }
 }

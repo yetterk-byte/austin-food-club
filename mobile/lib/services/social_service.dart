@@ -1,4 +1,3 @@
-import '../models/user.dart';
 import '../models/friend.dart';
 import 'api_service.dart';
 
@@ -20,6 +19,17 @@ class SocialService {
       return data.map((json) => SocialFeedItem.fromJson(json)).toList();
     } catch (e) {
       print('❌ SocialService: Error getting social feed: $e');
+      // Return empty list on error
+      return [];
+    }
+  }
+
+  static Future<List<SocialFeedItem>> getCityActivity(String userId) async {
+    try {
+      final data = await ApiService.getCityActivity(userId);
+      return data.map((json) => SocialFeedItem.fromJson(json)).toList();
+    } catch (e) {
+      print('❌ SocialService: Error getting city activity: $e');
       // Return empty list on error
       return [];
     }
