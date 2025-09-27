@@ -24,7 +24,7 @@ class ApiService {
   static Future<bool> createRSVP(String restaurantId, String day) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/rsvps'),
+        Uri.parse('$baseUrl/rsvp'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
