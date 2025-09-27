@@ -101,15 +101,7 @@ class MockDataService {
 
   static Future<Map<String, int>> getRSVPCounts(String restaurantId) async {
     try {
-      final data = await ApiService.getRSVPCounts(restaurantId);
-      final Map<String, int> counts = {};
-      
-      for (final item in data) {
-        if (item['day'] != null && item['count'] != null) {
-          counts[item['day']] = item['count'];
-        }
-      }
-      
+      final counts = await ApiService.getRSVPCounts(restaurantId);
       return counts;
     } catch (e) {
       print('❌ MockDataService: Error getting RSVP counts: $e');

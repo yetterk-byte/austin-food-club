@@ -32,10 +32,55 @@
   <title>Austin Food Club</title>
   <link rel="manifest" href="manifest.json">
   
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Material Icons Font - Multiple sources for reliability -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Icons&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.gstatic.com/s/materialicons/v140/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2" rel="preload" as="font" type="font/woff2" crossorigin>
+  
   <!-- Google Maps JavaScript API for Flutter Web -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6pcXA40sTWfiNL5lWA-pZZJsFJv0f5xQ&libraries=places"></script>
 
   <style>
+    /* Import Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+    @import url('https://fonts.googleapis.com/css2?family=Material+Icons&display=swap');
+    
+    /* Force Material Icons font loading with fallbacks */
+    .material-icons, .material-icons-outlined, .material-icons-round, .material-icons-sharp {
+      font-family: 'Material Icons', 'Material Icons Outlined', 'Material Icons Round', 'Material Icons Sharp';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* Additional font fallbacks for Flutter web */
+    body, html {
+      font-family: 'Inter', 'Roboto Condensed', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    
+    /* Monoton font for branding */
+    .monoton {
+      font-family: 'Monoton', cursive;
+    }
+    
     /* This will hide the Flutter loading indicator once the Flutter app starts. */
     .loading {
       display: flex;

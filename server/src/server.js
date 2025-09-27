@@ -1523,6 +1523,49 @@ app.get('/api/rsvp', verifySupabaseToken, requireAuth, async (req, res) => {
   }
 });
 
+// GET /api/rsvps/restaurant/:restaurantId/counts - Get RSVP counts for specific restaurant
+app.get('/api/rsvps/restaurant/:restaurantId/counts', async (req, res) => {
+  try {
+    const { restaurantId } = req.params;
+    
+    if (!restaurantId) {
+      return res.status(400).json({ 
+        success: false,
+        error: 'Restaurant ID is required' 
+      });
+    }
+
+    // Get RSVP counts for each day for this restaurant
+    const rsvpCounts = await prisma.rSVP.groupBy({
+      by: ['day'],
+      where: {
+        restaurantId: restaurantId,
+        status: 'confirmed'
+      },
+      _count: {
+        day: true
+      }
+    });
+
+    // Format the response
+    const formattedCounts = {};
+    rsvpCounts.forEach(count => {
+      formattedCounts[count.day] = count._count.day;
+    });
+
+    res.json({
+      success: true,
+      counts: formattedCounts
+    });
+  } catch (error) {
+    console.error('Error fetching RSVP counts:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Internal server error' 
+    });
+  }
+});
+
 // GET /api/rsvp/counts - Get RSVP counts for each day for current restaurant
 app.get('/api/rsvp/counts', async (req, res) => {
   try {

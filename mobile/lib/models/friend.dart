@@ -19,7 +19,7 @@ class Friend {
   factory Friend.fromJson(Map<String, dynamic> json) {
     return Friend(
       id: json['id'] ?? '',
-      userId: json['userId'] ?? '',
+      userId: json['userId']?.toString() ?? '',
       friendId: json['friendId'] ?? '',
       createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
       friendUser: User.fromJson(json['friendUser'] ?? {}),
@@ -57,8 +57,8 @@ class FriendRequest {
   factory FriendRequest.fromJson(Map<String, dynamic> json) {
     return FriendRequest(
       id: json['id'] ?? '',
-      fromUserId: json['fromUserId'] ?? '',
-      toUserId: json['toUserId'] ?? '',
+      fromUserId: json['fromUserId']?.toString() ?? '',
+      toUserId: json['toUserId']?.toString() ?? '',
       status: json['status'] ?? 'pending',
       createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
       fromUser: User.fromJson(json['fromUser'] ?? {}),
@@ -105,7 +105,7 @@ class SocialFeedItem {
   factory SocialFeedItem.fromJson(Map<String, dynamic> json) {
     return SocialFeedItem(
       id: json['id'] ?? '',
-      userId: json['userId'] ?? '',
+      userId: json['userId']?.toString() ?? '',
       type: json['type'] ?? '',
       createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
       user: User.fromJson(json['user'] ?? {}),

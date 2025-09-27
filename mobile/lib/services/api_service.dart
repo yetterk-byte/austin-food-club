@@ -49,7 +49,7 @@ class ApiService {
     }
   }
 
-  static Future<List<Map<String, dynamic>>> getRSVPCounts(String restaurantId) async {
+  static Future<Map<String, int>> getRSVPCounts(String restaurantId) async {
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/rsvps/restaurant/$restaurantId/counts'),
@@ -60,15 +60,20 @@ class ApiService {
       );
       
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        return data.cast<Map<String, dynamic>>();
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data['success'] == true && data['counts'] != null) {
+          // Convert the counts object to Map<String, int>
+          final Map<String, dynamic> counts = data['counts'];
+          return counts.map((key, value) => MapEntry(key, value is int ? value : 0));
+        }
+        return {};
       } else {
         print('❌ Failed to get RSVP counts: ${response.statusCode}');
-        return [];
+        return {};
       }
     } catch (e) {
       print('❌ Error getting RSVP counts: $e');
-      return [];
+      return {};
     }
   }
 

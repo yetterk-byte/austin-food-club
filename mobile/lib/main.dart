@@ -48,7 +48,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
       builder: (context, authProvider, child) {
         // Show loading while checking auth state
         if (authProvider.isLoading) {
-          return const Scaffold(
+          return Scaffold(
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -61,9 +61,8 @@ class _AuthWrapperState extends State<AuthWrapper> {
                   SizedBox(height: 24),
                   Text(
                     'Austin Food Club',
-                    style: TextStyle(
+                    style: AppTheme.monotonBranding.copyWith(
                       fontSize: 28,
-                      fontWeight: FontWeight.bold,
                       color: Colors.orange,
                     ),
                   ),
@@ -107,12 +106,11 @@ class WelcomeScreen extends StatelessWidget {
                 size: 120,
                 color: Colors.orange,
               ),
-              const SizedBox(height: 32),
-              const Text(
+              SizedBox(height: 32),
+              Text(
                 'Austin Food Club',
-                style: TextStyle(
+                style: AppTheme.monotonBranding.copyWith(
                   fontSize: 32,
-                  fontWeight: FontWeight.bold,
                   color: Colors.orange,
                 ),
                 textAlign: TextAlign.center,

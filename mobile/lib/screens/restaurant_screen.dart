@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:expandable/expandable.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../models/restaurant.dart';
 import '../widgets/rsvp_section.dart';
-import '../widgets/reliable_map_widget.dart';
+import '../widgets/simple_map_widget.dart';
+import '../config/app_theme.dart';
 // import 'photo_verification_screen.dart'; // Temporarily disabled
 
 class RestaurantScreen extends StatefulWidget {
@@ -126,10 +124,9 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
             toolbarHeight: 80, // Increased height to accommodate large Monoton text
             title: Text(
               'Austin Food Club',
-              style: GoogleFonts.monoton(
+              style: AppTheme.monotonBranding.copyWith(
+                fontSize: 32,
                 color: Colors.white,
-                fontSize: 32, // Keep the same large size as hero!
-                letterSpacing: 2.0, // Keep the same spacing as hero
               ),
             ),
             flexibleSpace: LayoutBuilder(
@@ -160,16 +157,19 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                 fit: StackFit.expand,
                 children: [
                     // Full-screen restaurant image
-                  CachedNetworkImage(
-                      imageUrl: widget.restaurant.imageUrl ?? 'https://via.placeholder.com/400x200?text=Restaurant+Image',
+                  Image.network(
+                    widget.restaurant.imageUrl ?? 'https://via.placeholder.com/400x200?text=Restaurant+Image',
                     fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      color: Colors.grey[800],
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        color: Colors.grey[800],
                         child: const Center(
                           child: CircularProgressIndicator(color: Colors.orange),
                         ),
-                    ),
-                    errorWidget: (context, url, error) => Container(
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) => Container(
                       color: Colors.grey[800],
                       child: const Center(
                         child: Icon(Icons.restaurant, size: 100, color: Colors.white54),
@@ -205,7 +205,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                           opacity: 1.0 - (scrollProgress * 1.2).clamp(0.0, 1.0),
                           child: Text(
                             widget.restaurant.name,
-                            style: GoogleFonts.robotoCondensed(
+                            style: TextStyle(
                               color: Colors.white,
                               fontSize: fontSize,
                               fontWeight: FontWeight.w300, // Light 300
@@ -410,42 +410,38 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                       ),
                     ),
                   const SizedBox(height: 24),
-                  // Hours - Expandable
+                  // Hours - Simplified
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: ExpandableNotifier(
-                      child: Card(
-                        color: Colors.grey[900],
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side: BorderSide(color: Colors.grey[700]!, width: 1),
-                        ),
-                        child: ExpandablePanel(
-                          header: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.access_time,
-                                  color: Colors.orange,
-                                  size: 20,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'Hours',
-                                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                const Spacer(),
-                                // Current status indicator
-                                _buildCurrentStatusChip(),
-                              ],
+                    child: Card(
+                      color: Colors.grey[900],
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: BorderSide(color: Colors.grey[700]!, width: 1),
+                      ),
+                      child: ExpansionTile(
+                        title: Row(
+                          children: [
+                            const Icon(
+                              Icons.access_time,
+                              color: Colors.orange,
+                              size: 20,
                             ),
-                          ),
-                          collapsed: Container(),
-                          expanded: Padding(
+                            const SizedBox(width: 8),
+                            Text(
+                              'Hours',
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            const Spacer(),
+                            // Current status indicator
+                            _buildCurrentStatusChip(),
+                          ],
+                        ),
+                        children: [
+                          Padding(
                             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                             child: Column(
                               children: [
@@ -493,15 +489,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                               ],
                             ),
                           ),
-                          theme: const ExpandableThemeData(
-                            headerAlignment: ExpandablePanelHeaderAlignment.center,
-                            tapBodyToExpand: true,
-                            tapBodyToCollapse: true,
-                            hasIcon: true,
-                            iconColor: Colors.orange,
-                            iconSize: 20,
-                          ),
-                        ),
+                        ],
                       ),
                     ),
                   ),
@@ -519,12 +507,42 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        // Reliable Google Maps Widget
-                        ReliableMapWidget(
-                          latitude: widget.restaurant.latitude,
-                          longitude: widget.restaurant.longitude,
-                          restaurantName: widget.restaurant.name,
-                          address: widget.restaurant.fullAddress,
+                        // Simplified location display
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[800],
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey[700]!, width: 1),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.location_on,
+                                  color: Colors.orange,
+                                  size: 32,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  widget.restaurant.fullAddress,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 12),
+                                SimpleMapWidget(
+                                  latitude: widget.restaurant.latitude,
+                                  longitude: widget.restaurant.longitude,
+                                  address: widget.restaurant.fullAddress,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),

@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 const mockVerifiedVisits = [
   {
     id: 1,
-    userId: 1,
+    userId: '1',
     restaurantId: 'sundance-bbq-1',
     restaurantName: 'Sundance BBQ',
     restaurantAddress: '8116 Thomas Springs Rd and Cir Dr',
@@ -19,7 +19,7 @@ const mockVerifiedVisits = [
   },
   {
     id: 2,
-    userId: 1,
+    userId: '1',
     restaurantId: 'terry-blacks-1',
     restaurantName: 'Terry Black\'s Barbecue',
     restaurantAddress: '1003 Barton Springs Rd',
@@ -30,7 +30,7 @@ const mockVerifiedVisits = [
   },
   {
     id: 3,
-    userId: 2,
+    userId: '2',
     restaurantId: 'franklin-bbq-1',
     restaurantName: 'Franklin Barbecue',
     restaurantAddress: '900 E 11th St',
@@ -943,10 +943,13 @@ const mockCityActivity = [
 router.get('/verified-visits/user/:userId', (req, res) => {
   try {
     const { userId } = req.params;
-    const userVisits = mockVerifiedVisits.filter(visit => visit.userId === parseInt(userId));
+    let userVisits = mockVerifiedVisits.filter(visit => visit.userId === parseInt(userId));
+    
+    // Sort by verification date (most recent first)
+    userVisits.sort((a, b) => new Date(b.verifiedAt) - new Date(a.verifiedAt));
     
     console.log(`🔍 Social: Getting verified visits for user ${userId}`);
-    console.log(`✅ Social: Found ${userVisits.length} verified visits for user ${userId}`);
+    console.log(`✅ Social: Found ${userVisits.length} verified visits for user ${userId} (sorted by date)`);
     
     res.json({
       success: true,

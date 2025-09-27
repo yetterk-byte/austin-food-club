@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/restaurant_service.dart';
 import '../models/restaurant.dart';
 import '../widgets/rsvp_section.dart';
+import '../config/app_theme.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -39,17 +40,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Austin Food Club',
-          style: TextStyle(
-            fontFamily: 'Monoton',
-            fontSize: 24,
-            letterSpacing: 2.0,
-          ),
+          style: AppTheme.monotonAppBar,
         ),
         backgroundColor: Colors.black,
         foregroundColor: Colors.orange,
         elevation: 0,
+        titleTextStyle: AppTheme.monotonAppBar,
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator(color: Colors.orange))
