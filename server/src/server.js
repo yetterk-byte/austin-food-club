@@ -137,6 +137,45 @@ app.use(sanitize);
 // Add standardized response helpers
 app.use(responseMiddleware);
 
+// Simple CORS bypass proxy for verification
+app.post('/api/proxy/verification/send-code', asyncHandler(async (req, res) => {
+  const { phone } = req.body;
+  
+  if (!phone) {
+    return res.status(400).json({
+      success: false,
+      message: 'Phone number is required',
+      timestamp: new Date().toISOString()
+    });
+  }
+
+  // Call the actual verification endpoint internally
+  try {
+    const response = await fetch(`http://localhost:3001/api/verification/send-code`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ phone }),
+    });
+
+    const data = await response.json();
+    
+    // Set CORS headers explicitly
+    res.header('Access-Control-Allow-Origin', 'https://austinfoodclub.com');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    
+    return res.status(response.status).json(data);
+  } catch (error) {
+    console.error('Proxy error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      timestamp: new Date().toISOString()
+    });
+  }
+}));
+
 // API versioning - Mount v1 API routes
 app.use('/api/v1', apiRouter);
 
