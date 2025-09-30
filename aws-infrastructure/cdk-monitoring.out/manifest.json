@@ -1,0 +1,2170 @@
+{
+  "version": "48.0.0",
+  "artifacts": {
+    "ECSAustinFoodClubStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "ECSAustinFoodClubStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "ECSAustinFoodClubStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://229037375031/us-east-1",
+      "properties": {
+        "templateFile": "ECSAustinFoodClubStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::229037375031:role/cdk-hnb659fds-deploy-role-229037375031-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::229037375031:role/cdk-hnb659fds-cfn-exec-role-229037375031-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-229037375031-us-east-1/bb8fd4f104de690f48506062ac1b52071a24ea8376986976956631d1cb23aa29.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "ECSAustinFoodClubStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::229037375031:role/cdk-hnb659fds-lookup-role-229037375031-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "ECSAustinFoodClubStack.assets"
+      ],
+      "metadata": {
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "maxAzs": "*",
+              "natGateways": "*"
+            }
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCDAF642A5"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet1": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": true,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": true,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {}
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addNatGateway": [
+                "*"
+              ]
+            }
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCPublicSubnet1Subnet531E6C19"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCPublicSubnet1RouteTableE435230D"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCPublicSubnet1RouteTableAssociationD94D8BC2"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCPublicSubnet1DefaultRouteCDB785A5"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet1/EIP": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCPublicSubnet1EIP0D473CE9"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet1/NATGateway": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCPublicSubnet1NATGatewayBC822848"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet2": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": true,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": true,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {}
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCPublicSubnet2SubnetB4ACF79B"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCPublicSubnet2RouteTable3C8EB7A3"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCPublicSubnet2RouteTableAssociation24B812B8"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet2/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCPublicSubnet2DefaultRouteF0430BA1"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet1": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": false,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": false,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {}
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCPrivateSubnet1SubnetBC8D84A7"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCPrivateSubnet1RouteTable41D7ED26"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCPrivateSubnet1RouteTableAssociationA98A3750"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCPrivateSubnet1DefaultRoute6B3F9E8E"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet2": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": false,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": false,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {}
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCPrivateSubnet2SubnetC4C88CC9"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCPrivateSubnet2RouteTable8588A17D"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCPrivateSubnet2RouteTableAssociationB9FF8765"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet2/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCPrivateSubnet2DefaultRoute0B498A09"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/IGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCIGWD8CEE361"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/VPCGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCVPCGWF5E5AD8A"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/RestrictDefaultSecurityGroupCustomResource": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubVPC/RestrictDefaultSecurityGroupCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubVPCRestrictDefaultSecurityGroupCustomResource505D0040"
+          }
+        ],
+        "/ECSAustinFoodClubStack/Custom::VpcRestrictDefaultSGCustomResourceProvider": [
+          {
+            "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
+            "data": true
+          }
+        ],
+        "/ECSAustinFoodClubStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0"
+          }
+        ],
+        "/ECSAustinFoodClubStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E"
+          }
+        ],
+        "/ECSAustinFoodClubStack/DatabaseSecret": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "generateSecretString": {
+                "secretStringTemplate": "*",
+                "generateStringKey": "*",
+                "passwordLength": "*",
+                "excludeCharacters": "*"
+              }
+            }
+          }
+        ],
+        "/ECSAustinFoodClubStack/DatabaseSecret/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DatabaseSecret86DBB7B3"
+          }
+        ],
+        "/ECSAustinFoodClubStack/DatabaseSecret/Attachment": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "secret": "*",
+              "target": "*"
+            }
+          }
+        ],
+        "/ECSAustinFoodClubStack/DatabaseSecret/Attachment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DatabaseSecretAttachment9A63A3D4"
+          }
+        ],
+        "/ECSAustinFoodClubStack/DatabaseSecurityGroup": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "vpc": "*",
+              "description": "*",
+              "allowAllOutbound": false
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addIngressRule": [
+                "*",
+                {},
+                "*"
+              ]
+            }
+          }
+        ],
+        "/ECSAustinFoodClubStack/DatabaseSecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DatabaseSecurityGroup7319C0F6"
+          }
+        ],
+        "/ECSAustinFoodClubStack/DatabaseSecurityGroup/from ECSAustinFoodClubStackECSSecurityGroup5A025BE4:5432": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DatabaseSecurityGroupfromECSAustinFoodClubStackECSSecurityGroup5A025BE45432D12E9D41"
+          }
+        ],
+        "/ECSAustinFoodClubStack/Database": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "engine": {
+                "engineType": "*",
+                "singleUserRotationApplication": "*",
+                "engineVersion": {
+                  "fullVersion": "*",
+                  "majorVersion": "*"
+                },
+                "parameterGroupFamily": "*",
+                "engineFamily": "*",
+                "defaultUsername": "*"
+              },
+              "credentials": "*",
+              "instanceType": "*",
+              "vpc": "*",
+              "vpcSubnets": {
+                "subnetType": "Private"
+              },
+              "securityGroups": [
+                "*"
+              ],
+              "publiclyAccessible": false,
+              "removalPolicy": "destroy",
+              "deleteAutomatedBackups": true,
+              "databaseName": "*"
+            }
+          }
+        ],
+        "/ECSAustinFoodClubStack/Database/SubnetGroup": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "description": "*",
+              "vpc": "*",
+              "vpcSubnets": {
+                "subnetType": "Private"
+              },
+              "removalPolicy": "*"
+            }
+          }
+        ],
+        "/ECSAustinFoodClubStack/Database/SubnetGroup/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DatabaseSubnetGroup7D60F180"
+          }
+        ],
+        "/ECSAustinFoodClubStack/Database/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DatabaseB269D8BB"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendBuildProject": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "projectName": "*",
+              "environment": {
+                "buildImage": {
+                  "type": "*",
+                  "defaultComputeType": "BUILD_GENERAL1_SMALL",
+                  "imageId": "*",
+                  "imagePullPrincipalType": "CODEBUILD",
+                  "secretsManagerCredentials": "*",
+                  "repository": "*"
+                },
+                "privileged": true,
+                "environmentVariables": "*"
+              },
+              "buildSpec": "*"
+            }
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendBuildProject/Role": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "roleName": "*",
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              }
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendBuildProject/Role/ImportRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendBuildProject/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendBuildProjectRoleA43C7559"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendBuildProject/Role/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendBuildProject/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendBuildProjectRoleDefaultPolicyF8A604A9"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendBuildProject/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendBuildProject66F920F7"
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubCluster": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "vpc": "*",
+              "clusterName": "*"
+            }
+          }
+        ],
+        "/ECSAustinFoodClubStack/AustinFoodClubCluster/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubCluster80984BC2"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendLogGroup": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "logGroupName": "*",
+              "retention": 7,
+              "removalPolicy": "destroy"
+            }
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendLogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendLogGroupDA10F1B2"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendTaskDefinition": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendTaskDefinition/TaskRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              }
+            }
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendTaskDefinition/TaskRole/ImportTaskRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendTaskDefinition/TaskRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendTaskDefinitionTaskRoleE757CE00"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendTaskDefinition/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendTaskDefinitionEC224DE6"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendTaskDefinition/ExecutionRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "roleName": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendTaskDefinition/ExecutionRole/ImportExecutionRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendTaskDefinition/ExecutionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendTaskDefinitionExecutionRoleDA72B768"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendTaskDefinition/ExecutionRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendTaskDefinition/ExecutionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendTaskDefinitionExecutionRoleDefaultPolicy0750C44A"
+          }
+        ],
+        "/ECSAustinFoodClubStack/ECSSecurityGroup": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "vpc": "*",
+              "description": "*",
+              "allowAllOutbound": true
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addIngressRule": [
+                {
+                  "canInlineRule": true,
+                  "connections": "*",
+                  "uniqueId": "*"
+                },
+                {},
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addIngressRule": [
+                "*",
+                {},
+                "*",
+                false
+              ]
+            }
+          }
+        ],
+        "/ECSAustinFoodClubStack/ECSSecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ECSSecurityGroupA14DBE7D"
+          }
+        ],
+        "/ECSAustinFoodClubStack/ECSSecurityGroup/from ECSAustinFoodClubStackBackendServiceLBSecurityGroupF6939AEC:3001": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ECSSecurityGroupfromECSAustinFoodClubStackBackendServiceLBSecurityGroupF6939AEC30010E87A995"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendService/LB": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendService/LB/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendServiceLB09608E98"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendService/LB/SecurityGroup": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "vpc": "*",
+              "description": "*",
+              "allowAllOutbound": false
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addIngressRule": [
+                {
+                  "canInlineRule": true,
+                  "connections": "*",
+                  "uniqueId": "*"
+                },
+                {},
+                "*",
+                false
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEgressRule": [
+                "*",
+                {},
+                "*",
+                true
+              ]
+            }
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendService/LB/SecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendServiceLBSecurityGroup2B9BA648"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendService/LB/SecurityGroup/to ECSAustinFoodClubStackECSSecurityGroup5A025BE4:3001": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendServiceLBSecurityGrouptoECSAustinFoodClubStackECSSecurityGroup5A025BE43001569B8A18"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendService/LB/PublicListener": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendService/LB/PublicListener/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendServiceLBPublicListener2FA7FC98"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendService/LB/PublicListener/ECSGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendServiceLBPublicListenerECSGroupD43CD2AB"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendService/LoadBalancerDNS": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendServiceLoadBalancerDNSE742582D"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendService/ServiceURL": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendServiceServiceURLB1770053"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendService/Service": [
+          {
+            "type": "aws:cdk:warning",
+            "data": "minHealthyPercent has not been configured so the default value of 50% is used. The number of running tasks will decrease below the desired count during deployments etc. See https://github.com/aws/aws-cdk/issues/31705 [ack: @aws-cdk/aws-ecs:minHealthyPercent]",
+            "trace": [
+              "Annotations.addMessage (/Users/kennyyetter/Desktop/austin-food-club/aws-infrastructure/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1978)",
+              "Annotations.addWarningV2 (/Users/kennyyetter/Desktop/austin-food-club/aws-infrastructure/node_modules/aws-cdk-lib/core/lib/annotations.js:1:896)",
+              "new BaseService (/Users/kennyyetter/Desktop/austin-food-club/aws-infrastructure/node_modules/aws-cdk-lib/aws-ecs/lib/base/base-service.js:1:8444)",
+              "new FargateService2 (/Users/kennyyetter/Desktop/austin-food-club/aws-infrastructure/node_modules/aws-cdk-lib/aws-ecs/lib/fargate/fargate-service.js:1:3888)",
+              "new FargateService2 (/Users/kennyyetter/Desktop/austin-food-club/aws-infrastructure/node_modules/aws-cdk-lib/core/lib/prop-injectable.js:1:488)",
+              "new ApplicationLoadBalancedFargateService2 (/Users/kennyyetter/Desktop/austin-food-club/aws-infrastructure/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/fargate/application-load-balanced-fargate-service.js:1:4035)",
+              "new ApplicationLoadBalancedFargateService2 (/Users/kennyyetter/Desktop/austin-food-club/aws-infrastructure/node_modules/aws-cdk-lib/core/lib/prop-injectable.js:1:488)",
+              "new ECSAustinFoodClubStack (/Users/kennyyetter/Desktop/austin-food-club/aws-infrastructure/lib/ecs-stack.ts:184:21)",
+              "Object.<anonymous> (/Users/kennyyetter/Desktop/austin-food-club/aws-infrastructure/bin/aws-infrastructure.ts:10:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1738:14)",
+              "Module.m._compile (/Users/kennyyetter/Desktop/austin-food-club/aws-infrastructure/node_modules/ts-node/src/index.ts:1618:23)",
+              "node:internal/modules/cjs/loader:1871:10",
+              "Object.require.extensions.<computed> [as .ts] (/Users/kennyyetter/Desktop/austin-food-club/aws-infrastructure/node_modules/ts-node/src/index.ts:1621:12)",
+              "Module.load (node:internal/modules/cjs/loader:1470:32)",
+              "Module._load (node:internal/modules/cjs/loader:1290:12)",
+              "TracingChannel.traceSync (node:diagnostics_channel:322:14)",
+              "wrapModuleLoad (node:internal/modules/cjs/loader:238:24)",
+              "Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)",
+              "phase4 (/Users/kennyyetter/Desktop/austin-food-club/aws-infrastructure/node_modules/ts-node/src/bin.ts:649:14)",
+              "bootstrap (/Users/kennyyetter/Desktop/austin-food-club/aws-infrastructure/node_modules/ts-node/src/bin.ts:95:10)",
+              "main (/Users/kennyyetter/Desktop/austin-food-club/aws-infrastructure/node_modules/ts-node/src/bin.ts:55:10)",
+              "Object.<anonymous> (/Users/kennyyetter/Desktop/austin-food-club/aws-infrastructure/node_modules/ts-node/src/bin.ts:800:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1738:14)",
+              "Object.<anonymous> (node:internal/modules/cjs/loader:1871:10)",
+              "Module.load (node:internal/modules/cjs/loader:1470:32)",
+              "Module._load (node:internal/modules/cjs/loader:1290:12)",
+              "TracingChannel.traceSync (node:diagnostics_channel:322:14)",
+              "wrapModuleLoad (node:internal/modules/cjs/loader:238:24)",
+              "Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)",
+              "node:internal/main/run_main_module:33:47"
+            ]
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendService/Service/Service": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendService2147DAF9"
+          }
+        ],
+        "/ECSAustinFoodClubStack/DatabaseEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DatabaseEndpoint"
+          }
+        ],
+        "/ECSAustinFoodClubStack/DatabaseSecretArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DatabaseSecretArn"
+          }
+        ],
+        "/ECSAustinFoodClubStack/ECSClusterName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ECSClusterName"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendServiceName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendServiceName"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BackendLoadBalancerUrl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendLoadBalancerUrl"
+          }
+        ],
+        "/ECSAustinFoodClubStack/ECRRepositoryUri": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ECRRepositoryUri"
+          }
+        ],
+        "/ECSAustinFoodClubStack/CodeBuildProjectName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CodeBuildProjectName"
+          }
+        ],
+        "/ECSAustinFoodClubStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/ECSAustinFoodClubStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/ECSAustinFoodClubStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "ECSAustinFoodClubStack"
+    },
+    "DomainAustinFoodClubStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "DomainAustinFoodClubStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "DomainAustinFoodClubStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://229037375031/us-east-1",
+      "properties": {
+        "templateFile": "DomainAustinFoodClubStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::229037375031:role/cdk-hnb659fds-deploy-role-229037375031-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::229037375031:role/cdk-hnb659fds-cfn-exec-role-229037375031-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-229037375031-us-east-1/5910bd34506e82055b33cf56846aecb746b3a12558309a780e87fd1ed0723750.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "DomainAustinFoodClubStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::229037375031:role/cdk-hnb659fds-lookup-role-229037375031-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "DomainAustinFoodClubStack.assets"
+      ],
+      "metadata": {
+        "/DomainAustinFoodClubStack/AustinFoodClubHostedZone": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "zoneName": "*",
+              "comment": "*"
+            }
+          }
+        ],
+        "/DomainAustinFoodClubStack/AustinFoodClubHostedZone/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubHostedZone5538A47B"
+          }
+        ],
+        "/DomainAustinFoodClubStack/AustinFoodClubCertificate": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "domainName": "*",
+              "subjectAlternativeNames": "*",
+              "validation": "*"
+            }
+          }
+        ],
+        "/DomainAustinFoodClubStack/AustinFoodClubCertificate/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubCertificate012FBAFE"
+          }
+        ],
+        "/DomainAustinFoodClubStack/AustinFoodClubDistribution": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "defaultBehavior": {
+                "origin": "*",
+                "viewerProtocolPolicy": "redirect-to-https",
+                "cachePolicy": "*",
+                "originRequestPolicy": "*"
+              },
+              "domainNames": "*",
+              "certificate": "*",
+              "comment": "*",
+              "priceClass": "PriceClass_100",
+              "httpVersion": "http2",
+              "enableIpv6": true
+            }
+          }
+        ],
+        "/DomainAustinFoodClubStack/AustinFoodClubDistribution/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubDistribution35720819"
+          }
+        ],
+        "/DomainAustinFoodClubStack/ExistingALB": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/DomainAustinFoodClubStack/ExistingALB/Vpc": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/DomainAustinFoodClubStack/ExistingALB/Vpc/PublicSubnet1": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/DomainAustinFoodClubStack/ExistingALB/Vpc/PublicSubnet2": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/DomainAustinFoodClubStack/ExistingALB/Vpc/PrivateSubnet1": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/DomainAustinFoodClubStack/ExistingALB/Vpc/PrivateSubnet2": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/DomainAustinFoodClubStack/ExistingALB/SecurityGroup-sg-06637b2f46c0db82a/from 0.0.0.0_0:443": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExistingALBSecurityGroupsg06637b2f46c0db82afrom00000443042695FB"
+          }
+        ],
+        "/DomainAustinFoodClubStack/ExistingALB/HttpsListener": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/DomainAustinFoodClubStack/ExistingALB/HttpsListener/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExistingALBHttpsListener97C5186C"
+          }
+        ],
+        "/DomainAustinFoodClubStack/MainDomainRecord": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "zone": "*",
+              "recordName": "*",
+              "target": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "zone": "*",
+              "recordName": "*",
+              "target": "*"
+            }
+          }
+        ],
+        "/DomainAustinFoodClubStack/MainDomainRecord/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MainDomainRecord8CF2511E"
+          }
+        ],
+        "/DomainAustinFoodClubStack/AWSCloudFrontPartitionHostedZoneIdMap": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AWSCloudFrontPartitionHostedZoneIdMap"
+          }
+        ],
+        "/DomainAustinFoodClubStack/ApiDomainRecord": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "zone": "*",
+              "recordName": "*",
+              "target": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "zone": "*",
+              "recordName": "*",
+              "target": "*"
+            }
+          }
+        ],
+        "/DomainAustinFoodClubStack/ApiDomainRecord/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiDomainRecord355D35CF"
+          }
+        ],
+        "/DomainAustinFoodClubStack/WwwDomainRecord": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "zone": "*",
+              "recordName": "*",
+              "domainName": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "zone": "*",
+              "recordName": "*",
+              "domainName": "*"
+            }
+          }
+        ],
+        "/DomainAustinFoodClubStack/WwwDomainRecord/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "WwwDomainRecord6A58C135"
+          }
+        ],
+        "/DomainAustinFoodClubStack/HostedZoneId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HostedZoneId"
+          }
+        ],
+        "/DomainAustinFoodClubStack/NameServers": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NameServers"
+          }
+        ],
+        "/DomainAustinFoodClubStack/CertificateArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CertificateArn"
+          }
+        ],
+        "/DomainAustinFoodClubStack/CloudFrontDomainName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CloudFrontDomainName"
+          }
+        ],
+        "/DomainAustinFoodClubStack/MainDomainUrl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MainDomainUrl"
+          }
+        ],
+        "/DomainAustinFoodClubStack/ApiDomainUrl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiDomainUrl"
+          }
+        ],
+        "/DomainAustinFoodClubStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/DomainAustinFoodClubStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/DomainAustinFoodClubStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "DomainAustinFoodClubStack"
+    },
+    "MonitoringAustinFoodClubStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "MonitoringAustinFoodClubStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "MonitoringAustinFoodClubStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://229037375031/us-east-1",
+      "properties": {
+        "templateFile": "MonitoringAustinFoodClubStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::229037375031:role/cdk-hnb659fds-deploy-role-229037375031-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::229037375031:role/cdk-hnb659fds-cfn-exec-role-229037375031-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-229037375031-us-east-1/07e6bcc87ae93a8af0948587b8aec860298332c96ec49cc27d81c2f507d57a1c.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "MonitoringAustinFoodClubStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::229037375031:role/cdk-hnb659fds-lookup-role-229037375031-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "MonitoringAustinFoodClubStack.assets"
+      ],
+      "metadata": {
+        "/MonitoringAustinFoodClubStack/AlertTopic": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "topicName": "*",
+              "displayName": "*"
+            }
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/AlertTopic/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AlertTopic2720D535"
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/ApplicationLogGroup": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "logGroupName": "*",
+              "retention": 14
+            }
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/ApplicationLogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApplicationLogGroupE33FCF9B"
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/AccessLogGroup": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "logGroupName": "*",
+              "retention": 7
+            }
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/AccessLogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AccessLogGroupEC82D238"
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/ErrorLogGroup": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "logGroupName": "*",
+              "retention": 30
+            }
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/ErrorLogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ErrorLogGroupB9A57448"
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/AustinFoodClubDashboard": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "dashboardName": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addWidgets": [
+                {
+                  "warnings": "*",
+                  "warningsV2": "*",
+                  "width": "*",
+                  "height": "*"
+                },
+                "*",
+                "*",
+                "*",
+                "*"
+              ]
+            }
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/AustinFoodClubDashboard/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AustinFoodClubDashboardB65A9E39"
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/HighCpuAlarm": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "metric": {
+                "warnings": "*"
+              },
+              "threshold": "*",
+              "evaluationPeriods": "*",
+              "alarmDescription": "*",
+              "alarmName": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addAlarmAction": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/HighCpuAlarm/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HighCpuAlarm40723000"
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/HighMemoryAlarm": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "metric": {
+                "warnings": "*"
+              },
+              "threshold": "*",
+              "evaluationPeriods": "*",
+              "alarmDescription": "*",
+              "alarmName": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addAlarmAction": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/HighMemoryAlarm/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HighMemoryAlarmB77DAB20"
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/HighResponseTimeAlarm": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "metric": {
+                "warnings": "*"
+              },
+              "threshold": "*",
+              "evaluationPeriods": "*",
+              "alarmDescription": "*",
+              "alarmName": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addAlarmAction": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/HighResponseTimeAlarm/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HighResponseTimeAlarmCB9F63BA"
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/HighErrorRateAlarm": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "metric": {
+                "warnings": "*"
+              },
+              "threshold": "*",
+              "evaluationPeriods": "*",
+              "alarmDescription": "*",
+              "alarmName": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addAlarmAction": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/HighErrorRateAlarm/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HighErrorRateAlarm9E2FAEE9"
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/RdsHighCpuAlarm": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "metric": {
+                "warnings": "*"
+              },
+              "threshold": "*",
+              "evaluationPeriods": "*",
+              "alarmDescription": "*",
+              "alarmName": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addAlarmAction": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/RdsHighCpuAlarm/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RdsHighCpuAlarmA9E4AEEA"
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/AlertTopicArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AlertTopicArn"
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/DashboardUrl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DashboardUrl"
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/LogGroupNames": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogGroupNames"
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/MonitoringAustinFoodClubStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "MonitoringAustinFoodClubStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "aws-cdk-lib/feature-flag-report": {
+      "type": "cdk:feature-flag-report",
+      "properties": {
+        "module": "aws-cdk-lib",
+        "flags": {
+          "@aws-cdk/aws-signer:signingProfileNamePassedToCfn": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Pass signingProfileName to CfnSigningProfile"
+          },
+          "@aws-cdk/core:newStyleStackSynthesis": {
+            "recommendedValue": true,
+            "explanation": "Switch to new stack synthesis method which enables CI/CD",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/core:stackRelativeExports": {
+            "recommendedValue": true,
+            "explanation": "Name exports based on the construct paths relative to the stack, rather than the global construct path",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/aws-ecs-patterns:secGroupsDisablesImplicitOpenListener": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Disable implicit openListener when custom security groups are provided"
+          },
+          "@aws-cdk/aws-rds:lowercaseDbIdentifier": {
+            "recommendedValue": true,
+            "explanation": "Force lowercasing of RDS Cluster names in CDK",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/aws-apigateway:usagePlanKeyOrderInsensitiveId": {
+            "recommendedValue": true,
+            "explanation": "Allow adding/removing multiple UsagePlanKeys independently",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/aws-lambda:recognizeVersionProps": {
+            "recommendedValue": true,
+            "explanation": "Enable this feature flag to opt in to the updated logical id calculation for Lambda Version created using the  `fn.currentVersion`.",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/aws-lambda:recognizeLayerVersion": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enable this feature flag to opt in to the updated logical id calculation for Lambda Version created using the `fn.currentVersion`."
+          },
+          "@aws-cdk/aws-cloudfront:defaultSecurityPolicyTLSv1.2_2021": {
+            "recommendedValue": true,
+            "explanation": "Enable this feature flag to have cloudfront distributions use the security policy TLSv1.2_2021 by default.",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/core:checkSecretUsage": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enable this flag to make it impossible to accidentally use SecretValues in unsafe locations"
+          },
+          "@aws-cdk/core:target-partitions": {
+            "userValue": [
+              "aws",
+              "aws-cn"
+            ],
+            "recommendedValue": [
+              "aws",
+              "aws-cn"
+            ],
+            "explanation": "What regions to include in lookup tables of environment agnostic stacks"
+          },
+          "@aws-cdk-containers/ecs-service-extensions:enableDefaultLogDriver": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "ECS extensions will automatically add an `awslogs` driver if no logging is specified"
+          },
+          "@aws-cdk/aws-ec2:uniqueImdsv2TemplateName": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enable this feature flag to have Launch Templates generated by the `InstanceRequireImdsv2Aspect` use unique names."
+          },
+          "@aws-cdk/aws-ecs:arnFormatIncludesClusterName": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "ARN format used by ECS. In the new ARN format, the cluster name is part of the resource ID."
+          },
+          "@aws-cdk/aws-iam:minimizePolicies": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Minimize IAM policies by combining Statements"
+          },
+          "@aws-cdk/core:validateSnapshotRemovalPolicy": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Error on snapshot removal policies on resources that do not support it."
+          },
+          "@aws-cdk/aws-codepipeline:crossAccountKeyAliasStackSafeResourceName": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Generate key aliases that include the stack name"
+          },
+          "@aws-cdk/aws-s3:createDefaultLoggingPolicy": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enable this feature flag to create an S3 bucket policy by default in cases where an AWS service would automatically create the Policy if one does not exist."
+          },
+          "@aws-cdk/aws-sns-subscriptions:restrictSqsDescryption": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Restrict KMS key policy for encrypted Queues a bit more"
+          },
+          "@aws-cdk/aws-apigateway:disableCloudWatchRole": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Make default CloudWatch Role behavior safe for multiple API Gateways in one environment"
+          },
+          "@aws-cdk/core:enablePartitionLiterals": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Make ARNs concrete if AWS partition is known"
+          },
+          "@aws-cdk/aws-events:eventsTargetQueueSameAccount": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Event Rules may only push to encrypted SQS queues in the same account"
+          },
+          "@aws-cdk/aws-ecs:disableExplicitDeploymentControllerForCircuitBreaker": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Avoid setting the \"ECS\" deployment controller when adding a circuit breaker"
+          },
+          "@aws-cdk/aws-iam:importedRoleStackSafeDefaultPolicyName": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enable this feature to by default create default policy names for imported roles that depend on the stack the role is in."
+          },
+          "@aws-cdk/aws-s3:serverAccessLogsUseBucketPolicy": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Use S3 Bucket Policy instead of ACLs for Server Access Logging"
+          },
+          "@aws-cdk/aws-route53-patters:useCertificate": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Use the official `Certificate` resource instead of `DnsValidatedCertificate`"
+          },
+          "@aws-cdk/customresources:installLatestAwsSdkDefault": {
+            "userValue": false,
+            "recommendedValue": false,
+            "explanation": "Whether to install the latest SDK by default in AwsCustomResource"
+          },
+          "@aws-cdk/aws-rds:databaseProxyUniqueResourceName": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Use unique resource name for Database Proxy"
+          },
+          "@aws-cdk/aws-codedeploy:removeAlarmsFromDeploymentGroup": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Remove CloudWatch alarms from deployment group"
+          },
+          "@aws-cdk/aws-apigateway:authorizerChangeDeploymentLogicalId": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Include authorizer configuration in the calculation of the API deployment logical ID."
+          },
+          "@aws-cdk/aws-ec2:launchTemplateDefaultUserData": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Define user data for a launch template by default when a machine image is provided."
+          },
+          "@aws-cdk/aws-secretsmanager:useAttachedSecretResourcePolicyForSecretTargetAttachments": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "SecretTargetAttachments uses the ResourcePolicy of the attached Secret."
+          },
+          "@aws-cdk/aws-redshift:columnId": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Whether to use an ID to track Redshift column changes"
+          },
+          "@aws-cdk/aws-stepfunctions-tasks:enableEmrServicePolicyV2": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enable AmazonEMRServicePolicy_v2 managed policies"
+          },
+          "@aws-cdk/aws-ec2:restrictDefaultSecurityGroup": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Restrict access to the VPC default security group"
+          },
+          "@aws-cdk/aws-apigateway:requestValidatorUniqueId": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Generate a unique id for each RequestValidator added to a method"
+          },
+          "@aws-cdk/aws-kms:aliasNameRef": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "KMS Alias name and keyArn will have implicit reference to KMS Key"
+          },
+          "@aws-cdk/aws-kms:applyImportedAliasPermissionsToPrincipal": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enable grant methods on Aliases imported by name to use kms:ResourceAliases condition"
+          },
+          "@aws-cdk/aws-autoscaling:generateLaunchTemplateInsteadOfLaunchConfig": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Generate a launch template when creating an AutoScalingGroup"
+          },
+          "@aws-cdk/core:includePrefixInUniqueNameGeneration": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Include the stack prefix in the stack name generation process"
+          },
+          "@aws-cdk/aws-efs:denyAnonymousAccess": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "EFS denies anonymous clients accesses"
+          },
+          "@aws-cdk/aws-opensearchservice:enableOpensearchMultiAzWithStandby": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enables support for Multi-AZ with Standby deployment for opensearch domains"
+          },
+          "@aws-cdk/aws-lambda-nodejs:useLatestRuntimeVersion": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enables aws-lambda-nodejs.Function to use the latest available NodeJs runtime as the default"
+          },
+          "@aws-cdk/aws-efs:mountTargetOrderInsensitiveLogicalId": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, mount targets will have a stable logicalId that is linked to the associated subnet."
+          },
+          "@aws-cdk/aws-rds:auroraClusterChangeScopeOfInstanceParameterGroupWithEachParameters": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, a scope of InstanceParameterGroup for AuroraClusterInstance with each parameters will change."
+          },
+          "@aws-cdk/aws-appsync:useArnForSourceApiAssociationIdentifier": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, will always use the arn for identifiers for CfnSourceApiAssociation in the GraphqlApi construct rather than id."
+          },
+          "@aws-cdk/aws-rds:preventRenderingDeprecatedCredentials": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, creating an RDS database cluster from a snapshot will only render credentials for snapshot credentials."
+          },
+          "@aws-cdk/aws-codepipeline-actions:useNewDefaultBranchForCodeCommitSource": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the CodeCommit source action is using the default branch name 'main'."
+          },
+          "@aws-cdk/aws-cloudwatch-actions:changeLambdaPermissionLogicalIdForLambdaAction": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the logical ID of a Lambda permission for a Lambda action includes an alarm ID."
+          },
+          "@aws-cdk/aws-codepipeline:crossAccountKeysDefaultValueToFalse": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enables Pipeline to set the default value for crossAccountKeys to false."
+          },
+          "@aws-cdk/aws-codepipeline:defaultPipelineTypeToV2": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enables Pipeline to set the default pipeline type to V2."
+          },
+          "@aws-cdk/aws-kms:reduceCrossAccountRegionPolicyScope": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, IAM Policy created from KMS key grant will reduce the resource scope to this key only."
+          },
+          "@aws-cdk/pipelines:reduceAssetRoleTrustScope": {
+            "recommendedValue": true,
+            "explanation": "Remove the root account principal from PipelineAssetsFileRole trust policy",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/aws-eks:nodegroupNameAttribute": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, nodegroupName attribute of the provisioned EKS NodeGroup will not have the cluster name prefix."
+          },
+          "@aws-cdk/aws-ec2:ebsDefaultGp3Volume": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the default volume type of the EBS volume will be GP3"
+          },
+          "@aws-cdk/aws-ecs:removeDefaultDeploymentAlarm": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, remove default deployment alarm settings"
+          },
+          "@aws-cdk/custom-resources:logApiResponseDataPropertyTrueDefault": {
+            "userValue": false,
+            "recommendedValue": false,
+            "explanation": "When enabled, the custom resource used for `AwsCustomResource` will configure the `logApiResponseData` property as true by default"
+          },
+          "@aws-cdk/aws-s3:keepNotificationInImportedBucket": {
+            "userValue": false,
+            "recommendedValue": false,
+            "explanation": "When enabled, Adding notifications to a bucket in the current stack will not remove notification from imported stack."
+          },
+          "@aws-cdk/aws-stepfunctions-tasks:useNewS3UriParametersForBedrockInvokeModelTask": {
+            "recommendedValue": true,
+            "explanation": "When enabled, use new props for S3 URI field in task definition of state machine for bedrock invoke model.",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/core:explicitStackTags": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, stack tags need to be assigned explicitly on a Stack."
+          },
+          "@aws-cdk/aws-ecs:enableImdsBlockingDeprecatedFeature": {
+            "userValue": false,
+            "recommendedValue": false,
+            "explanation": "When set to true along with canContainersAccessInstanceRole=false in ECS cluster, new updated commands will be added to UserData to block container accessing IMDS. **Applicable to Linux only. IMPORTANT: See [details.](#aws-cdkaws-ecsenableImdsBlockingDeprecatedFeature)**"
+          },
+          "@aws-cdk/aws-ecs:disableEcsImdsBlocking": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When set to true, CDK synth will throw exception if canContainersAccessInstanceRole is false. **IMPORTANT: See [details.](#aws-cdkaws-ecsdisableEcsImdsBlocking)**"
+          },
+          "@aws-cdk/aws-ecs:reduceEc2FargateCloudWatchPermissions": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, we will only grant the necessary permissions when users specify cloudwatch log group through logConfiguration"
+          },
+          "@aws-cdk/aws-dynamodb:resourcePolicyPerReplica": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled will allow you to specify a resource policy per replica, and not copy the source table policy to all replicas"
+          },
+          "@aws-cdk/aws-ec2:ec2SumTImeoutEnabled": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, initOptions.timeout and resourceSignalTimeout values will be summed together."
+          },
+          "@aws-cdk/aws-appsync:appSyncGraphQLAPIScopeLambdaPermission": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, a Lambda authorizer Permission created when using GraphqlApi will be properly scoped with a SourceArn."
+          },
+          "@aws-cdk/aws-rds:setCorrectValueForDatabaseInstanceReadReplicaInstanceResourceId": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the value of property `instanceResourceId` in construct `DatabaseInstanceReadReplica` will be set to the correct value which is `DbiResourceId` instead of currently `DbInstanceArn`"
+          },
+          "@aws-cdk/core:cfnIncludeRejectComplexResourceUpdateCreatePolicyIntrinsics": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, CFN templates added with `cfn-include` will error if the template contains Resource Update or Create policies with CFN Intrinsics that include non-primitive values."
+          },
+          "@aws-cdk/aws-lambda-nodejs:sdkV3ExcludeSmithyPackages": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, both `@aws-sdk` and `@smithy` packages will be excluded from the Lambda Node.js 18.x runtime to prevent version mismatches in bundled applications."
+          },
+          "@aws-cdk/aws-stepfunctions-tasks:fixRunEcsTaskPolicy": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the resource of IAM Run Ecs policy generated by SFN EcsRunTask will reference the definition, instead of constructing ARN."
+          },
+          "@aws-cdk/aws-ec2:bastionHostUseAmazonLinux2023ByDefault": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the BastionHost construct will use the latest Amazon Linux 2023 AMI, instead of Amazon Linux 2."
+          },
+          "@aws-cdk/core:aspectStabilization": {
+            "recommendedValue": true,
+            "explanation": "When enabled, a stabilization loop will be run when invoking Aspects during synthesis.",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/aws-route53-targets:userPoolDomainNameMethodWithoutCustomResource": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, use a new method for DNS Name of user pool domain target without creating a custom resource."
+          },
+          "@aws-cdk/aws-elasticloadbalancingV2:albDualstackWithoutPublicIpv4SecurityGroupRulesDefault": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the default security group ingress rules will allow IPv6 ingress from anywhere"
+          },
+          "@aws-cdk/aws-iam:oidcRejectUnauthorizedConnections": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the default behaviour of OIDC provider will reject unauthorized connections"
+          },
+          "@aws-cdk/core:enableAdditionalMetadataCollection": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, CDK will expand the scope of usage data collected to better inform CDK development and improve communication for security concerns and emerging issues."
+          },
+          "@aws-cdk/aws-lambda:createNewPoliciesWithAddToRolePolicy": {
+            "userValue": false,
+            "recommendedValue": false,
+            "explanation": "[Deprecated] When enabled, Lambda will create new inline policies with AddToRolePolicy instead of adding to the Default Policy Statement"
+          },
+          "@aws-cdk/aws-s3:setUniqueReplicationRoleName": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, CDK will automatically generate a unique role name that is used for s3 object replication."
+          },
+          "@aws-cdk/pipelines:reduceStageRoleTrustScope": {
+            "recommendedValue": true,
+            "explanation": "Remove the root account principal from Stage addActions trust policy",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/aws-events:requireEventBusPolicySid": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, grantPutEventsTo() will use resource policies with Statement IDs for service principals."
+          },
+          "@aws-cdk/core:aspectPrioritiesMutating": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When set to true, Aspects added by the construct library on your behalf will be given a priority of MUTATING."
+          },
+          "@aws-cdk/aws-dynamodb:retainTableReplica": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, table replica will be default to the removal policy of source table unless specified otherwise."
+          },
+          "@aws-cdk/cognito:logUserPoolClientSecretValue": {
+            "recommendedValue": false,
+            "explanation": "When disabled, the value of the user pool client secret will not be logged in the custom resource lambda function logs."
+          },
+          "@aws-cdk/pipelines:reduceCrossAccountActionRoleTrustScope": {
+            "recommendedValue": true,
+            "explanation": "When enabled, scopes down the trust policy for the cross-account action role",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/aws-stepfunctions:useDistributedMapResultWriterV2": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the resultWriterV2 property of DistributedMap will be used insted of resultWriter"
+          },
+          "@aws-cdk/s3-notifications:addS3TrustKeyPolicyForSnsSubscriptions": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Add an S3 trust policy to a KMS key resource policy for SNS subscriptions."
+          },
+          "@aws-cdk/aws-ec2:requirePrivateSubnetsForEgressOnlyInternetGateway": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the EgressOnlyGateway resource is only created if private subnets are defined in the dual-stack VPC."
+          },
+          "@aws-cdk/aws-ec2-alpha:useResourceIdForVpcV2Migration": {
+            "recommendedValue": false,
+            "explanation": "When enabled, use resource IDs for VPC V2 migration"
+          },
+          "@aws-cdk/aws-s3:publicAccessBlockedByDefault": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, setting any combination of options for BlockPublicAccess will automatically set true for any options not defined."
+          },
+          "@aws-cdk/aws-lambda:useCdkManagedLogGroup": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, CDK creates and manages loggroup for the lambda function"
+          }
+        }
+      }
+    }
+  },
+  "minimumCliVersion": "2.1029.3"
+}

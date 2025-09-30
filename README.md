@@ -1,243 +1,300 @@
-# Austin Food Club 🍽️
+# Austin Food Club
 
-A full-stack **event-focused** application for Austin's weekly featured restaurant. Connect with the community, RSVP for the restaurant of the week, and share your dining experiences.
+A full-stack food discovery and social platform connecting food enthusiasts with local restaurants through weekly featured spots and social interactions.
 
-## 🎪 **Event-Focused Concept**
+## 🏗️ Architecture
 
-Austin Food Club is **not a restaurant discovery or review app** - it's a **weekly community event** centered around one carefully selected Austin restaurant. Each week, we feature a single restaurant where the community gathers to dine and connect.
+- **Backend**: Node.js/Express API with standardized response format
+- **Frontend**: Flutter web application with responsive design
+- **Admin Dashboard**: React-based admin interface
+- **Database**: Prisma ORM with PostgreSQL
+- **External APIs**: Yelp integration for restaurant data
+- **Real-time**: WebSocket support for live updates
 
-## 🚀 **Current Features**
+## 🚀 Quick Start
 
-### 🎯 **Core Event Features**
-- **📅 Restaurant of the Week** - Single featured restaurant (currently: Suerte)
-- **🙋‍♀️ RSVP System** - Reserve your spot for specific days with real-time counts
-- **📍 Precise Location** - Google Maps integration with exact restaurant coordinates
-- **👥 Social Community** - See who else is going, connect with fellow food lovers
-- **✅ Visit Verification** - Photo verification system for confirmed visits
-- **📱 Cross-Platform** - Web app (React) + Mobile app (Flutter)
+### Prerequisites
 
-### 🎨 **User Experience**
-- **🌙 Dark Theme** - Professional, mobile-optimized design
-- **📲 Mobile-First** - Optimized for on-the-go restaurant planning
-- **🔐 Secure Auth** - Phone/SMS and email authentication options
-- **👫 Friends System** - Build your foodie network in Austin
+- Node.js 18+
+- Flutter 3.0+
+- PostgreSQL database
+- Yelp API key
 
-## 🛠️ **Tech Stack**
-
-### 🌐 **Web Frontend (React)**
-- **React 18** - Modern React with hooks and state management
-- **React Router** - Client-side routing
-- **Axios** - HTTP client for API calls
-- **CSS3** - Custom dark theme with mobile-first design
-
-### 📱 **Mobile App (Flutter)**
-- **Flutter 3.16.0** - Cross-platform mobile development
-- **Provider** - State management architecture
-- **Dart** - Modern programming language
-- **Material Design 3** - Native mobile UI components
-
-### 🖥️ **Backend (Shared)**
-- **Node.js** - JavaScript runtime
-- **Express.js** - RESTful API framework
-- **Prisma** - Database ORM with type safety
-- **SQLite** - Lightweight local database
-- **CORS** - Cross-origin resource sharing
-
-### 🗺️ **Integrations**
-- **Google Maps Static API** - Precise restaurant location mapping
-- **Supabase** - Authentication and real-time features
-- **SMS/Phone Auth** - Secure verification system
-
-## 📁 **Project Structure**
-
-```
-austin-food-club/
-├── client/                 # 🌐 React Web App
-│   ├── public/            # Static assets
-│   ├── src/
-│   │   ├── components/    # Reusable UI components
-│   │   ├── pages/         # Page components (Current, Profile)
-│   │   ├── services/      # API and Supabase services
-│   │   └── context/       # React context providers
-│   └── package.json
-├── mobile/                 # 📱 Flutter Mobile App
-│   ├── lib/
-│   │   ├── screens/       # Mobile screens (Restaurant, Profile, Friends)
-│   │   ├── widgets/       # Reusable Flutter widgets
-│   │   ├── services/      # API services and data management
-│   │   ├── models/        # Data models (User, Restaurant, RSVP)
-│   │   └── providers/     # State management
-│   ├── android/           # Android-specific configuration
-│   ├── ios/               # iOS-specific configuration
-│   └── pubspec.yaml       # Flutter dependencies
-├── server/                # 🖥️ Shared Backend API
-│   ├── src/
-│   │   └── server.js      # Express server with API endpoints
-│   ├── prisma/
-│   │   └── schema.prisma  # Database schema
-│   └── package.json
-├── database/              # 🗄️ Database files and migrations
-└── docs/                  # 📚 Documentation and setup guides
-```
-
-## 🚀 **Getting Started**
-
-### 📋 **Prerequisites**
-- **Node.js** (v18 or higher) - For backend and React web app
-- **Flutter SDK** - For mobile app development
-- **npm or yarn** - Package management
-- **Git** - Version control
-
-### 🔧 **Installation**
+### Installation
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yetterk-byte/austin-food-club.git
+   git clone <repository-url>
    cd austin-food-club
    ```
 
-2. **🖥️ Set up Backend API**
+2. **Backend Setup**
    ```bash
    cd server
    npm install
-   npx prisma generate
-   npx prisma migrate dev --name init
-   npm start  # Runs on http://localhost:3001
+   cp .env.example .env
+   # Configure your environment variables
+   npm start
    ```
 
-3. **🌐 Set up Web App (React)**
-   ```bash
-   cd client
-   npm install
-   # Create client/.env with your Supabase credentials
-   npm start  # Runs on http://localhost:3000
-   ```
-
-4. **📱 Set up Mobile App (Flutter)**
+3. **Frontend Setup**
    ```bash
    cd mobile
    flutter pub get
-   flutter run -d chrome --web-port=8080  # For web testing
-   # OR
-   flutter run  # For mobile device/emulator
+   flutter run -d chrome --web-port=8089
    ```
 
-### 🔑 **Environment Variables**
+4. **Admin Dashboard**
+   ```bash
+   # Access at http://localhost:3001/admin-dashboard.html
+   # Login: admin@austinfoodclub.com / admin123
+   ```
 
-**Client (.env):**
-```env
-REACT_APP_SUPABASE_URL=your_supabase_url
-REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
+## 📚 Documentation
+
+### API Documentation
+- **[API Documentation](API_DOCUMENTATION.md)** - Complete API reference with examples
+- **[Developer Guide](DEVELOPER_GUIDE.md)** - Step-by-step guide for implementing new endpoints
+
+### Testing
+- **[API Consistency Test](test-api-consistency.js)** - Automated testing script for API standardization
+
+## 🔧 Key Features
+
+### Restaurant Management
+- Weekly featured restaurant rotation
+- Yelp API integration for restaurant data
+- Multi-city support (Austin, Denver, Portland)
+- Restaurant queue management with drag-and-drop reordering
+
+### Social Features
+- User profiles with verified visits
+- Friends system and social activity feed
+- City-wide activity feed
+- Photo sharing for verified visits
+
+### Admin Dashboard
+- Real-time analytics and metrics
+- Restaurant queue management
+- City management and activation
+- User activity monitoring
+
+### API Features
+- Standardized response format
+- Comprehensive input validation
+- Centralized error handling
+- Real-time WebSocket updates
+
+## 🏛️ API Architecture
+
+### Standardized Response Format
+
+All API responses follow this consistent structure:
+
+```json
+{
+  "success": boolean,
+  "message": string,
+  "timestamp": string (ISO 8601),
+  "data": object | array | null,
+  "meta": object | null,
+  "error": string | null
+}
 ```
 
-**Mobile (lib/config/api_keys.dart):**
-```dart
-static const String googleMapsApiKey = 'your_google_maps_api_key';
-```
-
-### 🌐 **Access Points**
-- **Web App**: http://localhost:3000
-- **Mobile App**: http://localhost:8080 (web testing)
-- **Backend API**: http://localhost:3001
-
-## 📱 **App Features & Screens**
-
-### 🎪 **Restaurant of the Week Screen**
-- **📸 Hero Image** - Beautiful restaurant photography
-- **📍 Interactive Map** - Google Maps with precise location (click to navigate)
-- **🙋‍♀️ RSVP Section** - Day selector with real-time attendance counts
-- **ℹ️ Restaurant Details** - Hours, specialties, description
-- **⭐ Rating System** - Community-driven ratings
-
-### 👤 **Profile Screen**
-- **📊 User Stats** - Total visits, average rating, friend count
-- **✅ Verified Visits** - Photo-verified restaurant experiences
-- **👥 Friends List** - Connect with other Austin food lovers
-- **📅 RSVP History** - Track your upcoming and past events
-
-### 👫 **Friends Screen**
-- **🔍 Find Friends** - Connect with other community members
-- **📈 Friend Stats** - See verified visits and last visit dates
-- **🤝 Social Features** - Build your Austin foodie network
-
-### 🔐 **Authentication**
-- **📱 Phone Auth** - SMS verification for secure login
-- **📧 Email Option** - Traditional email/password fallback
-- **🔒 Supabase Integration** - Secure user management
-
-## 🗄️ **Database Schema**
-
-**Prisma with SQLite** powers the shared backend:
-
-- **👤 User** - User accounts, profiles, and authentication
-- **🍽️ Restaurant** - Weekly featured restaurant information  
-- **🙋‍♀️ RSVP** - User reservations with day selection and status
-- **✅ VerifiedVisit** - Photo-confirmed restaurant visits with ratings
-- **👫 Friendship** - Social connections between users
-
-## 🧪 **API Testing**
+### Example Endpoints
 
 ```bash
-# Test backend health
-curl http://localhost:3001/api/test
+# Get current featured restaurant
+GET /api/restaurants/current?citySlug=austin
 
-# Get current featured restaurant (Suerte)
-curl http://localhost:3001/api/restaurants/current
+# Get user's friends
+GET /api/friends/user/1
 
-# Create RSVP for this week
-curl -X POST http://localhost:3001/api/rsvp \
-  -H "Content-Type: application/json" \
-  -d '{"userId":"user123","day":"friday","status":"going"}'
+# Get social activity feed
+GET /api/social-feed/user/1
 
-# Get RSVP counts for the week
-curl http://localhost:3001/api/rsvp/counts
+# Get city activity
+GET /api/city-activity/user/1
+
+# Create verified visit
+POST /api/verified-visits
 ```
 
-## 🗺️ **Google Maps Integration**
+## 🧪 Testing
 
-**Precise location mapping** for the featured restaurant:
-- **📍 Static Maps API** - Shows exact restaurant location
-- **🎯 Address-based geocoding** - Uses full address for accuracy
-- **📱 Click-to-navigate** - Opens Google Maps for directions
-- **🔧 API Key setup** - Configured in `mobile/lib/config/api_keys.dart`
+### Run API Consistency Tests
 
-## 📦 **Deployment**
+```bash
+node test-api-consistency.js
+```
 
-### 🌐 **Web App (React)**
-- **Vercel/Netlify** - Deploy `client/build` folder
-- **Environment**: Supabase credentials required
+This script tests all endpoints to ensure they follow the standardized response format.
 
-### 📱 **Mobile App (Flutter)**
-- **iOS**: `flutter build ios --release`
-- **Android**: `flutter build apk --release`
-- **Web**: `flutter build web`
+### Manual Testing
 
-### 🖥️ **Backend (Node.js)**
-- **Railway/Heroku** - Deploy with database migration
-- **Environment**: Database and auth credentials
+```bash
+# Test basic endpoint
+curl -X GET http://localhost:3001/api/test | jq .
 
-## 🎯 **Current Focus: Suerte Restaurant**
+# Test admin login
+curl -X POST http://localhost:3001/api/auth/admin-login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@austinfoodclub.com","password":"admin123"}' | jq .
 
-**This Week's Featured Restaurant:**
-- **📍 Suerte** - 1800 E 6th St, Austin, TX 78702
-- **🍽️ Cuisine** - Contemporary Mexican
-- **⭐ Rating** - 4.8/5 stars
-- **💰 Price** - $$$ 
-- **⏰ Wait Time** - 30-45 minutes
+# Test restaurant endpoint
+curl -X GET "http://localhost:3001/api/restaurants/current?citySlug=austin" | jq .
+```
 
-## 🤝 **Contributing**
+## 🏙️ Multi-City Support
 
-1. Fork the repository
-2. Create a feature branch (`feature/new-restaurant-week`)
-3. Make your changes
-4. Submit a pull request
+The platform supports multiple cities with:
 
-## 📄 **License**
+- **City-specific restaurant queues**
+- **Independent featured restaurants**
+- **City-based user activity feeds**
+- **Admin dashboard city switching**
+- **City activation/deactivation controls**
 
-MIT License - Built with ❤️ for the Austin food community.
+### Supported Cities
+- Austin (Primary)
+- Denver
+- Portland
+
+## 🔐 Authentication
+
+### User Authentication
+- Magic link authentication
+- OAuth integration
+- JWT token-based sessions
+
+### Admin Authentication
+- Demo admin credentials: `admin@austinfoodclub.com` / `admin123`
+- Role-based access control
+- Admin dashboard protection
+
+## 📱 Frontend Integration
+
+### Flutter Services
+The Flutter app includes services for:
+- Restaurant data fetching
+- Social features (friends, activity feeds)
+- Verified visits management
+- User authentication
+
+### Response Handling
+All Flutter services handle the standardized API response format:
+
+```dart
+// Handle standardized API response format
+if (responseData['success'] == true && responseData['data'] != null) {
+  final Map<String, dynamic> data = responseData['data'] as Map<String, dynamic>;
+  if (data['items'] != null) {
+    final List<dynamic> items = data['items'] as List<dynamic>;
+    return items.cast<Map<String, dynamic>>();
+  }
+}
+```
+
+## 🛠️ Development
+
+### Adding New Endpoints
+
+1. Follow the [Developer Guide](DEVELOPER_GUIDE.md)
+2. Use the standardized middleware:
+   ```javascript
+   const { asyncHandler, NotFoundError, AppError } = require('../middleware/errorHandler');
+   const { validate, validateQuery } = require('../middleware/validation');
+   ```
+3. Use response helpers:
+   ```javascript
+   res.api.success.ok(res, 'Data retrieved successfully', data);
+   ```
+4. Add to test script
+5. Update documentation
+
+### Code Standards
+
+- **ESLint** configuration for consistent code style
+- **Standardized error handling** with custom error classes
+- **Input validation** with centralized rules
+- **Comprehensive logging** for debugging
+- **Type safety** in Flutter with proper casting
+
+## 📊 Monitoring
+
+### Real-time Analytics
+- User engagement metrics
+- Restaurant performance tracking
+- Social activity monitoring
+- System health indicators
+
+### WebSocket Events
+- Real-time dashboard updates
+- Live user activity feeds
+- Admin notification system
+- City-specific room management
+
+## 🚀 Deployment
+
+### Environment Variables
+
+```env
+# Database
+DATABASE_URL="postgresql://user:password@localhost:5432/austin_food_club"
+
+# Yelp API
+YELP_API_KEY="your_yelp_api_key"
+
+# Authentication
+JWT_SECRET="your_jwt_secret"
+SUPABASE_URL="your_supabase_url"
+SUPABASE_ANON_KEY="your_supabase_anon_key"
+
+# Server
+PORT=3001
+NODE_ENV=development
+```
+
+### Production Considerations
+
+- Database connection pooling
+- API rate limiting
+- Caching strategies
+- Error monitoring
+- Performance optimization
+
+## 🤝 Contributing
+
+1. Follow the [Developer Guide](DEVELOPER_GUIDE.md)
+2. Ensure all tests pass: `node test-api-consistency.js`
+3. Update documentation for new features
+4. Follow the established code standards
+5. Test thoroughly across all platforms
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🆘 Support
+
+For questions or issues:
+1. Check the [API Documentation](API_DOCUMENTATION.md)
+2. Review the [Developer Guide](DEVELOPER_GUIDE.md)
+3. Run the consistency tests to identify issues
+4. Check server logs for detailed error information
+
+## 🎯 Roadmap
+
+- [ ] Enhanced mobile app features
+- [ ] Advanced analytics dashboard
+- [ ] Restaurant owner portal
+- [ ] Event management system
+- [ ] Advanced social features
+- [ ] Multi-language support
+- [ ] API versioning
+- [ ] Performance optimization
 
 ---
 
-## 🎪 **Austin Food Club: Where Austin Eats Together**
-
-**Not just an app - it's a weekly community event.** Join us each week at Austin's finest restaurants and connect with fellow food lovers who share your passion for great dining experiences.
+**Austin Food Club** - Connecting food lovers with amazing local restaurants! 🍽️

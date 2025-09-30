@@ -111,6 +111,13 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('🏪 RestaurantScreen: Building screen for ${widget.restaurant.name}');
+    print('🏪 RestaurantScreen: Restaurant data:');
+    print('  - Name: ${widget.restaurant.name}');
+    print('  - Address: ${widget.restaurant.address}');
+    print('  - ImageUrl: ${widget.restaurant.imageUrl}');
+    print('  - Rating: ${widget.restaurant.rating}');
+    print('  - Categories: ${widget.restaurant.categories}');
     return Scaffold(
       body: CustomScrollView(
         controller: _scrollController,
@@ -161,7 +168,12 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                     widget.restaurant.imageUrl ?? 'https://via.placeholder.com/400x200?text=Restaurant+Image',
                     fit: BoxFit.cover,
                     loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
+                      print('🏪 RestaurantScreen: Loading image: ${widget.restaurant.imageUrl}');
+                      if (loadingProgress == null) {
+                        print('🏪 RestaurantScreen: Image loaded successfully');
+                        return child;
+                      }
+                      print('🏪 RestaurantScreen: Image loading progress: ${loadingProgress.cumulativeBytesLoaded}/${loadingProgress.expectedTotalBytes}');
                       return Container(
                         color: Colors.grey[800],
                         child: const Center(
@@ -169,12 +181,16 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                         ),
                       );
                     },
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      color: Colors.grey[800],
-                      child: const Center(
-                        child: Icon(Icons.restaurant, size: 100, color: Colors.white54),
-                      ),
-                    ),
+                    errorBuilder: (context, error, stackTrace) {
+                      print('🏪 RestaurantScreen: Image load error: $error');
+                      print('🏪 RestaurantScreen: Image URL: ${widget.restaurant.imageUrl}');
+                      return Container(
+                        color: Colors.grey[800],
+                        child: const Center(
+                          child: Icon(Icons.restaurant, size: 100, color: Colors.white54),
+                        ),
+                      );
+                    },
                   ),
                     // Subtle gradient for text readability
                   Container(

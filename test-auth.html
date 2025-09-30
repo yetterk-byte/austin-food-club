@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Austin Food Club - Auth Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #000; color: #fff; }
+        .container { max-width: 400px; margin: 0 auto; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #333; background: #222; color: #fff; }
+        button { width: 100%; padding: 15px; background: #ff6b35; color: white; border: none; cursor: pointer; font-size: 16px; }
+        button:hover { background: #e55a2b; }
+        .result { margin: 20px 0; padding: 15px; background: #333; border-radius: 5px; }
+        .success { border-left: 4px solid #4CAF50; }
+        .error { border-left: 4px solid #f44336; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍽️ Austin Food Club - Auth Test</h1>
+        <p>This page bypasses the Flutter service worker to test the backend directly.</p>
+        
+        <div style="margin: 20px 0; padding: 15px; background: #333; border-radius: 5px;">
+            <button onclick="testConnectivity()" style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Test Backend Connectivity</button>
+            <div id="connectivityResult" style="margin-top: 10px;"></div>
+        </div>
+        
+        <div>
+            <label>Phone Number:</label>
+            <input type="tel" id="phone" placeholder="+15551234567" value="+15551234567">
+        </div>
+        
+        <button onclick="sendCode()">Send Verification Code</button>
+        
+        <div id="result"></div>
+        
+        <div id="verifySection" style="display: none;">
+            <label>Verification Code:</label>
+            <input type="text" id="code" placeholder="Enter 6-digit code">
+            <button onclick="verifyCode()">Verify Code</button>
+        </div>
+    </div>
+
+    <script>
+        let mockCode = '';
+        
+        async function testConnectivity() {
+            const resultDiv = document.getElementById('connectivityResult');
+            resultDiv.innerHTML = 'Testing connectivity...';
+            
+            try {
+                // Test basic connectivity using original endpoint
+                const response = await fetch('https://api.austinfoodclub.com/api/verification/send-code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ phone: '+15551234567' })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML = `✅ Backend is reachable! Mock code: ${data.data.mockCode}`;
+                    resultDiv.style.color = '#4CAF50';
+                } else {
+                    resultDiv.innerHTML = `❌ Backend returned ${response.status}`;
+                    resultDiv.style.color = '#f44336';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `❌ Cannot reach backend: ${error.message}`;
+                resultDiv.style.color = '#f44336';
+                console.error('Connectivity test failed:', error);
+            }
+        }
+        
+        async function sendCode() {
+            const phone = document.getElementById('phone').value;
+            const resultDiv = document.getElementById('result');
+            
+            if (!phone) {
+                showResult('Please enter a phone number', 'error');
+                return;
+            }
+            
+            showResult('Sending verification code...', '');
+            
+            try {
+                console.log('Making request to:', 'https://api.austinfoodclub.com/api/verification/send-code');
+                console.log('Request body:', { phone: phone });
+                
+                const response = await fetch('https://api.austinfoodclub.com/api/verification/send-code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ phone: phone })
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response headers:', [...response.headers.entries()]);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Response error:', errorText);
+                    showResult(`❌ HTTP Error ${response.status}: ${errorText}`, 'error');
+                    return;
+                }
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (data.success) {
+                    mockCode = data.data.mockCode;
+                    showResult(`✅ Code sent! Mock code: ${mockCode}`, 'success');
+                    document.getElementById('verifySection').style.display = 'block';
+                } else {
+                    showResult(`❌ Error: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                showResult(`❌ Network error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function verifyCode() {
+            const phone = document.getElementById('phone').value;
+            const code = document.getElementById('code').value;
+            const resultDiv = document.getElementById('result');
+            
+            if (!code) {
+                showResult('Please enter verification code', 'error');
+                return;
+            }
+            
+            showResult('Verifying code...', '');
+            
+            try {
+                const response = await fetch('https://api.austinfoodclub.com/api/verification/verify-code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        phone: phone,
+                        code: code,
+                        name: 'Test User'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResult(`✅ Verification successful! User: ${data.data.user.name}`, 'success');
+                } else {
+                    showResult(`❌ Verification failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Network error: ${error.message}`, 'error');
+            }
+        }
+        
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = message;
+            resultDiv.className = `result ${type}`;
+        }
+    </script>
+</body>
+</html>

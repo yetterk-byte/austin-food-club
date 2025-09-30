@@ -1,0 +1,322 @@
+{
+ "Description": "Austin Food Club - CloudWatch Monitoring",
+ "Resources": {
+  "AlertTopic2720D535": {
+   "Type": "AWS::SNS::Topic",
+   "Properties": {
+    "DisplayName": "Austin Food Club Alerts",
+    "TopicName": "austin-food-club-alerts"
+   },
+   "Metadata": {
+    "aws:cdk:path": "MonitoringAustinFoodClubStack/AlertTopic/Resource"
+   }
+  },
+  "ApplicationLogGroupE33FCF9B": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": "/aws/ecs/austin-food-club/application",
+    "RetentionInDays": 14
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "MonitoringAustinFoodClubStack/ApplicationLogGroup/Resource"
+   }
+  },
+  "AccessLogGroupEC82D238": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": "/aws/ecs/austin-food-club/access",
+    "RetentionInDays": 7
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "MonitoringAustinFoodClubStack/AccessLogGroup/Resource"
+   }
+  },
+  "ErrorLogGroupB9A57448": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": "/aws/ecs/austin-food-club/errors",
+    "RetentionInDays": 30
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "MonitoringAustinFoodClubStack/ErrorLogGroup/Resource"
+   }
+  },
+  "AustinFoodClubDashboardB65A9E39": {
+   "Type": "AWS::CloudWatch::Dashboard",
+   "Properties": {
+    "DashboardBody": {
+     "Fn::Join": [
+      "",
+      [
+       "{\"widgets\":[{\"type\":\"metric\",\"width\":12,\"height\":6,\"x\":0,\"y\":0,\"properties\":{\"view\":\"timeSeries\",\"title\":\"ECS Service Metrics\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AWS/ECS\",\"CPUUtilization\",\"ClusterName\",\"austin-food-club-cluster\",\"ServiceName\",\"austin-food-club-backend\"],[\"AWS/ECS\",\"MemoryUtilization\",\"ClusterName\",\"austin-food-club-cluster\",\"ServiceName\",\"austin-food-club-backend\"]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":12,\"height\":6,\"x\":12,\"y\":0,\"properties\":{\"view\":\"timeSeries\",\"title\":\"ALB Metrics\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AWS/ApplicationELB\",\"RequestCount\",\"LoadBalancer\",\"ECSAus-Backe-9BcJbVFKkgWJ\",{\"period\":60,\"stat\":\"Sum\"}],[\"AWS/ApplicationELB\",\"TargetResponseTime\",\"LoadBalancer\",\"ECSAus-Backe-9BcJbVFKkgWJ\",{\"period\":60}],[\"AWS/ApplicationELB\",\"HTTPCode_Target_5XX_Count\",\"LoadBalancer\",\"ECSAus-Backe-9BcJbVFKkgWJ\",{\"period\":60,\"stat\":\"Sum\",\"yAxis\":\"right\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":12,\"height\":6,\"x\":0,\"y\":6,\"properties\":{\"view\":\"timeSeries\",\"title\":\"RDS Metrics\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AWS/RDS\",\"CPUUtilization\",\"DBInstanceIdentifier\",\"ecsaustinfoodclubstack-databaseb269d8bb-md52w78dfjlx\"],[\"AWS/RDS\",\"DatabaseConnections\",\"DBInstanceIdentifier\",\"ecsaustinfoodclubstack-databaseb269d8bb-md52w78dfjlx\"]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":12,\"height\":6,\"x\":12,\"y\":6,\"properties\":{\"view\":\"timeSeries\",\"title\":\"Application Metrics\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AustinFoodClub/API\",\"ResponseTime\",{\"period\":60}],[\"AustinFoodClub/Restaurants\",\"QueueSize\"],[\"AustinFoodClub/API\",\"ErrorCount\",{\"period\":60,\"stat\":\"Sum\",\"yAxis\":\"right\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":12,\"height\":6,\"x\":0,\"y\":12,\"properties\":{\"view\":\"timeSeries\",\"title\":\"CloudFront Requests\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AWS/CloudFront\",\"Requests\",\"DistributionId\",\"E1234567890ABC\",{\"stat\":\"Sum\"}]],\"yAxis\":{}}}]}"
+      ]
+     ]
+    },
+    "DashboardName": "Austin-Food-Club-Production"
+   },
+   "Metadata": {
+    "aws:cdk:path": "MonitoringAustinFoodClubStack/AustinFoodClubDashboard/Resource"
+   }
+  },
+  "HighCpuAlarm40723000": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmActions": [
+     {
+      "Ref": "AlertTopic2720D535"
+     }
+    ],
+    "AlarmDescription": "High CPU utilization on ECS service",
+    "AlarmName": "austin-food-club-high-cpu",
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "ClusterName",
+      "Value": "austin-food-club-cluster"
+     },
+     {
+      "Name": "ServiceName",
+      "Value": "austin-food-club-backend"
+     }
+    ],
+    "EvaluationPeriods": 2,
+    "MetricName": "CPUUtilization",
+    "Namespace": "AWS/ECS",
+    "Period": 300,
+    "Statistic": "Average",
+    "Threshold": 80
+   },
+   "Metadata": {
+    "aws:cdk:path": "MonitoringAustinFoodClubStack/HighCpuAlarm/Resource"
+   }
+  },
+  "HighMemoryAlarmB77DAB20": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmActions": [
+     {
+      "Ref": "AlertTopic2720D535"
+     }
+    ],
+    "AlarmDescription": "High memory utilization on ECS service",
+    "AlarmName": "austin-food-club-high-memory",
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "ClusterName",
+      "Value": "austin-food-club-cluster"
+     },
+     {
+      "Name": "ServiceName",
+      "Value": "austin-food-club-backend"
+     }
+    ],
+    "EvaluationPeriods": 2,
+    "MetricName": "MemoryUtilization",
+    "Namespace": "AWS/ECS",
+    "Period": 300,
+    "Statistic": "Average",
+    "Threshold": 85
+   },
+   "Metadata": {
+    "aws:cdk:path": "MonitoringAustinFoodClubStack/HighMemoryAlarm/Resource"
+   }
+  },
+  "HighResponseTimeAlarmCB9F63BA": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmActions": [
+     {
+      "Ref": "AlertTopic2720D535"
+     }
+    ],
+    "AlarmDescription": "High response time on ALB",
+    "AlarmName": "austin-food-club-high-response-time",
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "LoadBalancer",
+      "Value": "ECSAus-Backe-9BcJbVFKkgWJ"
+     }
+    ],
+    "EvaluationPeriods": 3,
+    "MetricName": "TargetResponseTime",
+    "Namespace": "AWS/ApplicationELB",
+    "Period": 60,
+    "Statistic": "Average",
+    "Threshold": 2
+   },
+   "Metadata": {
+    "aws:cdk:path": "MonitoringAustinFoodClubStack/HighResponseTimeAlarm/Resource"
+   }
+  },
+  "HighErrorRateAlarm9E2FAEE9": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmActions": [
+     {
+      "Ref": "AlertTopic2720D535"
+     }
+    ],
+    "AlarmDescription": "High error rate on ALB",
+    "AlarmName": "austin-food-club-high-error-rate",
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "LoadBalancer",
+      "Value": "ECSAus-Backe-9BcJbVFKkgWJ"
+     }
+    ],
+    "EvaluationPeriods": 2,
+    "MetricName": "HTTPCode_Target_5XX_Count",
+    "Namespace": "AWS/ApplicationELB",
+    "Period": 60,
+    "Statistic": "Sum",
+    "Threshold": 10
+   },
+   "Metadata": {
+    "aws:cdk:path": "MonitoringAustinFoodClubStack/HighErrorRateAlarm/Resource"
+   }
+  },
+  "RdsHighCpuAlarmA9E4AEEA": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmActions": [
+     {
+      "Ref": "AlertTopic2720D535"
+     }
+    ],
+    "AlarmDescription": "High CPU utilization on RDS",
+    "AlarmName": "austin-food-club-rds-high-cpu",
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "DBInstanceIdentifier",
+      "Value": "ecsaustinfoodclubstack-databaseb269d8bb-md52w78dfjlx"
+     }
+    ],
+    "EvaluationPeriods": 2,
+    "MetricName": "CPUUtilization",
+    "Namespace": "AWS/RDS",
+    "Period": 300,
+    "Statistic": "Average",
+    "Threshold": 75
+   },
+   "Metadata": {
+    "aws:cdk:path": "MonitoringAustinFoodClubStack/RdsHighCpuAlarm/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/+1UzWoDIRh8lnosrk22KYG9hQZ6KW1pS3sIoRi165e4uqibUBbfve5fNuSSF8hBvs9hnBlFTUk6fSCTG3pwCeO7RMGG1B+esh2O0E/ttCP1pymBrWrkm/pCC4EydIsw4uBKRf+OSFjjx1/dsgNWJo9Ln03+ZE1VxtWqb08ErPBCezAaZdNZwJc488uU+0kXYvANmClT8QP1TJJ6SZ3cGGp5jMOHfowf1Snn38Bz4R3KIulArQadu95omH6lAwDcy76XAnLpe6UWGce6S3X0xwtFbRENCuEtMJSdWUUBL61w0ijey4s9VRVtdvkmLBg+ZKKN0lI4ZqHszmCEz7fWui5YR1vVYd3g1wjXCG2E9oq2cAhN+1r5svIBa8MF2bq7fToj8/hXbB1AYqv44gpB3rv6DxQA+MBIBAAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "MonitoringAustinFoodClubStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "AlertTopicArn": {
+   "Description": "SNS Topic ARN for alerts",
+   "Value": {
+    "Ref": "AlertTopic2720D535"
+   }
+  },
+  "DashboardUrl": {
+   "Description": "CloudWatch Dashboard URL",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards:name=",
+      {
+       "Ref": "AustinFoodClubDashboardB65A9E39"
+      }
+     ]
+    ]
+   }
+  },
+  "LogGroupNames": {
+   "Description": "CloudWatch Log Group Names",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      {
+       "Ref": "ApplicationLogGroupE33FCF9B"
+      },
+      ", ",
+      {
+       "Ref": "AccessLogGroupEC82D238"
+      },
+      ", ",
+      {
+       "Ref": "ErrorLogGroupB9A57448"
+      }
+     ]
+    ]
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

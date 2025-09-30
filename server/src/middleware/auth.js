@@ -49,7 +49,10 @@ const verifySupabaseToken = async (req, res, next) => {
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({ 
-        error: 'Authorization header missing or invalid. Expected: Bearer <token>' 
+        success: false,
+        message: 'Authorization header missing or invalid. Expected: Bearer <token>',
+        error: 'UNAUTHORIZED',
+        timestamp: new Date().toISOString()
       });
     }
 
@@ -90,7 +93,10 @@ const verifySupabaseToken = async (req, res, next) => {
       if (verifyError || !user) {
         console.error('Token verification failed:', verifyError);
         return res.status(401).json({ 
-          error: 'Invalid or expired token' 
+          success: false,
+          message: 'Invalid or expired token',
+          error: 'UNAUTHORIZED',
+          timestamp: new Date().toISOString()
         });
       }
       supabaseUser = user;

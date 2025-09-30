@@ -178,7 +178,7 @@ class CityService {
   static String getApiBaseUrl() {
     // In production, this could route to city-specific subdomains
     // For now, use headers to specify city context
-    return 'http://localhost:3001';
+    return 'https://api.austinfoodclub.com';
   }
 
   /// Get API headers with city context

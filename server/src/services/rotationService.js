@@ -696,7 +696,7 @@ class RotationService {
           if (result.success && result.restaurantsAdded > 0) {
             console.log(`✅ Auto-queue: Added ${result.restaurantsAdded} restaurants to maintain queue size`);
             
-            await this.sendNotification('QUEUE_AUTO_FILLED', {
+            await this.sendNotification('QUEUE_UPDATED', {
               title: 'Restaurant Queue Auto-Maintained',
               message: `Automatically added ${result.restaurantsAdded} restaurants to maintain queue size of 20.`,
               recipientType: 'admin'

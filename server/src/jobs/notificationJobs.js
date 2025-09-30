@@ -2,7 +2,14 @@ const cron = require('node-cron');
 const { PrismaClient } = require('@prisma/client');
 const pushNotificationService = require('../services/pushNotificationService');
 
-const prisma = new PrismaClient();
+// Create a singleton Prisma client instance
+let prisma;
+const getPrismaClient = () => {
+  if (!prisma) {
+    prisma = new PrismaClient();
+  }
+  return prisma;
+};
 
 /**
  * Notification Cron Jobs for Austin Food Club
@@ -72,7 +79,8 @@ class NotificationJobs {
       console.log('📢 Running weekly announcement job...');
       
       // Get current featured restaurant
-      const currentRestaurant = await prisma.restaurant.findFirst({
+      const prismaClient = getPrismaClient();
+      const currentRestaurant = await prismaClient.restaurant.findFirst({
         where: { isFeatured: true },
         include: { city: true }
       });
@@ -160,7 +168,8 @@ class NotificationJobs {
       // Clean up old notification logs (older than 30 days)
       const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
       
-      const deletedLogs = await prisma.notificationLog.deleteMany({
+      const prismaClient = getPrismaClient();
+      const deletedLogs = await prismaClient.notificationLog.deleteMany({
         where: {
           createdAt: { lt: thirtyDaysAgo }
         }
@@ -198,16 +207,24 @@ class NotificationJobs {
    * Helper methods
    */
   async getUpcomingRsvps() {
-    // Get RSVPs for today and tomorrow that need reminders
-    const now = new Date();
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    
-    // Get day names
-    const todayName = now.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
-    const tomorrowName = tomorrow.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
-    
-    return await prisma.rsvp.findMany({
+    try {
+      // Ensure Prisma client is connected
+      const prismaClient = getPrismaClient();
+      if (!prismaClient) {
+        console.error('❌ Prisma client not initialized');
+        return [];
+      }
+      
+      // Get RSVPs for today and tomorrow that need reminders
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      
+      // Get day names
+      const todayName = now.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+      const tomorrowName = tomorrow.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+      
+      return await prismaClient.rsvp.findMany({
       where: {
         day: { in: [todayName, tomorrowName] },
         status: 'confirmed',
@@ -227,12 +244,17 @@ class NotificationJobs {
         }
       }
     });
+    } catch (error) {
+      console.error('❌ Error getting upcoming RSVPs:', error);
+      return [];
+    }
   }
 
   async getUnverifiedVisits(date) {
     const dayName = date.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+    const prismaClient = getPrismaClient();
     
-    return await prisma.rsvp.findMany({
+    return await prismaClient.rsvp.findMany({
       where: {
         day: dayName,
         status: 'confirmed',

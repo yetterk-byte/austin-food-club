@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ApiService {
-  static const String baseUrl = 'http://localhost:3001/api';
+  static const String baseUrl = 'https://api.austinfoodclub.com/api';
   
   static Future<bool> testConnection() async {
     try {
@@ -50,31 +50,10 @@ class ApiService {
   }
 
   static Future<Map<String, int>> getRSVPCounts(String restaurantId) async {
-    try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/rsvps/restaurant/$restaurantId/counts'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      );
-      
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        if (data['success'] == true && data['counts'] != null) {
-          // Convert the counts object to Map<String, int>
-          final Map<String, dynamic> counts = data['counts'];
-          return counts.map((key, value) => MapEntry(key, value is int ? value : 0));
-        }
-        return {};
-      } else {
-        print('❌ Failed to get RSVP counts: ${response.statusCode}');
-        return {};
-      }
-    } catch (e) {
-      print('❌ Error getting RSVP counts: $e');
-      return {};
-    }
+    // TODO: Implement RSVP counts endpoint on backend
+    // For now, return empty counts to prevent 422 errors
+    print('⚠️ RSVP counts endpoint not implemented, returning empty counts');
+    return {};
   }
 
   static Future<List<Map<String, dynamic>>> getVerifiedVisits(String userId) async {
@@ -88,8 +67,24 @@ class ApiService {
       );
       
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        return data.cast<Map<String, dynamic>>();
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        
+        // Handle standardized API response format
+        if (responseData['success'] == true && responseData['data'] != null) {
+          final Map<String, dynamic> data = responseData['data'] as Map<String, dynamic>;
+          if (data['visits'] != null) {
+            final List<dynamic> visits = data['visits'] as List<dynamic>;
+            return visits.cast<Map<String, dynamic>>();
+          }
+        }
+        
+        // Fallback to old format for backward compatibility
+        if (responseData is List) {
+          return (responseData as List<dynamic>).cast<Map<String, dynamic>>();
+        }
+        
+        print('❌ Unexpected response format for verified visits');
+        return [];
       } else {
         print('❌ Failed to get verified visits: ${response.statusCode}');
         return [];
@@ -101,71 +96,23 @@ class ApiService {
   }
 
   static Future<List<Map<String, dynamic>>> getFriends(String userId) async {
-    try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/friends/user/$userId'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      );
-      
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        return data.cast<Map<String, dynamic>>();
-      } else {
-        print('❌ Failed to get friends: ${response.statusCode}');
-        return [];
-      }
-    } catch (e) {
-      print('❌ Error getting friends: $e');
-      return [];
-    }
+    // TODO: Implement friends endpoint on backend
+    // For now, return empty list to prevent 422 errors
+    print('⚠️ Friends endpoint not implemented, returning empty list');
+    return [];
   }
 
   static Future<List<Map<String, dynamic>>> getSocialFeed(String userId) async {
-    try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/social-feed/user/$userId'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      );
-      
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        return data.cast<Map<String, dynamic>>();
-      } else {
-        print('❌ Failed to get social feed: ${response.statusCode}');
-        return [];
-      }
-    } catch (e) {
-      print('❌ Error getting social feed: $e');
-      return [];
-    }
+    // TODO: Implement social feed endpoint on backend
+    // For now, return empty list to prevent 422 errors
+    print('⚠️ Social feed endpoint not implemented, returning empty list');
+    return [];
   }
 
   static Future<List<Map<String, dynamic>>> getCityActivity(String userId) async {
-    try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/city-activity/user/$userId'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      );
-      
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        return data.cast<Map<String, dynamic>>();
-      } else {
-        print('❌ Failed to get city activity: ${response.statusCode}');
-        return [];
-      }
-    } catch (e) {
-      print('❌ Error getting city activity: $e');
-      return [];
-    }
+    // TODO: Implement city activity endpoint on backend
+    // For now, return empty list to prevent 422 errors
+    print('⚠️ City activity endpoint not implemented, returning empty list');
+    return [];
   }
 }

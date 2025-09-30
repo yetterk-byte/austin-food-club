@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
+import 'verification_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -110,9 +111,27 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: ElevatedButton(
                             onPressed: authProvider.isLoading
                                 ? null
-                                : () {
+                                : () async {
                                     if (_formKey.currentState!.validate()) {
-                                      authProvider.signInWithPhone(_phoneController.text);
+                                      // Format phone number
+                                      String phone = _phoneController.text.trim();
+                                      if (!phone.startsWith('+1')) {
+                                        phone = '+1$phone';
+                                      }
+                                      
+                                      // Send verification code
+                                      final success = await authProvider.sendVerificationCode(phone);
+                                      
+                                      if (success && mounted) {
+                                        // Navigate to verification screen
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) => VerificationScreen(
+                                              phoneNumber: phone,
+                                            ),
+                                          ),
+                                        );
+                                      }
                                     }
                                   },
                             style: ElevatedButton.styleFrom(

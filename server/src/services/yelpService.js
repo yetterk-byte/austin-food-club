@@ -40,7 +40,7 @@ class YelpService {
 
   // Check if service is configured
   isConfigured() {
-    return !!this.apiKey;
+    return !!this.apiKey && !this.apiKey.includes('your_') && !this.apiKey.includes('_here');
   }
 
   /**

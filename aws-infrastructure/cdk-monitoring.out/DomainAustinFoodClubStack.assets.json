@@ -1,0 +1,21 @@
+{
+  "version": "48.0.0",
+  "files": {
+    "5910bd34506e82055b33cf56846aecb746b3a12558309a780e87fd1ed0723750": {
+      "displayName": "DomainAustinFoodClubStack Template",
+      "source": {
+        "path": "DomainAustinFoodClubStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "229037375031-us-east-1-3d4bba7c": {
+          "bucketName": "cdk-hnb659fds-assets-229037375031-us-east-1",
+          "objectKey": "5910bd34506e82055b33cf56846aecb746b3a12558309a780e87fd1ed0723750.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::229037375031:role/cdk-hnb659fds-file-publishing-role-229037375031-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

@@ -1,0 +1,9 @@
+{
+  "name": "austin-food-club-backend-build",
+  "source": {
+    "type": "S3",
+    "location": "austin-food-club-build-artifacts/austin-food-club-source.zip",
+    "buildspec": "version: 0.2\nphases:\n  pre_build:\n    commands:\n      - echo Logging in to Amazon ECR...\n      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 229037375031.dkr.ecr.us-east-1.amazonaws.com\n      - echo Build started on `date`\n      - echo Building the Docker image...\n      - REPOSITORY_URI=229037375031.dkr.ecr.us-east-1.amazonaws.com/austin-food-club-backend\n      - IMAGE_TAG=latest\n  build:\n    commands:\n      - echo Build started on `date`\n      - echo Building the Docker image...\n      - cd server\n      - docker build -t austin-food-club-backend:$IMAGE_TAG .\n      - docker tag austin-food-club-backend:$IMAGE_TAG $REPOSITORY_URI:$IMAGE_TAG\n      - docker tag austin-food-club-backend:$IMAGE_TAG $REPOSITORY_URI:latest\n  post_build:\n    commands:\n      - echo Build completed on `date`\n      - echo Pushing the Docker images...\n      - docker push $REPOSITORY_URI:$IMAGE_TAG\n      - docker push $REPOSITORY_URI:latest\n      - echo Writing image definitions file...\n      - cd ..\n      - printf '[{\"name\":\"austin-food-club-backend\",\"imageUri\":\"%s\"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json\n      - cat imagedefinitions.json\nartifacts:\n  files:\n    - imagedefinitions.json\n  name: austin-food-club-backend-$(date +%Y-%m-%d)"
+  }
+}
+

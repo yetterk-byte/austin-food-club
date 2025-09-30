@@ -42,13 +42,16 @@ class _MainAppState extends State<MainApp> {
 
   Future<void> _loadFeaturedRestaurant() async {
     try {
+      print('🏠 MainApp: Starting to load featured restaurant...');
       final restaurant = await RestaurantService.getFeaturedRestaurant();
+      print('🏠 MainApp: Restaurant loaded: ${restaurant?.name}');
       setState(() {
         featuredRestaurant = restaurant;
         isLoading = false;
       });
+      print('🏠 MainApp: State updated - isLoading: false, restaurant: ${restaurant?.name}');
     } catch (e) {
-      print('Error loading featured restaurant: $e');
+      print('❌ MainApp: Error loading featured restaurant: $e');
       setState(() {
         isLoading = false;
       });
@@ -167,7 +170,9 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
+    print('🏠 MainApp: Building - isLoading: $isLoading, restaurant: ${featuredRestaurant?.name}');
     if (isLoading) {
+      print('🏠 MainApp: Showing loading screen');
       return const Scaffold(
         body: Center(
           child: Column(

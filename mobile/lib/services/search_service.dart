@@ -3,7 +3,7 @@ import 'dart:convert';
 import '../models/restaurant.dart';
 
 class SearchService {
-  static const String baseUrl = 'http://localhost:3001/api';
+  static const String baseUrl = 'https://api.austinfoodclub.com/api';
   
   /// Search restaurants using Yelp API
   static Future<List<Restaurant>> searchRestaurants({

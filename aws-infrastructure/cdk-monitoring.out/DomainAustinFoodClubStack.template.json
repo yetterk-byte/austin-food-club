@@ -1,0 +1,288 @@
+{
+ "Description": "Austin Food Club - Custom Domain Configuration",
+ "Resources": {
+  "AustinFoodClubHostedZone5538A47B": {
+   "Type": "AWS::Route53::HostedZone",
+   "Properties": {
+    "HostedZoneConfig": {
+     "Comment": "Hosted zone for austinfoodclub.com"
+    },
+    "Name": "austinfoodclub.com."
+   },
+   "Metadata": {
+    "aws:cdk:path": "DomainAustinFoodClubStack/AustinFoodClubHostedZone/Resource"
+   }
+  },
+  "AustinFoodClubCertificate012FBAFE": {
+   "Type": "AWS::CertificateManager::Certificate",
+   "Properties": {
+    "DomainName": "austinfoodclub.com",
+    "DomainValidationOptions": [
+     {
+      "DomainName": "austinfoodclub.com",
+      "HostedZoneId": {
+       "Ref": "AustinFoodClubHostedZone5538A47B"
+      }
+     },
+     {
+      "DomainName": "api.austinfoodclub.com",
+      "HostedZoneId": {
+       "Ref": "AustinFoodClubHostedZone5538A47B"
+      }
+     }
+    ],
+    "SubjectAlternativeNames": [
+     "api.austinfoodclub.com"
+    ],
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "DomainAustinFoodClubStack/AustinFoodClubCertificate"
+     }
+    ],
+    "ValidationMethod": "DNS"
+   },
+   "Metadata": {
+    "aws:cdk:path": "DomainAustinFoodClubStack/AustinFoodClubCertificate/Resource"
+   }
+  },
+  "AustinFoodClubDistribution35720819": {
+   "Type": "AWS::CloudFront::Distribution",
+   "Properties": {
+    "DistributionConfig": {
+     "Aliases": [
+      "austinfoodclub.com"
+     ],
+     "Comment": "CloudFront distribution for austinfoodclub.com",
+     "DefaultCacheBehavior": {
+      "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+      "Compress": true,
+      "OriginRequestPolicyId": "88a5eaf4-2fd4-4709-b370-b4c650ea3fcf",
+      "TargetOriginId": "DomainAustinFoodClubStackAustinFoodClubDistributionOrigin16B31F8AD",
+      "ViewerProtocolPolicy": "redirect-to-https"
+     },
+     "Enabled": true,
+     "HttpVersion": "http2",
+     "IPV6Enabled": true,
+     "Origins": [
+      {
+       "CustomOriginConfig": {
+        "OriginProtocolPolicy": "http-only",
+        "OriginSSLProtocols": [
+         "TLSv1.2"
+        ]
+       },
+       "DomainName": "basicaustinfoodclubstack-webappbucket8f6fa179-shyzfbe9qamw.s3-website-us-east-1.amazonaws.com",
+       "Id": "DomainAustinFoodClubStackAustinFoodClubDistributionOrigin16B31F8AD"
+      }
+     ],
+     "PriceClass": "PriceClass_100",
+     "ViewerCertificate": {
+      "AcmCertificateArn": {
+       "Ref": "AustinFoodClubCertificate012FBAFE"
+      },
+      "MinimumProtocolVersion": "TLSv1.2_2021",
+      "SslSupportMethod": "sni-only"
+     }
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "DomainAustinFoodClubStack/AustinFoodClubDistribution/Resource"
+   }
+  },
+  "ExistingALBSecurityGroupsg06637b2f46c0db82afrom00000443042695FB": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "CidrIp": "0.0.0.0/0",
+    "Description": "Allow from anyone on port 443",
+    "FromPort": 443,
+    "GroupId": "sg-06637b2f46c0db82a",
+    "IpProtocol": "tcp",
+    "ToPort": 443
+   },
+   "Metadata": {
+    "aws:cdk:path": "DomainAustinFoodClubStack/ExistingALB/SecurityGroup-sg-06637b2f46c0db82a/from 0.0.0.0_0:443"
+   }
+  },
+  "ExistingALBHttpsListener97C5186C": {
+   "Type": "AWS::ElasticLoadBalancingV2::Listener",
+   "Properties": {
+    "Certificates": [
+     {
+      "CertificateArn": {
+       "Ref": "AustinFoodClubCertificate012FBAFE"
+      }
+     }
+    ],
+    "DefaultActions": [
+     {
+      "FixedResponseConfig": {
+       "ContentType": "text/plain",
+       "MessageBody": "Not Found",
+       "StatusCode": "404"
+      },
+      "Type": "fixed-response"
+     }
+    ],
+    "LoadBalancerArn": "arn:aws:elasticloadbalancing:us-east-1:229037375031:loadbalancer/app/ECSAus-Backe-9BcJbVFKkgWJ/006c12eec76d1aaf",
+    "Port": 443,
+    "Protocol": "HTTPS"
+   },
+   "Metadata": {
+    "aws:cdk:path": "DomainAustinFoodClubStack/ExistingALB/HttpsListener/Resource"
+   }
+  },
+  "MainDomainRecord8CF2511E": {
+   "Type": "AWS::Route53::RecordSet",
+   "Properties": {
+    "AliasTarget": {
+     "DNSName": {
+      "Fn::GetAtt": [
+       "AustinFoodClubDistribution35720819",
+       "DomainName"
+      ]
+     },
+     "HostedZoneId": {
+      "Fn::FindInMap": [
+       "AWSCloudFrontPartitionHostedZoneIdMap",
+       {
+        "Ref": "AWS::Partition"
+       },
+       "zoneId"
+      ]
+     }
+    },
+    "HostedZoneId": {
+     "Ref": "AustinFoodClubHostedZone5538A47B"
+    },
+    "Name": "austinfoodclub.com.",
+    "Type": "A"
+   },
+   "Metadata": {
+    "aws:cdk:path": "DomainAustinFoodClubStack/MainDomainRecord/Resource"
+   }
+  },
+  "ApiDomainRecord355D35CF": {
+   "Type": "AWS::Route53::RecordSet",
+   "Properties": {
+    "AliasTarget": {
+     "DNSName": "dualstack.ECSAus-Backe-9BcJbVFKkgWJ-1172628832.us-east-1.elb.amazonaws.com",
+     "HostedZoneId": "Z35SXDOTRQ7X7K"
+    },
+    "HostedZoneId": {
+     "Ref": "AustinFoodClubHostedZone5538A47B"
+    },
+    "Name": "api.austinfoodclub.com.",
+    "Type": "A"
+   },
+   "Metadata": {
+    "aws:cdk:path": "DomainAustinFoodClubStack/ApiDomainRecord/Resource"
+   }
+  },
+  "WwwDomainRecord6A58C135": {
+   "Type": "AWS::Route53::RecordSet",
+   "Properties": {
+    "HostedZoneId": {
+     "Ref": "AustinFoodClubHostedZone5538A47B"
+    },
+    "Name": "www.austinfoodclub.com.",
+    "ResourceRecords": [
+     "austinfoodclub.com"
+    ],
+    "TTL": "1800",
+    "Type": "CNAME"
+   },
+   "Metadata": {
+    "aws:cdk:path": "DomainAustinFoodClubStack/WwwDomainRecord/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/8VTTW/bMAz9LdOxULTUXTcgtyQDtgL7CBJghwVBochMwkSWPIpy0Rn+75OdjxpFgfXWgyHrke+RfJIylV3fquE7/RAGJj8MLK5VvWBtDjJB9zX5yHB7o+qvPjDkv72DZS3+puWHLkCMxJWQwviiAMfdrlnJ6cY9ZcvxHIyn/MQ6MajDehKsaQsnBfnWqd0Ix7YXwHLqUtqrpsh9odFdgP/VfJ6+aqQBYtyg0QyFdnoLpOrpE5bqPyNJEeJ6D4bHloGcZqy6owmnaKUt5gn1rjdbT7GR4UZNojkAT3SA5Uoa62O+Ie9Y1Z8xMOE6tvy2Nmx0tDyBna7QkxjVwhNu0Z2LITwAzcizN97OvEXzmEIEOabhecB+sGMuQ3tntNnBJaMlH5Xm8CdC4F6k6Rt1Hqvn0wuXUIqS0MDU6tASZpfN/fVwmKJtE7+AwtGVdpclFJxeW7grq49ixBTh6FXfgkaCyVQCF2AiIT9+Se+jvHNbghAkpAqMyT6dr7XVzqDbVpmqx2Vp206TwLckBg5o2TV5JboKZ7Bp5ByCj2TgHH/p6zjfdVkm+fb3Z+QyciOdz0Htw/sq+6A+pSe9D4gDio6xADU/rv8AVMr6fO8DAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "DomainAustinFoodClubStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Mappings": {
+  "AWSCloudFrontPartitionHostedZoneIdMap": {
+   "aws": {
+    "zoneId": "Z2FDTNDATAQYW2"
+   },
+   "aws-cn": {
+    "zoneId": "Z3RFFRIM2A3IF5"
+   }
+  }
+ },
+ "Outputs": {
+  "HostedZoneId": {
+   "Description": "Route 53 Hosted Zone ID",
+   "Value": {
+    "Ref": "AustinFoodClubHostedZone5538A47B"
+   }
+  },
+  "NameServers": {
+   "Description": "Name servers for domain configuration - check Route 53 console",
+   "Value": "Check AWS Console for name servers"
+  },
+  "CertificateArn": {
+   "Description": "SSL Certificate ARN",
+   "Value": {
+    "Ref": "AustinFoodClubCertificate012FBAFE"
+   }
+  },
+  "CloudFrontDomainName": {
+   "Description": "CloudFront distribution domain name",
+   "Value": {
+    "Fn::GetAtt": [
+     "AustinFoodClubDistribution35720819",
+     "DomainName"
+    ]
+   }
+  },
+  "MainDomainUrl": {
+   "Description": "Main application URL",
+   "Value": "https://austinfoodclub.com"
+  },
+  "ApiDomainUrl": {
+   "Description": "API endpoint URL",
+   "Value": "https://api.austinfoodclub.com"
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

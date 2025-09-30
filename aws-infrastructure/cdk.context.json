@@ -1,0 +1,71 @@
+{
+  "availability-zones:account=229037375031:region=us-east-1": [
+    "us-east-1a",
+    "us-east-1b",
+    "us-east-1c",
+    "us-east-1d",
+    "us-east-1e",
+    "us-east-1f"
+  ],
+  "acknowledged-issue-numbers": [
+    34892
+  ],
+  "load-balancer:account=229037375031:loadBalancerArn=arn$:aws$:elasticloadbalancing$:us-east-1$:229037375031$:loadbalancer/app/ECSAus-Backe-9BcJbVFKkgWJ/006c12eec76d1aaf:loadBalancerType=application:region=us-east-1": {
+    "loadBalancerArn": "arn:aws:elasticloadbalancing:us-east-1:229037375031:loadbalancer/app/ECSAus-Backe-9BcJbVFKkgWJ/006c12eec76d1aaf",
+    "loadBalancerCanonicalHostedZoneId": "Z35SXDOTRQ7X7K",
+    "loadBalancerDnsName": "ECSAus-Backe-9BcJbVFKkgWJ-1172628832.us-east-1.elb.amazonaws.com",
+    "vpcId": "vpc-0acc19b5f64886323",
+    "securityGroupIds": [
+      "sg-06637b2f46c0db82a"
+    ],
+    "ipAddressType": "ipv4"
+  },
+  "vpc-provider:account=229037375031:filter.vpc-id=vpc-0acc19b5f64886323:region=us-east-1:returnAsymmetricSubnets=true": {
+    "vpcId": "vpc-0acc19b5f64886323",
+    "vpcCidrBlock": "10.0.0.0/16",
+    "ownerAccountId": "229037375031",
+    "availabilityZones": [],
+    "subnetGroups": [
+      {
+        "name": "Private",
+        "type": "Private",
+        "subnets": [
+          {
+            "subnetId": "subnet-0784a33b7242c7ab3",
+            "cidr": "10.0.128.0/18",
+            "availabilityZone": "us-east-1a",
+            "routeTableId": "rtb-0c73d9e581587d7de"
+          },
+          {
+            "subnetId": "subnet-0a632b8aad444f18a",
+            "cidr": "10.0.192.0/18",
+            "availabilityZone": "us-east-1b",
+            "routeTableId": "rtb-064d53769a98e58e2"
+          }
+        ]
+      },
+      {
+        "name": "Public",
+        "type": "Public",
+        "subnets": [
+          {
+            "subnetId": "subnet-03f17bab2dc5658fd",
+            "cidr": "10.0.0.0/18",
+            "availabilityZone": "us-east-1a",
+            "routeTableId": "rtb-06569ecf223b70c50"
+          },
+          {
+            "subnetId": "subnet-07c5a0e521faaa48d",
+            "cidr": "10.0.64.0/18",
+            "availabilityZone": "us-east-1b",
+            "routeTableId": "rtb-0a25a31634f188da5"
+          }
+        ]
+      }
+    ]
+  },
+  "security-group:account=229037375031:region=us-east-1:securityGroupId=sg-06637b2f46c0db82a": {
+    "securityGroupId": "sg-06637b2f46c0db82a",
+    "allowAllOutbound": false
+  }
+}

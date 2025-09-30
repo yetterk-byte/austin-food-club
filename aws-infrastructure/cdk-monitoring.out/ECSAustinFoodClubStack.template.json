@@ -1,0 +1,1392 @@
+{
+ "Description": "Austin Food Club - ECS Backend Deployment",
+ "Resources": {
+  "AustinFoodClubVPCDAF642A5": {
+   "Type": "AWS::EC2::VPC",
+   "Properties": {
+    "CidrBlock": "10.0.0.0/16",
+    "EnableDnsHostnames": true,
+    "EnableDnsSupport": true,
+    "InstanceTenancy": "default",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "ECSAustinFoodClubStack/AustinFoodClubVPC"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/Resource"
+   }
+  },
+  "AustinFoodClubVPCPublicSubnet1Subnet531E6C19": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.0.0/18",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "AustinFoodClubVPCDAF642A5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet1/Subnet"
+   }
+  },
+  "AustinFoodClubVPCPublicSubnet1RouteTableE435230D": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "AustinFoodClubVPCDAF642A5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet1/RouteTable"
+   }
+  },
+  "AustinFoodClubVPCPublicSubnet1RouteTableAssociationD94D8BC2": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "AustinFoodClubVPCPublicSubnet1RouteTableE435230D"
+    },
+    "SubnetId": {
+     "Ref": "AustinFoodClubVPCPublicSubnet1Subnet531E6C19"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet1/RouteTableAssociation"
+   }
+  },
+  "AustinFoodClubVPCPublicSubnet1DefaultRouteCDB785A5": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "AustinFoodClubVPCIGWD8CEE361"
+    },
+    "RouteTableId": {
+     "Ref": "AustinFoodClubVPCPublicSubnet1RouteTableE435230D"
+    }
+   },
+   "DependsOn": [
+    "AustinFoodClubVPCVPCGWF5E5AD8A"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet1/DefaultRoute"
+   }
+  },
+  "AustinFoodClubVPCPublicSubnet1EIP0D473CE9": {
+   "Type": "AWS::EC2::EIP",
+   "Properties": {
+    "Domain": "vpc",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet1"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet1/EIP"
+   }
+  },
+  "AustinFoodClubVPCPublicSubnet1NATGatewayBC822848": {
+   "Type": "AWS::EC2::NatGateway",
+   "Properties": {
+    "AllocationId": {
+     "Fn::GetAtt": [
+      "AustinFoodClubVPCPublicSubnet1EIP0D473CE9",
+      "AllocationId"
+     ]
+    },
+    "SubnetId": {
+     "Ref": "AustinFoodClubVPCPublicSubnet1Subnet531E6C19"
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet1"
+     }
+    ]
+   },
+   "DependsOn": [
+    "AustinFoodClubVPCPublicSubnet1DefaultRouteCDB785A5",
+    "AustinFoodClubVPCPublicSubnet1RouteTableAssociationD94D8BC2"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet1/NATGateway"
+   }
+  },
+  "AustinFoodClubVPCPublicSubnet2SubnetB4ACF79B": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.64.0/18",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "AustinFoodClubVPCDAF642A5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet2/Subnet"
+   }
+  },
+  "AustinFoodClubVPCPublicSubnet2RouteTable3C8EB7A3": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "AustinFoodClubVPCDAF642A5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet2/RouteTable"
+   }
+  },
+  "AustinFoodClubVPCPublicSubnet2RouteTableAssociation24B812B8": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "AustinFoodClubVPCPublicSubnet2RouteTable3C8EB7A3"
+    },
+    "SubnetId": {
+     "Ref": "AustinFoodClubVPCPublicSubnet2SubnetB4ACF79B"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet2/RouteTableAssociation"
+   }
+  },
+  "AustinFoodClubVPCPublicSubnet2DefaultRouteF0430BA1": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "AustinFoodClubVPCIGWD8CEE361"
+    },
+    "RouteTableId": {
+     "Ref": "AustinFoodClubVPCPublicSubnet2RouteTable3C8EB7A3"
+    }
+   },
+   "DependsOn": [
+    "AustinFoodClubVPCVPCGWF5E5AD8A"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/PublicSubnet2/DefaultRoute"
+   }
+  },
+  "AustinFoodClubVPCPrivateSubnet1SubnetBC8D84A7": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.128.0/18",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Name",
+      "Value": "ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "AustinFoodClubVPCDAF642A5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet1/Subnet"
+   }
+  },
+  "AustinFoodClubVPCPrivateSubnet1RouteTable41D7ED26": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "AustinFoodClubVPCDAF642A5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet1/RouteTable"
+   }
+  },
+  "AustinFoodClubVPCPrivateSubnet1RouteTableAssociationA98A3750": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "AustinFoodClubVPCPrivateSubnet1RouteTable41D7ED26"
+    },
+    "SubnetId": {
+     "Ref": "AustinFoodClubVPCPrivateSubnet1SubnetBC8D84A7"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet1/RouteTableAssociation"
+   }
+  },
+  "AustinFoodClubVPCPrivateSubnet1DefaultRoute6B3F9E8E": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "AustinFoodClubVPCPublicSubnet1NATGatewayBC822848"
+    },
+    "RouteTableId": {
+     "Ref": "AustinFoodClubVPCPrivateSubnet1RouteTable41D7ED26"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet1/DefaultRoute"
+   }
+  },
+  "AustinFoodClubVPCPrivateSubnet2SubnetC4C88CC9": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.192.0/18",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Name",
+      "Value": "ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "AustinFoodClubVPCDAF642A5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet2/Subnet"
+   }
+  },
+  "AustinFoodClubVPCPrivateSubnet2RouteTable8588A17D": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "AustinFoodClubVPCDAF642A5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet2/RouteTable"
+   }
+  },
+  "AustinFoodClubVPCPrivateSubnet2RouteTableAssociationB9FF8765": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "AustinFoodClubVPCPrivateSubnet2RouteTable8588A17D"
+    },
+    "SubnetId": {
+     "Ref": "AustinFoodClubVPCPrivateSubnet2SubnetC4C88CC9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet2/RouteTableAssociation"
+   }
+  },
+  "AustinFoodClubVPCPrivateSubnet2DefaultRoute0B498A09": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "AustinFoodClubVPCPublicSubnet1NATGatewayBC822848"
+    },
+    "RouteTableId": {
+     "Ref": "AustinFoodClubVPCPrivateSubnet2RouteTable8588A17D"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/PrivateSubnet2/DefaultRoute"
+   }
+  },
+  "AustinFoodClubVPCIGWD8CEE361": {
+   "Type": "AWS::EC2::InternetGateway",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "ECSAustinFoodClubStack/AustinFoodClubVPC"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/IGW"
+   }
+  },
+  "AustinFoodClubVPCVPCGWF5E5AD8A": {
+   "Type": "AWS::EC2::VPCGatewayAttachment",
+   "Properties": {
+    "InternetGatewayId": {
+     "Ref": "AustinFoodClubVPCIGWD8CEE361"
+    },
+    "VpcId": {
+     "Ref": "AustinFoodClubVPCDAF642A5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/VPCGW"
+   }
+  },
+  "AustinFoodClubVPCRestrictDefaultSecurityGroupCustomResource505D0040": {
+   "Type": "Custom::VpcRestrictDefaultSG",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E",
+      "Arn"
+     ]
+    },
+    "DefaultSecurityGroupId": {
+     "Fn::GetAtt": [
+      "AustinFoodClubVPCDAF642A5",
+      "DefaultSecurityGroup"
+     ]
+    },
+    "Account": "229037375031"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubVPC/RestrictDefaultSecurityGroupCustomResource/Default"
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ],
+    "Policies": [
+     {
+      "PolicyName": "Inline",
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Action": [
+          "ec2:AuthorizeSecurityGroupIngress",
+          "ec2:AuthorizeSecurityGroupEgress",
+          "ec2:RevokeSecurityGroupIngress",
+          "ec2:RevokeSecurityGroupEgress"
+         ],
+         "Resource": [
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:aws:ec2:us-east-1:229037375031:security-group/",
+             {
+              "Fn::GetAtt": [
+               "AustinFoodClubVPCDAF642A5",
+               "DefaultSecurityGroup"
+              ]
+             }
+            ]
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role"
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-229037375031-us-east-1",
+     "S3Key": "7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "__entrypoint__.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs22.x",
+    "Description": "Lambda function for removing all inbound/outbound rules from the VPC default security group"
+   },
+   "DependsOn": [
+    "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200",
+    "aws:asset:property": "Code"
+   }
+  },
+  "DatabaseSecret86DBB7B3": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "GenerateSecretString": {
+     "ExcludeCharacters": "\"@/\\",
+     "GenerateStringKey": "password",
+     "PasswordLength": 16,
+     "SecretStringTemplate": "{\"username\":\"postgres\"}"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/DatabaseSecret/Resource"
+   }
+  },
+  "DatabaseSecretAttachment9A63A3D4": {
+   "Type": "AWS::SecretsManager::SecretTargetAttachment",
+   "Properties": {
+    "SecretId": {
+     "Ref": "DatabaseSecret86DBB7B3"
+    },
+    "TargetId": {
+     "Ref": "DatabaseB269D8BB"
+    },
+    "TargetType": "AWS::RDS::DBInstance"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/DatabaseSecret/Attachment/Resource"
+   }
+  },
+  "DatabaseSecurityGroup7319C0F6": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for Austin Food Club database",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "255.255.255.255/32",
+      "Description": "Disallow all traffic",
+      "FromPort": 252,
+      "IpProtocol": "icmp",
+      "ToPort": 86
+     }
+    ],
+    "VpcId": {
+     "Ref": "AustinFoodClubVPCDAF642A5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/DatabaseSecurityGroup/Resource"
+   }
+  },
+  "DatabaseSecurityGroupfromECSAustinFoodClubStackECSSecurityGroup5A025BE45432D12E9D41": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Allow ECS to connect to PostgreSQL",
+    "FromPort": 5432,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "DatabaseSecurityGroup7319C0F6",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "ECSSecurityGroupA14DBE7D",
+      "GroupId"
+     ]
+    },
+    "ToPort": 5432
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/DatabaseSecurityGroup/from ECSAustinFoodClubStackECSSecurityGroup5A025BE4:5432"
+   }
+  },
+  "DatabaseSubnetGroup7D60F180": {
+   "Type": "AWS::RDS::DBSubnetGroup",
+   "Properties": {
+    "DBSubnetGroupDescription": "Subnet group for Database database",
+    "SubnetIds": [
+     {
+      "Ref": "AustinFoodClubVPCPrivateSubnet1SubnetBC8D84A7"
+     },
+     {
+      "Ref": "AustinFoodClubVPCPrivateSubnet2SubnetC4C88CC9"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/Database/SubnetGroup/Default"
+   }
+  },
+  "DatabaseB269D8BB": {
+   "Type": "AWS::RDS::DBInstance",
+   "Properties": {
+    "AllocatedStorage": "100",
+    "CopyTagsToSnapshot": true,
+    "DBInstanceClass": "db.t3.micro",
+    "DBName": "austinfoodclubdb",
+    "DBSubnetGroupName": {
+     "Ref": "DatabaseSubnetGroup7D60F180"
+    },
+    "DeleteAutomatedBackups": true,
+    "Engine": "postgres",
+    "EngineVersion": "15",
+    "MasterUserPassword": {
+     "Fn::Join": [
+      "",
+      [
+       "{{resolve:secretsmanager:",
+       {
+        "Ref": "DatabaseSecret86DBB7B3"
+       },
+       ":SecretString:password::}}"
+      ]
+     ]
+    },
+    "MasterUsername": {
+     "Fn::Join": [
+      "",
+      [
+       "{{resolve:secretsmanager:",
+       {
+        "Ref": "DatabaseSecret86DBB7B3"
+       },
+       ":SecretString:username::}}"
+      ]
+     ]
+    },
+    "PubliclyAccessible": false,
+    "StorageType": "gp2",
+    "VPCSecurityGroups": [
+     {
+      "Fn::GetAtt": [
+       "DatabaseSecurityGroup7319C0F6",
+       "GroupId"
+      ]
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/Database/Resource"
+   }
+  },
+  "BackendBuildProjectRoleA43C7559": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "codebuild.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/BackendBuildProject/Role/Resource"
+   }
+  },
+  "BackendBuildProjectRoleDefaultPolicyF8A604A9": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:logs:us-east-1:229037375031:log-group:/aws/codebuild/",
+           {
+            "Ref": "BackendBuildProject66F920F7"
+           },
+           ":*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:logs:us-east-1:229037375031:log-group:/aws/codebuild/",
+           {
+            "Ref": "BackendBuildProject66F920F7"
+           }
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "codebuild:BatchPutCodeCoverages",
+        "codebuild:BatchPutTestCases",
+        "codebuild:CreateReport",
+        "codebuild:CreateReportGroup",
+        "codebuild:UpdateReport"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:aws:codebuild:us-east-1:229037375031:report-group/",
+          {
+           "Ref": "BackendBuildProject66F920F7"
+          },
+          "-*"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": [
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:BatchGetImage",
+        "ecr:CompleteLayerUpload",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:InitiateLayerUpload",
+        "ecr:PutImage",
+        "ecr:UploadLayerPart"
+       ],
+       "Effect": "Allow",
+       "Resource": "arn:aws:ecr:us-east-1:229037375031:repository/austin-food-club-backend"
+      },
+      {
+       "Action": "ecr:GetAuthorizationToken",
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "BackendBuildProjectRoleDefaultPolicyF8A604A9",
+    "Roles": [
+     {
+      "Ref": "BackendBuildProjectRoleA43C7559"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/BackendBuildProject/Role/DefaultPolicy/Resource"
+   }
+  },
+  "BackendBuildProject66F920F7": {
+   "Type": "AWS::CodeBuild::Project",
+   "Properties": {
+    "Artifacts": {
+     "Type": "NO_ARTIFACTS"
+    },
+    "Cache": {
+     "Type": "NO_CACHE"
+    },
+    "EncryptionKey": "alias/aws/s3",
+    "Environment": {
+     "ComputeType": "BUILD_GENERAL1_SMALL",
+     "EnvironmentVariables": [
+      {
+       "Name": "AWS_DEFAULT_REGION",
+       "Type": "PLAINTEXT",
+       "Value": "us-east-1"
+      },
+      {
+       "Name": "AWS_ACCOUNT_ID",
+       "Type": "PLAINTEXT",
+       "Value": "229037375031"
+      },
+      {
+       "Name": "IMAGE_NAME",
+       "Type": "PLAINTEXT",
+       "Value": "austin-food-club-backend"
+      }
+     ],
+     "Image": "aws/codebuild/amazonlinux2-x86_64-standard:5.0",
+     "ImagePullCredentialsType": "CODEBUILD",
+     "PrivilegedMode": true,
+     "Type": "LINUX_CONTAINER"
+    },
+    "Name": "austin-food-club-backend-build",
+    "ServiceRole": {
+     "Fn::GetAtt": [
+      "BackendBuildProjectRoleA43C7559",
+      "Arn"
+     ]
+    },
+    "Source": {
+     "BuildSpec": "{\n  \"version\": \"0.2\",\n  \"phases\": {\n    \"pre_build\": {\n      \"commands\": [\n        \"echo Logging in to Amazon ECR...\",\n        \"aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com\",\n        \"echo Build started on `date`\",\n        \"echo Building the Docker image...\",\n        \"REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/austin-food-club-backend\",\n        \"COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)\",\n        \"IMAGE_TAG=${COMMIT_HASH:=latest}\"\n      ]\n    },\n    \"build\": {\n      \"commands\": [\n        \"echo Build started on `date`\",\n        \"echo Building the Docker image...\",\n        \"cd server\",\n        \"docker build -t $IMAGE_NAME:$IMAGE_TAG .\",\n        \"docker tag $IMAGE_NAME:$IMAGE_TAG $REPOSITORY_URI:$IMAGE_TAG\",\n        \"docker tag $IMAGE_NAME:$IMAGE_TAG $REPOSITORY_URI:latest\"\n      ]\n    },\n    \"post_build\": {\n      \"commands\": [\n        \"echo Build completed on `date`\",\n        \"echo Pushing the Docker images...\",\n        \"docker push $REPOSITORY_URI:$IMAGE_TAG\",\n        \"docker push $REPOSITORY_URI:latest\",\n        \"echo Writing image definitions file...\",\n        \"printf '[{\\\"name\\\":\\\"austin-food-club-backend\\\",\\\"imageUri\\\":\\\"%s\\\"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json\",\n        \"cat imagedefinitions.json\"\n      ]\n    }\n  },\n  \"artifacts\": {\n    \"files\": [\n      \"imagedefinitions.json\"\n    ],\n    \"name\": \"austin-food-club-backend-$(date +%Y-%m-%d)\"\n  }\n}",
+     "Type": "NO_SOURCE"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/BackendBuildProject/Resource"
+   }
+  },
+  "AustinFoodClubCluster80984BC2": {
+   "Type": "AWS::ECS::Cluster",
+   "Properties": {
+    "ClusterName": "austin-food-club-cluster"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/AustinFoodClubCluster/Resource"
+   }
+  },
+  "BackendLogGroupDA10F1B2": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": "/ecs/austin-food-club-backend",
+    "RetentionInDays": 7
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/BackendLogGroup/Resource"
+   }
+  },
+  "BackendTaskDefinitionTaskRoleE757CE00": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/BackendTaskDefinition/TaskRole/Resource"
+   }
+  },
+  "BackendTaskDefinitionEC224DE6": {
+   "Type": "AWS::ECS::TaskDefinition",
+   "Properties": {
+    "ContainerDefinitions": [
+     {
+      "Cpu": 256,
+      "Environment": [
+       {
+        "Name": "NODE_ENV",
+        "Value": "production"
+       },
+       {
+        "Name": "PORT",
+        "Value": "3001"
+       }
+      ],
+      "Essential": true,
+      "Image": {
+       "Fn::Join": [
+        "",
+        [
+         "229037375031.dkr.ecr.us-east-1.",
+         {
+          "Ref": "AWS::URLSuffix"
+         },
+         "/austin-food-club-backend:latest"
+        ]
+       ]
+      },
+      "LogConfiguration": {
+       "LogDriver": "awslogs",
+       "Options": {
+        "awslogs-group": {
+         "Ref": "BackendLogGroupDA10F1B2"
+        },
+        "awslogs-stream-prefix": "backend",
+        "awslogs-region": "us-east-1"
+       }
+      },
+      "Memory": 512,
+      "Name": "BackendContainer",
+      "PortMappings": [
+       {
+        "ContainerPort": 3001,
+        "Protocol": "tcp"
+       }
+      ],
+      "Secrets": [
+       {
+        "Name": "DATABASE_URL",
+        "ValueFrom": {
+         "Ref": "DatabaseSecret86DBB7B3"
+        }
+       }
+      ]
+     }
+    ],
+    "Cpu": "256",
+    "ExecutionRoleArn": {
+     "Fn::GetAtt": [
+      "BackendTaskDefinitionExecutionRoleDA72B768",
+      "Arn"
+     ]
+    },
+    "Family": "ECSAustinFoodClubStackBackendTaskDefinition1AD7E381",
+    "Memory": "512",
+    "NetworkMode": "awsvpc",
+    "RequiresCompatibilities": [
+     "FARGATE"
+    ],
+    "TaskRoleArn": {
+     "Fn::GetAtt": [
+      "BackendTaskDefinitionTaskRoleE757CE00",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/BackendTaskDefinition/Resource"
+   }
+  },
+  "BackendTaskDefinitionExecutionRoleDA72B768": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/BackendTaskDefinition/ExecutionRole/Resource"
+   }
+  },
+  "BackendTaskDefinitionExecutionRoleDefaultPolicy0750C44A": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:BatchGetImage",
+        "ecr:GetDownloadUrlForLayer"
+       ],
+       "Effect": "Allow",
+       "Resource": "arn:aws:ecr:us-east-1:229037375031:repository/austin-food-club-backend"
+      },
+      {
+       "Action": "ecr:GetAuthorizationToken",
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "BackendLogGroupDA10F1B2",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:GetSecretValue"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Ref": "DatabaseSecret86DBB7B3"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "BackendTaskDefinitionExecutionRoleDefaultPolicy0750C44A",
+    "Roles": [
+     {
+      "Ref": "BackendTaskDefinitionExecutionRoleDA72B768"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/BackendTaskDefinition/ExecutionRole/DefaultPolicy/Resource"
+   }
+  },
+  "ECSSecurityGroupA14DBE7D": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for ECS service",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "SecurityGroupIngress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow HTTP traffic from ALB",
+      "FromPort": 3001,
+      "IpProtocol": "tcp",
+      "ToPort": 3001
+     }
+    ],
+    "VpcId": {
+     "Ref": "AustinFoodClubVPCDAF642A5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/ECSSecurityGroup/Resource"
+   }
+  },
+  "ECSSecurityGroupfromECSAustinFoodClubStackBackendServiceLBSecurityGroupF6939AEC30010E87A995": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Load balancer to target",
+    "FromPort": 3001,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "ECSSecurityGroupA14DBE7D",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "BackendServiceLBSecurityGroup2B9BA648",
+      "GroupId"
+     ]
+    },
+    "ToPort": 3001
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/ECSSecurityGroup/from ECSAustinFoodClubStackBackendServiceLBSecurityGroupF6939AEC:3001"
+   }
+  },
+  "BackendServiceLB09608E98": {
+   "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+   "Properties": {
+    "LoadBalancerAttributes": [
+     {
+      "Key": "deletion_protection.enabled",
+      "Value": "false"
+     }
+    ],
+    "Scheme": "internet-facing",
+    "SecurityGroups": [
+     {
+      "Fn::GetAtt": [
+       "BackendServiceLBSecurityGroup2B9BA648",
+       "GroupId"
+      ]
+     }
+    ],
+    "Subnets": [
+     {
+      "Ref": "AustinFoodClubVPCPublicSubnet1Subnet531E6C19"
+     },
+     {
+      "Ref": "AustinFoodClubVPCPublicSubnet2SubnetB4ACF79B"
+     }
+    ],
+    "Type": "application"
+   },
+   "DependsOn": [
+    "AustinFoodClubVPCPublicSubnet1DefaultRouteCDB785A5",
+    "AustinFoodClubVPCPublicSubnet1RouteTableAssociationD94D8BC2",
+    "AustinFoodClubVPCPublicSubnet2DefaultRouteF0430BA1",
+    "AustinFoodClubVPCPublicSubnet2RouteTableAssociation24B812B8"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/BackendService/LB/Resource"
+   }
+  },
+  "BackendServiceLBSecurityGroup2B9BA648": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Automatically created Security Group for ELB ECSAustinFoodClubStackBackendServiceLB2E9C9E67",
+    "SecurityGroupIngress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow from anyone on port 80",
+      "FromPort": 80,
+      "IpProtocol": "tcp",
+      "ToPort": 80
+     }
+    ],
+    "VpcId": {
+     "Ref": "AustinFoodClubVPCDAF642A5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/BackendService/LB/SecurityGroup/Resource"
+   }
+  },
+  "BackendServiceLBSecurityGrouptoECSAustinFoodClubStackECSSecurityGroup5A025BE43001569B8A18": {
+   "Type": "AWS::EC2::SecurityGroupEgress",
+   "Properties": {
+    "Description": "Load balancer to target",
+    "DestinationSecurityGroupId": {
+     "Fn::GetAtt": [
+      "ECSSecurityGroupA14DBE7D",
+      "GroupId"
+     ]
+    },
+    "FromPort": 3001,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "BackendServiceLBSecurityGroup2B9BA648",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "ToPort": 3001
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/BackendService/LB/SecurityGroup/to ECSAustinFoodClubStackECSSecurityGroup5A025BE4:3001"
+   }
+  },
+  "BackendServiceLBPublicListener2FA7FC98": {
+   "Type": "AWS::ElasticLoadBalancingV2::Listener",
+   "Properties": {
+    "DefaultActions": [
+     {
+      "TargetGroupArn": {
+       "Ref": "BackendServiceLBPublicListenerECSGroupD43CD2AB"
+      },
+      "Type": "forward"
+     }
+    ],
+    "LoadBalancerArn": {
+     "Ref": "BackendServiceLB09608E98"
+    },
+    "Port": 80,
+    "Protocol": "HTTP"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/BackendService/LB/PublicListener/Resource"
+   }
+  },
+  "BackendServiceLBPublicListenerECSGroupD43CD2AB": {
+   "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+   "Properties": {
+    "HealthCheckIntervalSeconds": 30,
+    "HealthCheckPath": "/api/health",
+    "HealthCheckTimeoutSeconds": 5,
+    "HealthyThresholdCount": 2,
+    "Matcher": {
+     "HttpCode": "200"
+    },
+    "Port": 80,
+    "Protocol": "HTTP",
+    "TargetGroupAttributes": [
+     {
+      "Key": "stickiness.enabled",
+      "Value": "false"
+     }
+    ],
+    "TargetType": "ip",
+    "UnhealthyThresholdCount": 3,
+    "VpcId": {
+     "Ref": "AustinFoodClubVPCDAF642A5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/BackendService/LB/PublicListener/ECSGroup/Resource"
+   }
+  },
+  "BackendService2147DAF9": {
+   "Type": "AWS::ECS::Service",
+   "Properties": {
+    "Cluster": {
+     "Ref": "AustinFoodClubCluster80984BC2"
+    },
+    "DeploymentConfiguration": {
+     "MaximumPercent": 200,
+     "MinimumHealthyPercent": 50
+    },
+    "DesiredCount": 1,
+    "EnableECSManagedTags": false,
+    "HealthCheckGracePeriodSeconds": 60,
+    "LaunchType": "FARGATE",
+    "LoadBalancers": [
+     {
+      "ContainerName": "BackendContainer",
+      "ContainerPort": 3001,
+      "TargetGroupArn": {
+       "Ref": "BackendServiceLBPublicListenerECSGroupD43CD2AB"
+      }
+     }
+    ],
+    "NetworkConfiguration": {
+     "AwsvpcConfiguration": {
+      "AssignPublicIp": "DISABLED",
+      "SecurityGroups": [
+       {
+        "Fn::GetAtt": [
+         "ECSSecurityGroupA14DBE7D",
+         "GroupId"
+        ]
+       }
+      ],
+      "Subnets": [
+       {
+        "Ref": "AustinFoodClubVPCPrivateSubnet1SubnetBC8D84A7"
+       },
+       {
+        "Ref": "AustinFoodClubVPCPrivateSubnet2SubnetC4C88CC9"
+       }
+      ]
+     }
+    },
+    "ServiceName": "austin-food-club-backend",
+    "TaskDefinition": {
+     "Ref": "BackendTaskDefinitionEC224DE6"
+    }
+   },
+   "DependsOn": [
+    "BackendServiceLBPublicListenerECSGroupD43CD2AB",
+    "BackendServiceLBPublicListener2FA7FC98",
+    "BackendTaskDefinitionTaskRoleE757CE00"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/BackendService/Service/Service"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/9VX308jNxD+W24fK7O9Q21P4i0EDkXNQZTkeGiEkGMPweC1t7Y3XBrlf+/4x24cAkh39CF9QLFnPLPfjL+ZMcfl8affy48f6JM9YvzxSIp5uZ44yh4Jim7XwI7L9XXNZuuiot97/9jipPilIIWi7oI6eKKrKNnckP6duh71yaiZS8EmzVyBQyu6pELSuZDCrf7SCpL9smYDntZMcHMqNXtM+4rW0cmgvlJD2ih2X5w40wApRL38o//sOLVWLNQANT3ODVh7pfoGqBNaRWjkQFAEIJxfdqkrTmaouTkYgIeBIlIpEsivxrpxMKVzCVv5VtazVjMRHHSH/eJ8MPI/22STkRFLXP7nzLyj0h5Azt8H43CQHAiMyMKBcmCQLi2HYo9Lu57DPnlfgXJkAqwxiPfC6KZGbiHY9CkOlhlRd67x41Lqp56UV42b60bxhDR1h4FaeEDjRkJsD/5u2i7xY259Fb7odV0wiqFJoSBKYr0yrRQw77Lt8o0SfzeQ0r7JkbyBlIRwfgLv62l4H+AMEHo+fwW1d3mTek9+m3uCBG1PHh1viAVmwNmKKroAg9M07DGGBSgwvgMFwcQZoRbFybqw2X4KVS3xTIqnMwnKP2GV5DUy+EkbPgS1cPdJCN+ZbDj076mhDHmbJnMXE36ExJ8pNQtwW/7OWhDJkwv6bLC/bLYhhttyfUYdnVMLA2UdVQzQG8ISvnLb1XRVtyFZDETCNwtmrF0ouV5dY+nSjBvR6BpDCLJ1cddI2W1TyT9ok4s2PiuGVoCRh/v4QishVzsed0Qc7mgjnUei0Kx1goFyjE0gZ9JBkeLKgtgSG1dxothwlWGZDqaB453anCg2zX0EHJqWXPUYQ+qIuedkalsGKr2kcqTxgEeMBeSMXgXcEmPsNU5X6J2f4lst+Iw1wdNlXHYh3ZAIsO1N+6X4o9E8x9ay5Ow0+1IUtJzYEGRQOYZaW+G0WZ0ixNkNYZrDvBGSl+uR0Q9YzAiwjqsuAn97S2G08pzzuILFoMLy8ju3vZZ0pX1d1f59EBWn3wbDs9uL88vzcW/46XbytTcc+lv19t1ECbsRsgzDVEzUVCbr/tXZefBQkFQj9mus7P4eUUwXXsdITJqQsADe3k8WyjU1wj9hbHs6xDWpgWU5TWnZEEGrcj3W0peXwZ8sPdgMmgqZsPLpqNsAkFTYV93OGW/fY9s5l3riVHdht5c6wwkYtKHaY+/tdN0UeFP5tt/3aN8X709bk93E/w+TdxPfyPiUjuI4ABOUqfaaPYT7Ys7xP0QHnsN257PvFR8Umlh+IU2+e+Gg68vG4nTZed+xKMvbLZqlk+QLTkzq/1Oxj2dwJ5TwZApJf+UvWO8eJ32tHEWSmEyWHE/ALAVO3NYy7TdE6gUCHupF2/VlWmZtA3uZ71+e3Z9fHzgxoNZTyMRtjXeBU9OW2egeaoqzSPpmz3fREZDUOpxzeGIeTuATYHlcrl+2NrM8F7mC5AYCE6y2h3cS2Cpzg/h46UZTtsWuMAarGxMTmXnCS9RVrov1kwTP9Nipl4KD8aON4L+l/klH8dWx8Db4ysWRtCEKB175YH9dHv9Wfi4/fniwQhwZbDyignIcf/8FTkpTQpQRAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "ECSAustinFoodClubStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "BackendServiceLoadBalancerDNSE742582D": {
+   "Value": {
+    "Fn::GetAtt": [
+     "BackendServiceLB09608E98",
+     "DNSName"
+    ]
+   }
+  },
+  "BackendServiceServiceURLB1770053": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "http://",
+      {
+       "Fn::GetAtt": [
+        "BackendServiceLB09608E98",
+        "DNSName"
+       ]
+      }
+     ]
+    ]
+   }
+  },
+  "DatabaseEndpoint": {
+   "Description": "RDS instance endpoint",
+   "Value": {
+    "Fn::GetAtt": [
+     "DatabaseB269D8BB",
+     "Endpoint.Address"
+    ]
+   }
+  },
+  "DatabaseSecretArn": {
+   "Description": "ARN of the database secret",
+   "Value": {
+    "Ref": "DatabaseSecret86DBB7B3"
+   }
+  },
+  "ECSClusterName": {
+   "Description": "Name of the ECS cluster",
+   "Value": {
+    "Ref": "AustinFoodClubCluster80984BC2"
+   }
+  },
+  "BackendServiceName": {
+   "Description": "Name of the ECS service",
+   "Value": {
+    "Fn::GetAtt": [
+     "BackendService2147DAF9",
+     "Name"
+    ]
+   }
+  },
+  "BackendLoadBalancerUrl": {
+   "Description": "URL of the backend load balancer",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "http://",
+      {
+       "Fn::GetAtt": [
+        "BackendServiceLB09608E98",
+        "DNSName"
+       ]
+      }
+     ]
+    ]
+   }
+  },
+  "ECRRepositoryUri": {
+   "Description": "URI of the ECR repository",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "229037375031.dkr.ecr.us-east-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/austin-food-club-backend"
+     ]
+    ]
+   }
+  },
+  "CodeBuildProjectName": {
+   "Description": "Name of the CodeBuild project",
+   "Value": {
+    "Ref": "BackendBuildProject66F920F7"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

@@ -10,6 +10,11 @@ const yelpService = require('./services/yelpService');
 const restaurantSync = require('./services/restaurantSync');
 const featuredRestaurant = require('./services/featuredRestaurant');
 const fallbackService = require('./services/fallbackService');
+
+// Import new middleware
+const { responseMiddleware } = require('./middleware/apiResponse');
+const { sanitize, validate, validateQuery, validateId, rules } = require('./middleware/validation');
+const { errorHandler, notFound, initializeErrorHandling, asyncHandler, NotFoundError, AppError, UnauthorizedError, ServiceUnavailableError, ValidationError } = require('./middleware/errorHandler');
 const { 
   cacheRestaurantDetails, 
   cacheSearchResults, 
@@ -40,6 +45,9 @@ const notificationRoutes = require('./routes/notification.routes'); // Push noti
 const socialRoutes = require('./routes/social.routes');
 const visitsRoutes = require('./routes/visits.routes'); // Social features routes
 const analyticsRoutes = require('./routes/analytics.routes'); // Analytics routes
+const verificationRoutes = require('./routes/verification.routes'); // Verification routes
+const monitoringRoutes = require('./routes/monitoring.routes'); // Monitoring routes
+const monitoringService = require('./utils/monitoringService');
 
 const app = express();
 const PORT = 3001;
@@ -59,14 +67,23 @@ app.use(cors({
     'http://localhost:8081',   // Alternative Flutter ports
     'http://localhost:8082',
     'http://localhost:3000',   // React dev server
-    /^http:\/\/localhost:\d+$/ // Allow any localhost port
+    /^http:\/\/localhost:\d+$/, // Allow any localhost port
+    'https://austinfoodclub.com',  // Production frontend domain
+    'https://www.austinfoodclub.com'  // Production frontend domain with www
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
   optionsSuccessStatus: 200
 }));
-app.use(express.json());
+
+// Body parsing and sanitization
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(sanitize);
+
+// Add standardized response helpers
+app.use(responseMiddleware);
 
 // API versioning - Mount v1 API routes
 app.use('/api/v1', apiRouter);
@@ -74,8 +91,54 @@ app.use('/api/v1', apiRouter);
 // Simple restaurant routes (working version)
 app.use('/api/restaurants', simpleRestaurantRoutes);
 
+// Proxy endpoint to bypass Safari CORS issues
+app.post('/api/proxy/verification/send-code', asyncHandler(async (req, res) => {
+  const { phone } = req.body;
+  
+  if (!phone) {
+    return res.status(400).json({
+      success: false,
+      message: 'Phone number is required',
+      timestamp: new Date().toISOString()
+    });
+  }
+  
+  // Generate 6-digit verification code
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  
+  // Store code with expiration (10 minutes)
+  const verificationCodes = new Map();
+  verificationCodes.set(phone, {
+    code,
+    expiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
+    attempts: 0
+  });
+  
+  // Mock SMS sending for testing
+  console.log(`📱 [MOCK SMS] Verification code for ${phone}: ${code}`);
+  console.log(`📱 [MOCK SMS] Message: "Your Austin Food Club verification code is: ${code}. This code expires in 10 minutes."`);
+  
+  res.json({
+    success: true,
+    message: 'Verification code sent successfully (mock mode)',
+    data: {
+      phone: phone,
+      expiresIn: 600, // 10 minutes in seconds
+      mockCode: code, // Include code in response for testing
+      note: 'This is a mock SMS - no actual SMS was sent'
+    },
+    timestamp: new Date().toISOString()
+  });
+}));
+
 // Auth routes (public)
 app.use('/api/auth', authRoutes);
+
+// Verification routes (public)
+app.use('/api/verification', verificationRoutes);
+
+// Monitoring routes (public)
+app.use('/api/monitoring', monitoringRoutes);
 
 // Admin routes (protected)
 app.use('/api/admin', adminRoutes);
@@ -97,25 +160,32 @@ app.use('/api/visits', visitsRoutes); // Verified visits routes (rsvps, friends,
 
 // Test endpoint
 app.get('/api/test', (req, res) => {
-  res.json({ 
-    message: 'Server is running!', 
-    timestamp: new Date().toISOString() 
+  res.api.success.ok(res, 'Server is running!', {
+    status: 'healthy',
+    version: '1.0.0',
+    uptime: process.uptime()
   });
 });
 
+
 // Admin login endpoint (demo - replace with proper auth)
-app.post('/api/auth/admin-login', async (req, res) => {
-  try {
+app.post('/api/auth/admin-login', 
+  validate({
+    email: { required: true, type: 'email', message: 'Valid email address is required' },
+    password: { required: true, type: 'string', minLength: 6, message: 'Password must be at least 6 characters' }
+  }),
+  asyncHandler(async (req, res) => {
     const { email, password } = req.body;
+    
     
     // Demo credentials - replace with proper auth
     if (email === 'admin@austinfoodclub.com' && password === 'admin123') {
       // Generate a demo token (in production, use proper JWT)
       const token = 'demo-admin-token-' + Date.now();
       
-      res.json({
+      res.api.success.ok(res, 'Login successful', {
         token,
-        user: {
+        admin: {
           id: 'admin-user',
           email: 'admin@austinfoodclub.com',
           name: 'Austin Food Club Admin',
@@ -123,18 +193,14 @@ app.post('/api/auth/admin-login', async (req, res) => {
         }
       });
     } else {
-      res.status(401).json({ error: 'Invalid credentials' });
+      throw new UnauthorizedError('Invalid credentials');
     }
-  } catch (error) {
-    console.error('Admin login error:', error);
-    res.status(500).json({ error: 'Login failed' });
-  }
-});
+  })
+);
 
 // Test user endpoint (requires auth)
 app.get('/api/test/user', verifySupabaseToken, requireAuth, (req, res) => {
-  res.json({ 
-    message: 'User data retrieved successfully',
+  res.api.success.ok(res, 'User data retrieved successfully', {
     user: {
       id: req.user.id,
       supabaseId: req.user.supabaseId,
@@ -151,93 +217,91 @@ app.get('/api/test/user', verifySupabaseToken, requireAuth, (req, res) => {
 });
 
 // Test SMS endpoint
-app.post('/api/test/sms', async (req, res) => {
-  try {
+app.post('/api/test/sms', 
+  validate({
+    phone: { required: true, type: 'phone', message: 'Valid phone number is required' },
+    message: { required: true, type: 'string', minLength: 1, maxLength: 160, message: 'Message must be between 1 and 160 characters' }
+  }),
+  asyncHandler(async (req, res) => {
     const { phone, message } = req.body;
-    
-    // Validate required fields
-    if (!phone || !message) {
-      return res.status(400).json({
-        success: false,
-        error: 'Missing required fields: phone and message are required'
-      });
-    }
     
     // Send SMS
     const result = await twilioService.sendSMS(phone, message);
     
     if (result.success) {
-      res.json({
-        success: true,
-        message: 'SMS sent successfully',
+      res.api.success.ok(res, 'SMS sent successfully', {
         sid: result.sid,
-        phone: phone
+        phone: phone,
+        messageLength: message.length
       });
     } else {
-      res.status(400).json({
-        success: false,
-        error: result.error
-      });
+      throw new AppError(result.error, 400, 'SMS_SEND_FAILED');
     }
-  } catch (error) {
-    console.error('Error in test SMS endpoint:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Internal server error'
-    });
-  }
-});
+  })
+);
 
 // Test OTP endpoint
-app.post('/api/test/otp', async (req, res) => {
-  try {
+app.post('/api/test/otp', 
+  validate({
+    phone: { required: true, type: 'phone', message: 'Valid phone number is required' }
+  }),
+  asyncHandler(async (req, res) => {
     const { phone } = req.body;
-    
-    if (!phone) {
-      return res.status(400).json({
-        success: false,
-        error: 'Missing required field: phone'
-      });
-    }
     
     const result = await twilioService.sendOTP(phone);
     
     if (result.success) {
-      res.json({
-        success: true,
-        message: 'OTP sent successfully',
+      res.api.success.ok(res, 'OTP sent successfully', {
         phone: phone,
         // Note: In production, don't return the actual OTP code
         otpCode: result.otpCode // Only for testing
       });
     } else {
-      res.status(400).json({
-        success: false,
-        error: result.error
-      });
+      throw new AppError(result.error, 400, 'OTP_SEND_FAILED');
     }
-  } catch (error) {
-    console.error('Error in test OTP endpoint:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Internal server error'
-    });
-  }
-});
+  })
+);
 
 // Current restaurant endpoint - fetch from database
-app.get('/api/restaurants/current', async (req, res) => {
-  try {
+app.get('/api/restaurants/current', 
+  validateQuery({
+    cityId: { required: false, type: 'string' },
+    citySlug: { required: false, type: 'string' }
+  }),
+  asyncHandler(async (req, res) => {
+    const { cityId, citySlug } = req.query;
+    
     // Get the current week's featured restaurant
     const currentWeek = new Date();
     currentWeek.setDate(currentWeek.getDate() - currentWeek.getDay()); // Start of week
     
+    let whereClause = {
+      weekOf: {
+        gte: currentWeek
+      }
+    };
+    
+    // Add city filtering if provided
+    if (cityId) {
+      whereClause.cityId = cityId;
+    } else if (citySlug) {
+      const city = await prisma.city.findUnique({
+        where: { slug: citySlug }
+      });
+      
+      if (!city) {
+        throw new NotFoundError('City not found');
+      }
+      
+      if (!city.isActive) {
+        throw new NotFoundError('City is not active');
+      }
+      
+      whereClause.cityId = city.id;
+    }
+    
     let restaurant = await prisma.restaurant.findFirst({
-      where: {
-        weekOf: {
-          gte: currentWeek
-        }
-      },
+      where: whereClause,
       orderBy: {
         weekOf: 'desc'
       }
@@ -290,21 +354,28 @@ app.get('/api/restaurants/current', async (req, res) => {
       lastUpdated: restaurant.createdAt.toISOString()
     };
 
-    res.json(response);
-  } catch (error) {
-    console.error('Error fetching current restaurant:', error);
-    res.status(500).json({ error: 'Failed to fetch restaurant data' });
-  }
-});
+    res.api.success.ok(res, 'Current restaurant retrieved successfully', response);
+  })
+);
 
 // All restaurants endpoint
-app.get('/api/restaurants', async (req, res) => {
-  try {
+app.get('/api/restaurants', 
+  validateQuery({
+    limit: { required: false, type: 'number', min: 1, max: 100, message: 'Limit must be between 1 and 100' },
+    offset: { required: false, type: 'number', min: 0, message: 'Offset must be 0 or greater' }
+  }),
+  asyncHandler(async (req, res) => {
+    const { limit = 20, offset = 0 } = req.query;
+    
     const restaurants = await prisma.restaurant.findMany({
+      skip: parseInt(offset),
+      take: parseInt(limit),
       orderBy: {
         weekOf: 'desc'
       }
     });
+
+    const total = await prisma.restaurant.count();
 
     // Format response to match frontend expectations
     const formattedRestaurants = restaurants.map(restaurant => ({
@@ -329,12 +400,9 @@ app.get('/api/restaurants', async (req, res) => {
       lastUpdated: restaurant.createdAt.toISOString()
     }));
 
-    res.json(formattedRestaurants);
-  } catch (error) {
-    console.error('Error fetching restaurants:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
+    res.api.paginated(res, formattedRestaurants, Math.floor(offset / limit) + 1, parseInt(limit), total, 'Restaurants retrieved successfully');
+  })
+);
 
 // Yelp-powered restaurant endpoints
 // GET /api/restaurants/featured - Get this week's featured restaurant (with Yelp fallback)
@@ -496,8 +564,15 @@ app.get('/api/restaurants/featured', async (req, res) => {
 app.get('/api/restaurants/search', 
   rateLimitMiddleware('yelp'),
   cacheSearchResults,
-  async (req, res) => {
-  try {
+  validateQuery({
+    location: { required: false, type: 'string', maxLength: 100, message: 'Location must be less than 100 characters' },
+    cuisine: { required: false, type: 'string', maxLength: 50, message: 'Cuisine must be less than 50 characters' },
+    price: { required: false, type: 'string', enum: ['$', '$$', '$$$', '$$$$'], message: 'Price must be one of: $, $$, $$$, $$$$' },
+    limit: { required: false, type: 'number', min: 1, max: 50, message: 'Limit must be between 1 and 50' },
+    sortBy: { required: false, type: 'string', enum: ['rating', 'distance', 'review_count'], message: 'Sort by must be one of: rating, distance, review_count' },
+    term: { required: false, type: 'string', maxLength: 100, message: 'Search term must be less than 100 characters' }
+  }),
+  asyncHandler(async (req, res) => {
     const { 
       location = 'Austin, TX', 
       cuisine, 
@@ -508,11 +583,7 @@ app.get('/api/restaurants/search',
     } = req.query;
 
     if (!yelpService.isConfigured()) {
-      return res.status(503).json({
-        success: false,
-        error: 'Yelp API not configured',
-        message: 'Please set YELP_API_KEY in environment variables'
-      });
+      throw new ServiceUnavailableError('Yelp API not configured. Please set YELP_API_KEY in environment variables');
     }
 
     console.log('Searching restaurants:', { location, cuisine, price, limit, term });
@@ -524,8 +595,7 @@ app.get('/api/restaurants/search',
       yelpService.formatRestaurantForApp(restaurant)
     );
 
-    res.json({
-      success: true,
+    res.api.success.ok(res, 'Restaurant search completed successfully', {
       restaurants: formattedRestaurants,
       total: results.total,
       region: results.region,
@@ -537,15 +607,8 @@ app.get('/api/restaurants/search',
         term
       }
     });
-  } catch (error) {
-    console.error('Error searching restaurants:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Failed to search restaurants',
-      message: error.message
-    });
-  }
-});
+  })
+);
 
 // GET /api/restaurants/yelp/:id - Get restaurant details from Yelp
 app.get('/api/restaurants/yelp/:id', 
@@ -1406,25 +1469,13 @@ app.post('/api/restaurants/test-photos', async (req, res) => {
 });
 
 // RSVP endpoints
-app.post('/api/rsvp', verifySupabaseToken, requireAuth, async (req, res) => {
-  try {
+app.post('/api/rsvp', 
+  verifySupabaseToken, 
+  requireAuth, 
+  validate(rules.rsvp),
+  asyncHandler(async (req, res) => {
     const { day, status, restaurantId } = req.body;
     const userId = req.user.id; // Get userId from authenticated user
-    
-    // Validate required fields
-    if (!day || !status) {
-      return res.status(400).json({ 
-        error: 'Missing required fields: day and status are required' 
-      });
-    }
-    
-    // Validate status values
-    const validStatuses = ['going', 'maybe', 'not_going'];
-    if (!validStatuses.includes(status)) {
-      return res.status(400).json({ 
-        error: 'Invalid status. Must be one of: going, maybe, not_going' 
-      });
-    }
 
     // Get current restaurant ID if not provided
     let currentRestaurantId = restaurantId;
@@ -1437,7 +1488,7 @@ app.post('/api/rsvp', verifySupabaseToken, requireAuth, async (req, res) => {
       });
       
       if (!currentRestaurant) {
-        return res.status(404).json({ error: 'No current restaurant found' });
+        throw new NotFoundError('No current restaurant found');
       }
       
       currentRestaurantId = currentRestaurant.id;
@@ -1447,7 +1498,7 @@ app.post('/api/rsvp', verifySupabaseToken, requireAuth, async (req, res) => {
     const rsvp = await prisma.$transaction(async (tx) => {
       // Delete any existing RSVPs for this user-restaurant pair
       await tx.rSVP.deleteMany({
-      where: {
+        where: {
           userId,
           restaurantId: currentRestaurantId
         }
@@ -1456,30 +1507,24 @@ app.post('/api/rsvp', verifySupabaseToken, requireAuth, async (req, res) => {
       // Create new RSVP
       return await tx.rSVP.create({
         data: {
-        userId,
-        restaurantId: currentRestaurantId,
-        day,
-        status
-      }
+          userId,
+          restaurantId: currentRestaurantId,
+          day,
+          status
+        }
       });
     });
     
-    res.status(201).json({ 
-      message: 'RSVP saved successfully',
-      rsvp: { 
-        id: rsvp.id,
-        userId: rsvp.userId, 
-        restaurantId: rsvp.restaurantId,
-        day: rsvp.day, 
-        status: rsvp.status,
-        createdAt: rsvp.createdAt
-      }
+    res.api.success.created(res, 'RSVP saved successfully', { 
+      id: rsvp.id,
+      userId: rsvp.userId, 
+      restaurantId: rsvp.restaurantId,
+      day: rsvp.day, 
+      status: rsvp.status,
+      createdAt: rsvp.createdAt
     });
-  } catch (error) {
-    console.error('Error saving RSVP:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
+  })
+);
 
 app.get('/api/rsvp', verifySupabaseToken, requireAuth, async (req, res) => {
   try {
@@ -1524,23 +1569,17 @@ app.get('/api/rsvp', verifySupabaseToken, requireAuth, async (req, res) => {
 });
 
 // GET /api/rsvps/restaurant/:restaurantId/counts - Get RSVP counts for specific restaurant
-app.get('/api/rsvps/restaurant/:restaurantId/counts', async (req, res) => {
-  try {
+app.get('/api/rsvps/restaurant/:restaurantId/counts', 
+  validateId('restaurantId'),
+  asyncHandler(async (req, res) => {
     const { restaurantId } = req.params;
-    
-    if (!restaurantId) {
-      return res.status(400).json({ 
-        success: false,
-        error: 'Restaurant ID is required' 
-      });
-    }
 
     // Get RSVP counts for each day for this restaurant
     const rsvpCounts = await prisma.rSVP.groupBy({
       by: ['day'],
       where: {
         restaurantId: restaurantId,
-        status: 'confirmed'
+        status: 'going' // Changed from 'confirmed' to 'going' to match our status enum
       },
       _count: {
         day: true
@@ -1553,30 +1592,21 @@ app.get('/api/rsvps/restaurant/:restaurantId/counts', async (req, res) => {
       formattedCounts[count.day] = count._count.day;
     });
 
-    res.json({
-      success: true,
-      counts: formattedCounts
+    res.api.success.ok(res, 'RSVP counts retrieved successfully', {
+      restaurantId,
+      counts: formattedCounts,
+      totalGoing: Object.values(formattedCounts).reduce((sum, count) => sum + count, 0)
     });
-  } catch (error) {
-    console.error('Error fetching RSVP counts:', error);
-    res.status(500).json({ 
-      success: false,
-      error: 'Internal server error' 
-    });
-  }
-});
+  })
+);
 
 // GET /api/rsvp/counts - Get RSVP counts for each day for current restaurant
-app.get('/api/rsvp/counts', async (req, res) => {
-  try {
+app.get('/api/rsvp/counts', 
+  validateQuery({
+    restaurantId: { required: true, type: 'string', minLength: 1, message: 'Restaurant ID is required' }
+  }),
+  asyncHandler(async (req, res) => {
     const { restaurantId } = req.query;
-    
-    if (!restaurantId) {
-      return res.status(400).json({ 
-        success: false,
-        error: 'Restaurant ID is required' 
-      });
-    }
 
     // Get RSVP counts for each day for this restaurant
     const rsvpCounts = await prisma.rSVP.groupBy({
@@ -1596,25 +1626,25 @@ app.get('/api/rsvp/counts', async (req, res) => {
       dayCounts[count.day] = count._count.id;
     });
 
-    res.json({
-      success: true,
+    res.api.success.ok(res, 'RSVP counts retrieved successfully', {
       restaurantId: restaurantId,
       dayCounts: dayCounts,
       totalGoing: Object.values(dayCounts).reduce((sum, count) => sum + count, 0)
     });
-  } catch (error) {
-    console.error('Error fetching RSVP counts:', error);
-    res.status(500).json({ 
-      success: false,
-      error: 'Internal server error' 
-    });
-  }
-});
+  })
+);
 
 // GET /api/verified-visits - Get user's verified visits
-app.get('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, res) => {
-  try {
+app.get('/api/verified-visits', 
+  verifySupabaseToken, 
+  requireAuth, 
+  validateQuery({
+    limit: { required: false, type: 'number', min: 1, max: 100, message: 'Limit must be between 1 and 100' },
+    offset: { required: false, type: 'number', min: 0, message: 'Offset must be 0 or greater' }
+  }),
+  asyncHandler(async (req, res) => {
     const userId = req.user.id;
+    const { limit = 20, offset = 0 } = req.query;
     
     const verifiedVisits = await prisma.verifiedVisit.findMany({
       where: {
@@ -1632,77 +1662,46 @@ app.get('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, re
       },
       orderBy: {
         visitDate: 'desc'
-      }
+      },
+      skip: parseInt(offset),
+      take: parseInt(limit)
+    });
+
+    const total = await prisma.verifiedVisit.count({
+      where: { userId }
     });
     
-    res.json({
-      success: true,
-      verifiedVisits: verifiedVisits.map(visit => ({
-        id: visit.id,
-        userId: visit.userId,
-        restaurantId: visit.restaurantId,
-        photoUrl: visit.photoUrl,
-        rating: visit.rating,
-        review: visit.review,
-        visitDate: visit.visitDate,
-        createdAt: visit.createdAt,
-        restaurant: visit.restaurant
-      }))
-    });
-  } catch (error) {
-    console.error('Error fetching verified visits:', error);
-    res.status(500).json({ 
-      success: false,
-      error: 'Internal server error' 
-    });
-  }
-});
+    const formattedVisits = verifiedVisits.map(visit => ({
+      id: visit.id,
+      userId: visit.userId,
+      restaurantId: visit.restaurantId,
+      photoUrl: visit.photoUrl,
+      rating: visit.rating,
+      review: visit.review,
+      visitDate: visit.visitDate,
+      createdAt: visit.createdAt,
+      restaurant: visit.restaurant
+    }));
+
+    res.api.paginated(res, formattedVisits, Math.floor(offset / limit) + 1, parseInt(limit), total, 'Verified visits retrieved successfully');
+  })
+);
 
 // POST /api/verified-visits - Submit a new verified visit
-app.post('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, res) => {
-  try {
+app.post('/api/verified-visits', 
+  verifySupabaseToken, 
+  requireAuth, 
+  validate(rules.verifiedVisit),
+  asyncHandler(async (req, res) => {
     const userId = req.user.id;
     const { restaurantId, photoUrl, rating, review, visitDate } = req.body;
-    
-    // Validation
-    if (!restaurantId) {
-      return res.status(400).json({
-        success: false,
-        error: 'Restaurant ID is required'
-      });
-    }
-    
-    if (!rating) {
-      return res.status(400).json({
-        success: false,
-        error: 'Rating is required'
-      });
-    }
-    
-    const ratingNum = parseInt(rating);
-    if (isNaN(ratingNum) || ratingNum < 1 || ratingNum > 5) {
-      return res.status(400).json({
-        success: false,
-        error: 'Rating must be a number between 1 and 5'
-      });
-    }
-    
-    if (!photoUrl) {
-      return res.status(400).json({
-        success: false,
-        error: 'Photo URL is required'
-      });
-    }
     
     // Validate visit date
     let parsedVisitDate;
     if (visitDate) {
       parsedVisitDate = new Date(visitDate);
       if (isNaN(parsedVisitDate.getTime())) {
-        return res.status(400).json({
-          success: false,
-          error: 'Invalid visit date format'
-        });
+        throw new ValidationError('Invalid visit date format');
       }
     } else {
       parsedVisitDate = new Date();
@@ -1714,10 +1713,7 @@ app.post('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, r
     });
     
     if (!restaurant) {
-      return res.status(404).json({
-        success: false,
-        error: 'Restaurant not found'
-      });
+      throw new NotFoundError('Restaurant not found');
     }
     
     // Create the verified visit
@@ -1726,7 +1722,7 @@ app.post('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, r
         userId,
         restaurantId,
         photoUrl,
-        rating: ratingNum,
+        rating: parseInt(rating),
         review: review?.trim() || null,
         visitDate: parsedVisitDate
       },
@@ -1742,29 +1738,19 @@ app.post('/api/verified-visits', verifySupabaseToken, requireAuth, async (req, r
       }
     });
     
-    res.status(201).json({
-      success: true,
-      message: 'Verified visit created successfully',
-      verifiedVisit: {
-        id: verifiedVisit.id,
-        userId: verifiedVisit.userId,
-        restaurantId: verifiedVisit.restaurantId,
-        photoUrl: verifiedVisit.photoUrl,
-        rating: verifiedVisit.rating,
-        review: verifiedVisit.review,
-        visitDate: verifiedVisit.visitDate,
-        createdAt: verifiedVisit.createdAt,
-        restaurant: verifiedVisit.restaurant
-      }
+    res.api.success.created(res, 'Verified visit created successfully', {
+      id: verifiedVisit.id,
+      userId: verifiedVisit.userId,
+      restaurantId: verifiedVisit.restaurantId,
+      photoUrl: verifiedVisit.photoUrl,
+      rating: verifiedVisit.rating,
+      review: verifiedVisit.review,
+      visitDate: verifiedVisit.visitDate,
+      createdAt: verifiedVisit.createdAt,
+      restaurant: verifiedVisit.restaurant
     });
-  } catch (error) {
-    console.error('Error creating verified visit:', error);
-    res.status(500).json({ 
-      success: false,
-      error: 'Internal server error' 
-    });
-  }
-});
+  })
+);
 
 // GET /api/verified-visits/:userId - Get verified visits for a specific user
 app.get('/api/verified-visits/:userId', verifySupabaseToken, requireAuth, async (req, res) => {
@@ -2055,8 +2041,13 @@ websocketService.initialize(server);
 
 // Start server
 server.listen(PORT, async () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`Test endpoint: http://localhost:${PORT}/api/test`);
+  // Start monitoring service
+  try {
+    monitoringService.startMonitoring(30000); // 30 second intervals
+    console.log('📊 Monitoring service initialized');
+  } catch (error) {
+    console.error('❌ Failed to initialize monitoring service:', error);
+  }
   
   // Initialize rotation system
   try {
@@ -2103,6 +2094,17 @@ server.listen(PORT, async () => {
   console.log(`  - Set Custom: POST http://localhost:${PORT}/api/restaurants/featured/set-custom`);
   console.log(`  - Archive Old: POST http://localhost:${PORT}/api/restaurants/featured/archive`);
   console.log(`  - Manual Rotation: POST http://localhost:${PORT}/api/restaurants/featured/rotate`);
+  console.log(`\nMonitoring endpoints (PUBLIC):`);
+  console.log(`  - Health Check: GET http://localhost:${PORT}/api/monitoring/health`);
+  console.log(`  - Dashboard: GET http://localhost:${PORT}/api/monitoring/dashboard`);
+  console.log(`  - Metrics: GET http://localhost:${PORT}/api/monitoring/metrics`);
+  console.log(`  - Status: GET http://localhost:${PORT}/api/monitoring/status`);
+  console.log(`  - Start Monitoring: POST http://localhost:${PORT}/api/monitoring/start`);
+  console.log(`  - Stop Monitoring: POST http://localhost:${PORT}/api/monitoring/stop`);
+  console.log(`\nVerification endpoints (PUBLIC):`);
+  console.log(`  - Send Code: POST http://localhost:${PORT}/api/verification/send-code`);
+  console.log(`  - Verify Code: POST http://localhost:${PORT}/api/verification/verify-code`);
+  console.log(`  - Status: GET http://localhost:${PORT}/api/verification/status/:phone`);
   console.log(`\nProtected endpoints (AUTH REQUIRED):`);
   console.log(`  - RSVP: POST/GET http://localhost:${PORT}/api/rsvp`);
   console.log(`  - Wishlist: GET/POST/DELETE http://localhost:${PORT}/api/wishlist`);
@@ -2341,6 +2343,13 @@ app.post('/api/cron/sync', async (req, res) => {
     });
   }
 });
+
+// Error handling middleware (must be last)
+app.use(notFound);
+app.use(errorHandler);
+
+// Initialize error handling
+initializeErrorHandling();
 
 // Graceful shutdown
 process.on('SIGINT', async () => {

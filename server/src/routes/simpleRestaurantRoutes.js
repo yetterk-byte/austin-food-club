@@ -1,12 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
+const { asyncHandler, NotFoundError } = require('../middleware/errorHandler');
+const { validateQuery } = require('../middleware/validation');
+const { rules } = require('../middleware/validation');
 
 const prisma = new PrismaClient();
 
 // Simple endpoint to get current featured restaurant
-router.get('/current', async (req, res) => {
-  try {
+router.get('/current', 
+  validateQuery({
+    cityId: { required: false, type: 'string' },
+    citySlug: { required: false, type: 'string' }
+  }),
+  asyncHandler(async (req, res) => {
     console.log('🔍 Simple route: Getting featured restaurant...');
     
     const { cityId, citySlug } = req.query;
@@ -25,12 +32,12 @@ router.get('/current', async (req, res) => {
       
       if (!city) {
         console.log('❌ City not found for slug:', citySlug);
-        return res.status(404).json({ error: 'City not found' });
+        throw new NotFoundError('City not found');
       }
       
       if (!city.isActive) {
         console.log('❌ City is inactive:', citySlug);
-        return res.status(404).json({ error: 'City is not active' });
+        throw new NotFoundError('City is not active');
       }
       
       whereClause.cityId = city.id;
@@ -53,7 +60,7 @@ router.get('/current', async (req, res) => {
 
     if (!restaurant) {
       console.log('❌ No featured restaurant found for city:', citySlug || cityId || 'default');
-      return res.status(404).json({ error: 'No featured restaurant this week' });
+      throw new NotFoundError('No featured restaurant this week');
     }
 
     console.log('✅ Found restaurant:', restaurant.name);
@@ -78,13 +85,8 @@ router.get('/current', async (req, res) => {
     }
 
     console.log('✅ Sending restaurant data:', parsedRestaurant.name);
-    res.json(parsedRestaurant);
-    
-  } catch (error) {
-    console.error('❌ Error in /current endpoint:', error.message);
-    console.error('   Stack:', error.stack);
-    res.status(500).json({ error: 'Internal server error', details: error.message });
-  }
-});
+    res.api.success.ok(res, 'Restaurant retrieved successfully', parsedRestaurant);
+  })
+);
 
 module.exports = router;

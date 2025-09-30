@@ -1,0 +1,36 @@
+{
+  "version": "48.0.0",
+  "files": {
+    "7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200": {
+      "displayName": "ECSAustinFoodClubStack/Custom::VpcRestrictDefaultSGCustomResourceProvider Code",
+      "source": {
+        "path": "asset.7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "229037375031-us-east-1-09eb527c": {
+          "bucketName": "cdk-hnb659fds-assets-229037375031-us-east-1",
+          "objectKey": "7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200.zip",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::229037375031:role/cdk-hnb659fds-file-publishing-role-229037375031-us-east-1"
+        }
+      }
+    },
+    "bb8fd4f104de690f48506062ac1b52071a24ea8376986976956631d1cb23aa29": {
+      "displayName": "ECSAustinFoodClubStack Template",
+      "source": {
+        "path": "ECSAustinFoodClubStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "229037375031-us-east-1-c384abd6": {
+          "bucketName": "cdk-hnb659fds-assets-229037375031-us-east-1",
+          "objectKey": "bb8fd4f104de690f48506062ac1b52071a24ea8376986976956631d1cb23aa29.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::229037375031:role/cdk-hnb659fds-file-publishing-role-229037375031-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

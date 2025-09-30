@@ -1,0 +1,41 @@
+{
+  "version": "0.2",
+  "phases": {
+    "pre_build": {
+      "commands": [
+        "echo Logging in to Amazon ECR...",
+        "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 229037375031.dkr.ecr.us-east-1.amazonaws.com",
+        "echo Build started on `date`",
+        "echo Building the Docker image...",
+        "REPOSITORY_URI=229037375031.dkr.ecr.us-east-1.amazonaws.com/austin-food-club-backend",
+        "IMAGE_TAG=latest"
+      ]
+    },
+    "build": {
+      "commands": [
+        "echo Build started on `date`",
+        "echo Building the Docker image...",
+        "cd server",
+        "docker build -t austin-food-club-backend:$IMAGE_TAG .",
+        "docker tag austin-food-club-backend:$IMAGE_TAG $REPOSITORY_URI:$IMAGE_TAG",
+        "docker tag austin-food-club-backend:$IMAGE_TAG $REPOSITORY_URI:latest"
+      ]
+    },
+    "post_build": {
+      "commands": [
+        "echo Build completed on `date`",
+        "echo Pushing the Docker images...",
+        "docker push $REPOSITORY_URI:$IMAGE_TAG",
+        "docker push $REPOSITORY_URI:latest",
+        "echo Writing image definitions file...",
+        "printf '[{\"name\":\"austin-food-club-backend\",\"imageUri\":\"%s\"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json",
+        "cat imagedefinitions.json"
+      ]
+    }
+  },
+  "artifacts": {
+    "files": ["imagedefinitions.json"],
+    "name": "austin-food-club-backend-$(date +%Y-%m-%d)"
+  }
+}
+

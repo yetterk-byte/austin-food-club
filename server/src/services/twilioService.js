@@ -6,7 +6,11 @@ class TwilioService {
     this.authToken = process.env.TWILIO_AUTH_TOKEN;
     this.phoneNumber = process.env.TWILIO_PHONE_NUMBER;
     
-    if (!this.accountSid || !this.authToken || !this.phoneNumber) {
+    // Check if credentials are missing or are placeholder values
+    const isPlaceholder = (value) => value && value.includes('your_') && value.includes('_here');
+    
+    if (!this.accountSid || !this.authToken || !this.phoneNumber || 
+        isPlaceholder(this.accountSid) || isPlaceholder(this.authToken) || isPlaceholder(this.phoneNumber)) {
       console.warn('Twilio credentials not found. SMS functionality will be disabled.');
       this.client = null;
     } else {
@@ -60,16 +64,16 @@ class TwilioService {
   /**
    * Send OTP verification code
    * @param {string} phoneNumber - Phone number to send OTP to
+   * @param {string} customCode - Custom verification code (optional)
    * @returns {Promise<{success: boolean, error?: string}>}
    */
-  async sendOTP(phoneNumber) {
-    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+  async sendOTP(phoneNumber, customCode = null) {
+    const otpCode = customCode || Math.floor(100000 + Math.random() * 900000).toString();
     const message = `Your Austin Food Club verification code is: ${otpCode}. This code expires in 10 minutes.`;
     
     const result = await this.sendSMS(phoneNumber, message);
     
     if (result.success) {
-      // In a real implementation, you'd store this OTP in a database with expiration
       console.log(`OTP sent to ${phoneNumber}: ${otpCode}`);
       return {
         success: true,

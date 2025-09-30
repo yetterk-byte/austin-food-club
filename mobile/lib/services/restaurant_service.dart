@@ -3,7 +3,7 @@ import 'dart:convert';
 import '../models/restaurant.dart';
 
 class RestaurantService {
-  static const String baseUrl = 'http://localhost:3001/api';
+  static const String baseUrl = 'https://api.austinfoodclub.com/api';
   
   static Future<Restaurant?> getFeaturedRestaurant({String? citySlug}) async {
     try {
@@ -42,7 +42,17 @@ class RestaurantService {
         print('✅ RestaurantService: Successfully fetched restaurant data');
         print('🔍 RestaurantService: Response body length: ${response.body.length}');
         
-        final data = json.decode(response.body);
+        final responseData = json.decode(response.body);
+        
+        // Handle standardized API response format
+        Map<String, dynamic> data;
+        if (responseData['success'] == true && responseData['data'] != null) {
+          data = responseData['data'];
+        } else {
+          // Fallback to old format for backward compatibility
+          data = responseData;
+        }
+        
         print('🔍 RestaurantService: Restaurant name: ${data['name']}');
         print('🔍 RestaurantService: Restaurant address: ${data['address']}');
         print('🔍 RestaurantService: Categories: ${data['categories']}');

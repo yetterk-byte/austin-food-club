@@ -13,8 +13,10 @@ const requireAdmin = async (req, res, next) => {
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({ 
-        error: 'Authentication required',
-        code: 'AUTH_REQUIRED' 
+        success: false,
+        message: 'Authentication required',
+        error: 'AUTH_REQUIRED',
+        timestamp: new Date().toISOString()
       });
     }
 
@@ -37,8 +39,10 @@ const requireAdmin = async (req, res, next) => {
     
     if (!req.user) {
       return res.status(401).json({ 
-        error: 'Authentication required',
-        code: 'AUTH_REQUIRED' 
+        success: false,
+        message: 'Authentication required',
+        error: 'AUTH_REQUIRED',
+        timestamp: new Date().toISOString()
       });
     }
 
@@ -50,8 +54,10 @@ const requireAdmin = async (req, res, next) => {
 
     if (!user) {
       return res.status(404).json({ 
-        error: 'User not found',
-        code: 'USER_NOT_FOUND' 
+        success: false,
+        message: 'User not found',
+        error: 'USER_NOT_FOUND',
+        timestamp: new Date().toISOString()
       });
     }
 
@@ -65,8 +71,10 @@ const requireAdmin = async (req, res, next) => {
       });
 
       return res.status(403).json({ 
-        error: 'Admin privileges required',
-        code: 'ADMIN_REQUIRED' 
+        success: false,
+        message: 'Admin privileges required',
+        error: 'ADMIN_REQUIRED',
+        timestamp: new Date().toISOString()
       });
     }
 
@@ -76,8 +84,10 @@ const requireAdmin = async (req, res, next) => {
   } catch (error) {
     console.error('Admin auth error:', error);
     res.status(500).json({ 
-      error: 'Authentication error',
-      code: 'AUTH_ERROR' 
+      success: false,
+      message: 'Authentication error',
+      error: 'AUTH_ERROR',
+      timestamp: new Date().toISOString()
     });
   }
 };

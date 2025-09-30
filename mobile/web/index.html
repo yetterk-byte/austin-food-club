@@ -110,15 +110,35 @@
     var scriptLoaded = false;
     function loadMainDartJs() {
       if (scriptLoaded) {
+        console.log('Script already loaded, skipping...');
         return;
       }
       scriptLoaded = true;
+      console.log('Creating script tag for main.dart.js');
       var scriptTag = document.createElement('script');
       scriptTag.src = 'main.dart.js';
       scriptTag.type = 'application/javascript';
+      
+      scriptTag.onload = function() {
+        console.log('✅ main.dart.js loaded successfully');
+      };
+      
+      scriptTag.onerror = function() {
+        console.error('❌ Failed to load main.dart.js');
+      };
+      
       document.body.append(scriptTag);
+      console.log('Script tag appended to body');
     }
 
+    // TEMPORARILY DISABLED SERVICE WORKER FOR DEBUGGING
+    console.log('Service worker disabled for debugging - loading app directly');
+    console.log('About to load main.dart.js...');
+    loadMainDartJs();
+    console.log('main.dart.js loading initiated');
+    
+    // Original service worker code (commented out):
+    /*
     if ('serviceWorker' in navigator) {
       // Service workers are supported. Use them.
       window.addEventListener('load', function () {
@@ -168,6 +188,7 @@
       // Service workers not supported. Just drop the <script> tag.
       loadMainDartJs();
     }
+    */
   </script>
   
   <!-- Loading indicator -->

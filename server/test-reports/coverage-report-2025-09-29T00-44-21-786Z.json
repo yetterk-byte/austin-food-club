@@ -1,0 +1,33 @@
+{
+  "summary": {
+    "totalTests": 1,
+    "passedTests": 1,
+    "failedTests": 0,
+    "successRate": "100.0",
+    "totalDuration": 885
+  },
+  "byCategory": {
+    "health": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "duration": 857
+    }
+  },
+  "testResults": [
+    {
+      "name": "health Tests",
+      "category": "health",
+      "status": "PASS",
+      "duration": 857,
+      "output": "🚀 Austin Food Club API Test Suite\n📍 Base URL: http://localhost:3001\n\n🧪 Running health tests...\n\n  ✓ Health endpoint returns 200\n    ✅ PASSED (162.07ms)\n  ✓ Health endpoint includes service status\n    ✅ PASSED (7.70ms)\n\n📊 Test Report\n==============\nTotal Tests: 2\n✅ Passed: 2\n❌ Failed: 0\n⏱️ Average Duration: 84.89ms\n📈 Success Rate: 100.0%\n\n🎯 Test Suite Complete!"
+    }
+  ],
+  "recommendations": [
+    {
+      "type": "success",
+      "message": "All tests are passing! Consider adding more test cases for better coverage."
+    }
+  ],
+  "timestamp": "2025-09-29T00:44:21.779Z"
+}

@@ -4,8 +4,14 @@ import 'screens/main_app.dart';
 import 'screens/auth/login_screen.dart';
 import 'providers/auth_provider.dart';
 import 'config/app_theme.dart';
+import 'config/supabase_config.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Supabase
+  await SupabaseConfig.initialize();
+  
   runApp(const AustinFoodClubApp());
 }
 

@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../models/verified_visit.dart';
 
 class VerifiedVisitsService {
-  static const String baseUrl = 'http://localhost:3001/api';
+  static const String baseUrl = 'https://api.austinfoodclub.com/api';
 
   /// Get verified visits for a user
   static Future<List<VerifiedVisit>> getUserVisits(int userId) async {
@@ -21,18 +21,31 @@ class VerifiedVisitsService {
       print('🔍 VerifiedVisitsService: Response status: ${response.statusCode}');
       
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+        final responseData = json.decode(response.body);
         
-        if (data['success'] == true && data['visits'] != null) {
-          final List<dynamic> visitsData = data['visits'];
+        // Handle standardized API response format
+        if (responseData['success'] == true && responseData['data'] != null) {
+          final Map<String, dynamic> data = responseData['data'];
+          if (data['visits'] != null) {
+            final List<dynamic> visitsData = data['visits'];
+            final visits = visitsData.map((json) => VerifiedVisit.fromJson(json)).toList();
+            
+            print('✅ VerifiedVisitsService: Found ${visits.length} visits for user $userId');
+            return visits;
+          }
+        }
+        
+        // Fallback to old format for backward compatibility
+        if (responseData['success'] == true && responseData['visits'] != null) {
+          final List<dynamic> visitsData = responseData['visits'];
           final visits = visitsData.map((json) => VerifiedVisit.fromJson(json)).toList();
           
           print('✅ VerifiedVisitsService: Found ${visits.length} visits for user $userId');
           return visits;
-        } else {
-          print('❌ VerifiedVisitsService: API returned unsuccessful response');
-          return [];
         }
+        
+        print('❌ VerifiedVisitsService: API returned unsuccessful response');
+        return [];
       } else {
         print('❌ VerifiedVisitsService: HTTP ${response.statusCode}: ${response.body}');
         return [];

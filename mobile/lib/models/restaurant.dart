@@ -71,7 +71,7 @@ class Restaurant {
       longitude = (json['longitude'] ?? 0.0).toDouble();
     }
     
-    // Handle categories - can be list of strings or list of objects
+    // Handle categories - can be list of strings, list of objects, or comma-separated string
     List<Category>? categories;
     if (json['categories'] != null) {
       if (json['categories'] is List) {
@@ -83,7 +83,20 @@ class Restaurant {
           }
           return Category(alias: 'unknown', title: 'Unknown');
         }).toList();
+      } else if (json['categories'] is String) {
+        // Handle comma-separated string format from backend
+        final categoryStrings = (json['categories'] as String).split(',').map((s) => s.trim()).toList();
+        categories = categoryStrings.map((c) => 
+          Category(alias: c.toLowerCase().replaceAll(' ', '_'), title: c)
+        ).toList();
       }
+    }
+    
+    // Debug categories parsing
+    if (categories != null) {
+      print('🏪 RestaurantScreen: Categories parsed successfully: ${categories.map((c) => c.title).join(', ')}');
+    } else {
+      print('🏪 RestaurantScreen: No categories found');
     }
     
     return Restaurant(

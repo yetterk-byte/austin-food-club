@@ -1,5 +1,7 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
+const { asyncHandler, NotFoundError, AppError } = require('../middleware/errorHandler');
+const { validateId } = require('../middleware/validation');
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -399,8 +401,9 @@ const mockSocialFeed = [
  * GET /api/friends/user/:userId
  * Get friends list for a user
  */
-router.get('/friends/user/:userId', async (req, res) => {
-  try {
+router.get('/friends/user/:userId', 
+  validateId('userId'),
+  asyncHandler(async (req, res) => {
     const { userId } = req.params;
     
     console.log(`🔍 Social: Getting friends for user ${userId}`);
@@ -410,19 +413,20 @@ router.get('/friends/user/:userId', async (req, res) => {
     
     console.log(`✅ Social: Found ${userFriends.length} friends for user ${userId}`);
     
-    res.json(userFriends);
-  } catch (error) {
-    console.error('❌ Social: Error getting friends:', error);
-    res.status(500).json({ error: 'Failed to get friends: ' + error.message });
-  }
-});
+    res.api.success.ok(res, 'Friends retrieved successfully', {
+      userId,
+      friends: userFriends
+    });
+  })
+);
 
 /**
  * GET /api/social-feed/user/:userId
  * Get social feed for a user (friends' activities)
  */
-router.get('/social-feed/user/:userId', async (req, res) => {
-  try {
+router.get('/social-feed/user/:userId', 
+  validateId('userId'),
+  asyncHandler(async (req, res) => {
     const { userId } = req.params;
     
     console.log(`🔍 Social: Getting social feed for user ${userId}`);
@@ -471,19 +475,19 @@ router.get('/social-feed/user/:userId', async (req, res) => {
     
     console.log(`✅ Social: Found ${userSocialFeed.length} social feed items for user ${userId}`);
     
-    res.json(userSocialFeed);
-  } catch (error) {
-    console.error('❌ Social: Error getting social feed:', error);
-    res.status(500).json({ error: 'Failed to get social feed: ' + error.message });
-  }
-});
+    res.api.success.ok(res, 'Social feed retrieved successfully', {
+      userId,
+      activities: userSocialFeed
+    });
+  })
+);
 
 /**
  * POST /api/friends/add
  * Add a friend
  */
-router.post('/friends/add', async (req, res) => {
-  try {
+router.post('/friends/add', 
+  asyncHandler(async (req, res) => {
     const { userId, friendId } = req.body;
     
     console.log(`🔍 Social: Adding friend ${friendId} for user ${userId}`);
@@ -494,7 +498,7 @@ router.post('/friends/add', async (req, res) => {
     );
     
     if (existingFriendship) {
-      return res.status(400).json({ error: 'Friendship already exists' });
+      throw new AppError('Friendship already exists', 400, 'DUPLICATE_FRIENDSHIP');
     }
     
     // Create new friendship (in a real app, this would be saved to database)
@@ -514,19 +518,16 @@ router.post('/friends/add', async (req, res) => {
     
     console.log(`✅ Social: Added friend ${friendId} for user ${userId}`);
     
-    res.json(newFriendship);
-  } catch (error) {
-    console.error('❌ Social: Error adding friend:', error);
-    res.status(500).json({ error: 'Failed to add friend: ' + error.message });
-  }
-});
+    res.api.success.created(res, 'Friend added successfully', newFriendship);
+  })
+);
 
 /**
  * DELETE /api/friends/remove
  * Remove a friend
  */
-router.delete('/friends/remove', async (req, res) => {
-  try {
+router.delete('/friends/remove', 
+  asyncHandler(async (req, res) => {
     const { userId, friendId } = req.body;
     
     console.log(`🔍 Social: Removing friend ${friendId} for user ${userId}`);
@@ -536,12 +537,13 @@ router.delete('/friends/remove', async (req, res) => {
     
     console.log(`✅ Social: Removed friend ${friendId} for user ${userId}`);
     
-    res.json({ success: true, message: 'Friend removed successfully' });
-  } catch (error) {
-    console.error('❌ Social: Error removing friend:', error);
-    res.status(500).json({ error: 'Failed to remove friend: ' + error.message });
-  }
-});
+    res.api.success.ok(res, 'Friend removed successfully', {
+      userId,
+      friendId,
+      removedAt: new Date().toISOString()
+    });
+  })
+);
 
 // Mock data for city activity (public activity from all Austin Food Club members)
 const mockCityActivity = [
@@ -940,8 +942,9 @@ const mockCityActivity = [
  * GET /api/verified-visits/user/:userId
  * Get verified visits for a user
  */
-router.get('/verified-visits/user/:userId', (req, res) => {
-  try {
+router.get('/verified-visits/user/:userId', 
+  validateId('userId'),
+  asyncHandler(async (req, res) => {
     const { userId } = req.params;
     let userVisits = mockVerifiedVisits.filter(visit => visit.userId === parseInt(userId));
     
@@ -951,36 +954,25 @@ router.get('/verified-visits/user/:userId', (req, res) => {
     console.log(`🔍 Social: Getting verified visits for user ${userId}`);
     console.log(`✅ Social: Found ${userVisits.length} verified visits for user ${userId} (sorted by date)`);
     
-    res.json({
-      success: true,
+    res.api.success.ok(res, 'Verified visits retrieved successfully', {
+      userId,
       visits: userVisits,
       total: userVisits.length
     });
-  } catch (error) {
-    console.error('❌ Social: Error getting verified visits:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Failed to get verified visits',
-      message: error.message
-    });
-  }
-});
+  })
+);
 
 /**
  * POST /api/verified-visits
  * Create a new verified visit
  */
-router.post('/verified-visits', (req, res) => {
-  try {
+router.post('/verified-visits', 
+  asyncHandler(async (req, res) => {
     const { userId, restaurantId, restaurantName, restaurantAddress, rating, imageUrl, citySlug } = req.body;
     
     // Validate required fields
     if (!userId || !restaurantId || !restaurantName || !rating) {
-      return res.status(400).json({
-        success: false,
-        error: 'Missing required fields',
-        message: 'userId, restaurantId, restaurantName, and rating are required'
-      });
+      throw new AppError('Missing required fields: userId, restaurantId, restaurantName, and rating are required', 400, 'MISSING_REQUIRED_FIELDS');
     }
     
     // Create new visit
@@ -1001,27 +993,17 @@ router.post('/verified-visits', (req, res) => {
     console.log(`🔍 Social: Created new verified visit for user ${userId}`);
     console.log(`✅ Social: Visit ID ${newVisit.id} - ${restaurantName} (${rating} stars)`);
     
-    res.status(201).json({
-      success: true,
-      visit: newVisit,
-      message: 'Visit verified successfully'
-    });
-  } catch (error) {
-    console.error('❌ Social: Error creating verified visit:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Failed to create verified visit',
-      message: error.message
-    });
-  }
-});
+    res.api.success.created(res, 'Visit verified successfully', newVisit);
+  })
+);
 
 /**
  * GET /api/city-activity/user/:userId
  * Get city-wide public activity feed
  */
-router.get('/city-activity/user/:userId', async (req, res) => {
-  try {
+router.get('/city-activity/user/:userId', 
+  validateId('userId'),
+  asyncHandler(async (req, res) => {
     const { userId } = req.params;
     
     console.log(`🔍 Social: Getting city activity for user ${userId}`);
@@ -1062,11 +1044,11 @@ router.get('/city-activity/user/:userId', async (req, res) => {
     
     console.log(`✅ Social: Found ${sortedCityActivity.length} city activity items for user ${userId}`);
     
-    res.json(sortedCityActivity);
-  } catch (error) {
-    console.error('❌ Social: Error getting city activity:', error);
-    res.status(500).json({ error: 'Failed to get city activity: ' + error.message });
-  }
-});
+    res.api.success.ok(res, 'City activity retrieved successfully', {
+      userId,
+      activities: sortedCityActivity
+    });
+  })
+);
 
 module.exports = router;

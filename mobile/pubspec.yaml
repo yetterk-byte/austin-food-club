@@ -27,6 +27,7 @@ dependencies:
   # Authentication and storage
   shared_preferences: ^2.2.2
   crypto: ^3.0.3
+  supabase_flutter: ^2.5.6
   
   # Maps and location
   url_launcher: ^6.2.1
