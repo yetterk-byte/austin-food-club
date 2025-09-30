@@ -18,6 +18,10 @@ router.post('/send-code',
     phone: { type: 'string', required: true, pattern: /^\+1\d{10}$/ }
   }),
   asyncHandler(async (req, res) => {
+    // Manual CORS header for austinfoodclub.com
+    res.header('Access-Control-Allow-Origin', 'https://austinfoodclub.com');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    
     const { phone } = req.body;
     
     // Generate 6-digit verification code
@@ -60,6 +64,10 @@ router.post('/verify-code',
     name: { type: 'string', required: false }
   }),
   asyncHandler(async (req, res) => {
+    // Manual CORS header for austinfoodclub.com
+    res.header('Access-Control-Allow-Origin', 'https://austinfoodclub.com');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    
     const { phone, code, name } = req.body;
     
     // Get stored verification data
