@@ -55,6 +55,28 @@ const prisma = new PrismaClient();
 
 // Database storage via Prisma (in-memory storage removed)
 
+// GLOBAL CORS FIX - MUST BE FIRST MIDDLEWARE
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  console.log(`🌐 CORS: Request from origin: ${origin}`);
+  
+  if (origin === 'https://austinfoodclub.com' || origin === 'https://www.austinfoodclub.com') {
+    console.log(`✅ CORS: Setting headers for ${origin}`);
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,Accept');
+  }
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    console.log(`✅ CORS: Handling OPTIONS preflight for ${origin}`);
+    return res.status(200).end();
+  }
+  
+  next();
+});
+
 // Middleware
 // Serve static files from client/public directory
 app.use(express.static('../client/public'));
