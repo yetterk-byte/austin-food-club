@@ -80,7 +80,8 @@ const corsOptions = {
                      /^http:\/\/localhost:\d+$/.test(origin);
     
     if (isAllowed) {
-      callback(null, true);
+      console.log(`✅ CORS: Allowing origin: ${origin}`);
+      callback(null, origin); // Return the actual origin
     } else {
       console.log(`❌ CORS: Blocked origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
