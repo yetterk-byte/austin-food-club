@@ -60,22 +60,39 @@ const prisma = new PrismaClient();
 app.use(express.static('../client/public'));
 
 // CORS configuration for Flutter web (dynamic ports)
-app.use(cors({
-  origin: [
-    'http://localhost:51070',  // Current Flutter port
-    'http://localhost:8080',   // Standard Flutter web port
-    'http://localhost:8081',   // Alternative Flutter ports
-    'http://localhost:8082',
-    'http://localhost:3000',   // React dev server
-    /^http:\/\/localhost:\d+$/, // Allow any localhost port
-    'https://austinfoodclub.com',  // Production frontend domain
-    'https://www.austinfoodclub.com'  // Production frontend domain with www
-  ],
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      'http://localhost:51070',
+      'http://localhost:8080',
+      'http://localhost:8081',
+      'http://localhost:8082',
+      'http://localhost:3000',
+      'https://austinfoodclub.com',
+      'https://www.austinfoodclub.com'
+    ];
+    
+    // Check if origin matches allowed origins or localhost pattern
+    const isAllowed = allowedOrigins.indexOf(origin) !== -1 || 
+                     /^http:\/\/localhost:\d+$/.test(origin);
+    
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      console.log(`❌ CORS: Blocked origin: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
   optionsSuccessStatus: 200
-}));
+};
+
+app.use(cors(corsOptions));
 
 // Body parsing and sanitization
 app.use(express.json({ limit: '10mb' }));
