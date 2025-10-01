@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class VerificationService {
-  static const String _baseUrl = 'https://api.austinfoodclub.com/api/proxy/verification';
+  static const String _baseUrl = 'https://api.austinfoodclub.com/api/verification';
   
   /// Send verification code to phone number
   static Future<Map<String, dynamic>> sendVerificationCode(String phone) async {

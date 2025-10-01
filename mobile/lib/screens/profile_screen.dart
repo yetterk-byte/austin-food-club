@@ -96,46 +96,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     } catch (e) {
       print('❌ ProfileScreen: Error loading verified visits: $e');
-      // Fallback to mock data on error
-      final restaurants = await MockDataService.getAllRestaurantsMock();
+      // Fallback to simple mock data on error
       final fallbackVisits = [
         VerifiedVisit(
           id: 1,
           userId: 1,
-          restaurantId: restaurants[0].id,
-          restaurantName: restaurants[0].name,
-          restaurantAddress: restaurants[0].address,
+          restaurantId: '1',
+          restaurantName: 'Sample Restaurant',
+          restaurantAddress: '123 Main St',
           rating: 5,
           imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop',
           verifiedAt: DateTime.now().subtract(const Duration(days: 3)),
           citySlug: 'austin',
         ),
-        VerifiedVisit(
-          id: 2,
-          userId: 1,
-          restaurantId: restaurants[1].id,
-          restaurantName: restaurants[1].name,
-          restaurantAddress: restaurants[1].address,
-          rating: 4,
-          imageUrl: 'https://images.unsplash.com/photo-1558030006-450675393462?w=400&h=300&fit=crop',
-          verifiedAt: DateTime.now().subtract(const Duration(days: 10)),
-          citySlug: 'austin',
-        ),
-        VerifiedVisit(
-          id: 3,
-          userId: 1,
-          restaurantId: restaurants[2].id,
-          restaurantName: restaurants[2].name,
-          restaurantAddress: restaurants[2].address,
-          rating: 4,
-          imageUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop',
-          verifiedAt: DateTime.now().subtract(const Duration(days: 18)),
-          citySlug: 'austin',
-        ),
       ];
-      
-      // Sort fallback visits by verification date (most recent first)
-      fallbackVisits.sort((a, b) => b.verifiedAt.compareTo(a.verifiedAt));
       
       setState(() {
         verifiedVisits = fallbackVisits;

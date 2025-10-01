@@ -119,12 +119,13 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     print('  - Rating: ${widget.restaurant.rating}');
     print('  - Categories: ${widget.restaurant.categories}');
     return Scaffold(
+      backgroundColor: Colors.black,
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
           // Full-screen Hero Image with Parallax Effect
           SliverAppBar(
-            expandedHeight: MediaQuery.of(context).size.height, // Full screen height
+            expandedHeight: 400, // Reduced height for testing
             floating: false,
             pinned: true,
             backgroundColor: Colors.black, // Clean, solid app bar background

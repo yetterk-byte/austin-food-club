@@ -74,6 +74,22 @@
     /* Additional font fallbacks for Flutter web */
     body, html {
       font-family: 'Inter', 'Roboto Condensed', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: #000000 !important;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    
+    /* Force Flutter app container to be visible with red border for debugging */
+    #flutter-app, flt-glass-pane, flutter-view {
+      background-color: #000000 !important;
+      border: 3px solid red !important;
+      min-height: 100vh !important;
+    }
+    
+    /* Make sure Flutter canvas is visible */
+    canvas {
+      border: 2px solid green !important;
     }
     
     /* Monoton font for branding */
@@ -115,6 +131,11 @@
       }
       scriptLoaded = true;
       console.log('Creating script tag for main.dart.js');
+      
+      // Force HTML renderer for Safari compatibility
+      window.flutterWebRenderer = "html";
+      console.log('Using HTML renderer for better Safari compatibility');
+      
       var scriptTag = document.createElement('script');
       scriptTag.src = 'main.dart.js';
       scriptTag.type = 'application/javascript';
