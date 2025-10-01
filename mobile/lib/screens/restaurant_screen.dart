@@ -323,7 +323,9 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                          widget.restaurant.categories?.first.title ?? 'Restaurant',
+                          widget.restaurant.categories != null && widget.restaurant.categories!.isNotEmpty 
+                              ? widget.restaurant.categories!.first.title 
+                              : 'Restaurant',
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: Colors.orange,
                         ),
