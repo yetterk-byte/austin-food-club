@@ -7,7 +7,8 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "seed": "node prisma/seed.js",
-    "populate-queue": "node src/scripts/populateQueue.js"
+    "populate-queue": "node src/scripts/populateQueue.js",
+    "smoke": "node src/scripts/smokeTest.js"
   },
   "dependencies": {
     "@prisma/client": "^6.16.1",

@@ -10,6 +10,27 @@ This guide provides step-by-step instructions for implementing new API endpoints
 - Understanding of Express.js
 - Familiarity with our middleware system
 
+## Auth Flow (Dev vs Prod)
+
+- Dev:
+  - `POST /api/verification/send-code` returns `data.mockCode`.
+  - `POST /api/verification/verify-code` returns `data.authToken = mock-token-consistent` and `data.sessionToken`.
+  - The auth middleware accepts tokens starting with `mock-token` and creates/syncs a mock user.
+  - Mobile app persists the token and auto-attaches it to protected requests.
+
+- Prod:
+  - `verify-code` returns only a real `sessionToken`.
+  - You must include `Authorization: Bearer <sessionToken>` for protected routes.
+
+### Protected Endpoints
+- `POST /api/rsvp`
+- `GET /api/verified-visits`
+
+Use the header:
+```
+Authorization: Bearer <token>
+```
+
 ## Step-by-Step Implementation
 
 ### 1. Choose Your Endpoint Location

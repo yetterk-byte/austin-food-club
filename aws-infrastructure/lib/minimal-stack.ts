@@ -53,21 +53,10 @@ export class MinimalAustinFoodClubStack extends cdk.Stack {
       autoDeleteObjects: true,
     });
 
-    // Create CloudFront Origin Access Control
-    const originAccessControl = new cloudfront.CfnOriginAccessControl(this, 'OriginAccessControl', {
-      name: 'AustinFoodClubOAC',
-      description: 'OAC for Austin Food Club S3 bucket',
-      originAccessControlOriginType: 's3',
-      signingBehavior: 'always',
-      signingProtocol: 'sigv4',
-    });
-
     // Create CloudFront distribution
     const distribution = new cloudfront.Distribution(this, 'WebAppDistribution', {
       defaultBehavior: {
-        origin: new origins.S3Origin(webAppBucket, {
-          originAccessControlId: originAccessControl.ref,
-        }),
+        origin: new origins.S3Origin(webAppBucket),
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       },
       defaultRootObject: 'index.html',

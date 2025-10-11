@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../models/restaurant.dart';
 import '../models/verified_visit.dart';
-import '../services/mock_data_service.dart';
-import '../services/api_service.dart';
-import '../services/social_service.dart';
-import '../services/restaurant_service.dart';
 import '../services/verified_visits_service.dart';
-import '../providers/auth_provider.dart';
-import '../widgets/restaurant_search_widget.dart';
+import '../services/wishlist_service.dart';
+import '../models/restaurant.dart';
+import '../services/restaurant_service.dart';
 import 'photo_verification_screen.dart';
+import 'select_restaurant_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -19,449 +15,85 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final double averageRating = 4.2;
-  int friendCount = 0;
-  
   List<VerifiedVisit> verifiedVisits = [];
-  Restaurant? favoriteRestaurant;
+  List<dynamic> favorites = [];
+  bool isLoading = true;
+  bool _seeded = false;
 
   @override
   void initState() {
     super.initState();
     _loadVerifiedVisits();
-    _loadFriendCount();
-    _loadFavoriteRestaurant();
+    _loadFavorites();
   }
 
   Future<void> _loadVerifiedVisits() async {
     try {
-      print('🔍 ProfileScreen: Loading verified visits');
-      // Try to get real verified visits from our new API
-      final visits = await VerifiedVisitsService.getUserVisits(1); // TODO: Get from auth service
-      
-      if (visits.isNotEmpty) {
-        // Sort visits by verification date (most recent first)
-        visits.sort((a, b) => b.verifiedAt.compareTo(a.verifiedAt));
-        
-        setState(() {
-          verifiedVisits = visits;
-        });
-        print('✅ ProfileScreen: Loaded ${visits.length} verified visits from API (sorted by date)');
-      } else {
-        // Fallback to mock data if no real data available
-        final restaurants = await MockDataService.getAllRestaurantsMock();
-        final mockVisits = [
-          VerifiedVisit(
-            id: 1,
-            userId: 1,
-            restaurantId: restaurants[0].id,
-            restaurantName: restaurants[0].name,
-            restaurantAddress: restaurants[0].address,
-            rating: 5,
-            imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop',
-            verifiedAt: DateTime.now().subtract(const Duration(days: 3)),
-            citySlug: 'austin',
-          ),
-          VerifiedVisit(
-            id: 2,
-            userId: 1,
-            restaurantId: restaurants[1].id,
-            restaurantName: restaurants[1].name,
-            restaurantAddress: restaurants[1].address,
-            rating: 4,
-            imageUrl: 'https://images.unsplash.com/photo-1558030006-450675393462?w=400&h=300&fit=crop',
-            verifiedAt: DateTime.now().subtract(const Duration(days: 10)),
-            citySlug: 'austin',
-          ),
-          VerifiedVisit(
-            id: 3,
-            userId: 1,
-            restaurantId: restaurants[2].id,
-            restaurantName: restaurants[2].name,
-            restaurantAddress: restaurants[2].address,
-            rating: 4,
-            imageUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop',
-            verifiedAt: DateTime.now().subtract(const Duration(days: 18)),
-            citySlug: 'austin',
-          ),
-        ];
-        
-        // Sort mock visits by verification date (most recent first)
-        mockVisits.sort((a, b) => b.verifiedAt.compareTo(a.verifiedAt));
-      
+      final visits = await VerifiedVisitsService.getMyVisits(limit: 20);
       setState(() {
-          verifiedVisits = mockVisits;
+        verifiedVisits = visits;
+        isLoading = false;
       });
-        print('✅ ProfileScreen: Using mock verified visits data');
+
+      // Seed a couple of sample visits for test user if none exist
+      if (verifiedVisits.isEmpty && !_seeded) {
+        _seeded = true;
+        await _seedSampleVisits();
+        final refreshed = await VerifiedVisitsService.getMyVisits(limit: 20);
+        setState(() {
+          verifiedVisits = refreshed;
+        });
       }
     } catch (e) {
-      print('❌ ProfileScreen: Error loading verified visits: $e');
-      // Fallback to simple mock data on error
-      final fallbackVisits = [
-        VerifiedVisit(
-          id: 1,
-          userId: 1,
-          restaurantId: '1',
-          restaurantName: 'Sample Restaurant',
-          restaurantAddress: '123 Main St',
+      print('Error loading verified visits: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _seedSampleVisits() async {
+    try {
+      final featured = await RestaurantService.getFeaturedRestaurant();
+      if (featured != null) {
+        await VerifiedVisitsService.createVerifiedVisit(
+          restaurantId: featured.id,
+          restaurantName: featured.name,
+          restaurantAddress: featured.address,
           rating: 5,
-          imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop',
-          verifiedAt: DateTime.now().subtract(const Duration(days: 3)),
-          citySlug: 'austin',
-        ),
-      ];
-      
-      setState(() {
-        verifiedVisits = fallbackVisits;
-      });
-      print('✅ ProfileScreen: Using fallback mock verified visits data');
+          photoUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800',
+        );
+      }
+    } catch (e) {
+      print('Seed visits error: $e');
     }
   }
 
-  Future<void> _loadFriendCount() async {
+  Future<void> _loadFavorites() async {
     try {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final userId = authProvider.currentUser?.id ?? '1';
-      final friends = await SocialService.getFriends(userId);
-      
+      final favs = await WishlistService.getMyFavorites(limit: 50);
       setState(() {
-        friendCount = friends.length;
+        favorites = favs;
       });
     } catch (e) {
-      print('Error loading friend count: $e');
+      print('Error loading favorites: $e');
     }
-  }
-
-  Future<void> _loadFavoriteRestaurant() async {
-    try {
-      // For now, use mock data - in production this would come from user preferences
-      final restaurants = await MockDataService.getAllRestaurantsMock();
-      setState(() {
-        favoriteRestaurant = restaurants[2]; // Default to Uchi as favorite
-      });
-    } catch (e) {
-      print('Error loading favorite restaurant: $e');
-    }
-  }
-
-  void _showVerifyVisitModal() {
-        showModalBottomSheet(
-          context: context,
-          backgroundColor: Colors.grey[900],
-          isScrollControlled: true,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          builder: (context) {
-            return DraggableScrollableSheet(
-              initialChildSize: 0.75,
-              minChildSize: 0.5,
-              maxChildSize: 0.95,
-              expand: false,
-              builder: (context, scrollController) {
-                return Container(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-                  child: SingleChildScrollView(
-                    controller: scrollController,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Header
-                        Row(
-                          children: [
-                            const Icon(Icons.camera_alt, color: Colors.orange, size: 24),
-                            const SizedBox(width: 12),
-                            const Text(
-                              'Verify Visit',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            const Spacer(),
-                            IconButton(
-                              onPressed: () => Navigator.pop(context),
-                              icon: const Icon(Icons.close, color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        
-                        // Featured Restaurant Section
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Colors.orange.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.orange.withOpacity(0.3)),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  const Icon(Icons.star, color: Colors.orange, size: 20),
-                                  const SizedBox(width: 8),
-                                  const Text(
-                                    'This Week\'s Featured Restaurant',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.orange,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 12),
-                              FutureBuilder<Restaurant?>(
-                                future: RestaurantService.getFeaturedRestaurant(citySlug: 'austin'),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return const Center(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(20),
-                                        child: CircularProgressIndicator(color: Colors.orange),
-                                      ),
-                                    );
-                                  }
-                                  
-                                  if (snapshot.hasError || snapshot.data == null) {
-                                    return Container(
-                                      padding: const EdgeInsets.all(16),
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[800],
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: const Text(
-                                        'No featured restaurant this week',
-                                        style: TextStyle(color: Colors.grey),
-                                      ),
-                                    );
-                                  }
-                                  
-                              final featuredRestaurant = snapshot.data!;
-                              // Check if user has already verified this restaurant
-                              final hasVerified = verifiedVisits.any(
-                                (visit) => visit.restaurantId == featuredRestaurant.id || 
-                                          visit.restaurantName == featuredRestaurant.name
-                              );
-                              
-                              if (hasVerified) {
-                                return _buildAlreadyVerifiedCard(featuredRestaurant);
-                              } else {
-                                return _buildRestaurantCard(
-                                  featuredRestaurant,
-                                  isFeatured: true,
-                                  onTap: () => _verifyVisitToRestaurant(featuredRestaurant),
-                                );
-                              }
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        
-                        const SizedBox(height: 24),
-                        
-                        // Other Restaurants Section
-                        const Text(
-                          'Other Restaurants',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        
-                        // Smart search widget with fixed height
-                        SizedBox(
-                          height: 400, // Fixed height to prevent overflow
-                          child: RestaurantSearchWidget(
-                            onRestaurantSelected: _verifyVisitToRestaurant,
-                          ),
-                        ),
-                        
-                        const SizedBox(height: 20), // Extra bottom padding
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        );
-  }
-
-  Widget _buildRestaurantCard(Restaurant restaurant, {required bool isFeatured, required VoidCallback onTap}) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: Colors.grey[800],
-        borderRadius: BorderRadius.circular(12),
-        border: isFeatured ? Border.all(color: Colors.orange.withOpacity(0.5)) : null,
-      ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(16),
-        leading: CircleAvatar(
-          backgroundColor: isFeatured ? Colors.orange : Colors.grey[700],
-          radius: 24,
-          child: Text(
-            restaurant.name.substring(0, 1).toUpperCase(),
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-        ),
-        title: Text(
-          restaurant.name,
-          style: TextStyle(
-            fontWeight: isFeatured ? FontWeight.w600 : FontWeight.w500,
-            color: isFeatured ? Colors.orange : Colors.white,
-          ),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (restaurant.categories?.isNotEmpty == true)
-              Text(
-                restaurant.categories?.first.title ?? 'Restaurant',
-                style: const TextStyle(color: Colors.grey),
-              ),
-            Text(
-              restaurant.address,
-              style: const TextStyle(color: Colors.grey, fontSize: 12),
-            ),
-          ],
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (isFeatured)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.orange.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Text(
-                  'FEATURED',
-                  style: TextStyle(
-                    color: Colors.orange,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            const SizedBox(width: 8),
-            const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
-          ],
-        ),
-        onTap: onTap,
-      ),
-    );
-  }
-
-  void _verifyVisitToRestaurant(Restaurant restaurant) {
-    Navigator.pop(context); // Close the modal
-    
-    // Navigate directly to photo verification screen
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PhotoVerificationScreen(restaurant: restaurant),
-      ),
-    ).then((_) {
-      // Refresh verified visits when returning from photo verification
-      _loadVerifiedVisits();
-    });
-  }
-
-  void _showRestaurantSelector() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.grey[900],
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Choose Your Favorite Restaurant',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              const SizedBox(height: 16),
-              FutureBuilder<List<Restaurant>>(
-                future: MockDataService.getAllRestaurantsMock(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  
-                  if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  }
-                  
-                  final restaurants = snapshot.data ?? [];
-                  return Column(
-                    children: restaurants.map((restaurant) {
-                      return ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.orange,
-                          child: Text(
-                            restaurant.name.substring(0, 1),
-                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        title: Text(restaurant.name),
-                        subtitle: Text(restaurant.categories?.isNotEmpty == true 
-                            ? restaurant.categories!.first.title 
-                            : 'Restaurant'),
-                        trailing: favoriteRestaurant?.id == restaurant.id
-                            ? const Icon(Icons.favorite, color: Colors.white) // Filled for current favorite
-                            : const Icon(Icons.favorite_border, color: Colors.white), // Outline for options
-                        onTap: () {
-                          setState(() {
-                            favoriteRestaurant = restaurant;
-                          });
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('${restaurant.name} set as favorite!'),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
-                        },
-                      );
-                    }).toList(),
-                  );
-                },
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        );
-      },
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        title: const Text('Profile'),
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // User Header
+            // User Info Card
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -469,119 +101,85 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: Colors.grey[700]!),
               ),
-              child: Column(
+              child: Row(
                 children: [
-                  // Avatar and basic info
-                  Consumer<AuthProvider>(
-                    builder: (context, authProvider, child) {
-                      final user = authProvider.currentUser;
-                      if (user == null) return const SizedBox.shrink();
-                      
-                      return Row(
-                        children: [
-                          CircleAvatar(
-                            radius: 40,
-                            backgroundColor: Colors.orange,
-                            child: Text(
-                              user.initials,
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  user.name,
-                                  style: const TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Member since ${user.memberSince}',
-                                  style: TextStyle(
-                                    color: Colors.grey[400],
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    // TODO: Edit profile
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.orange,
-                                    foregroundColor: Colors.white,
-                                    minimumSize: const Size(120, 36),
-                                  ),
-                                  child: const Text('Edit Profile'),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Settings menu
-                          PopupMenuButton<String>(
-                            onSelected: (value) async {
-                              if (value == 'settings') {
-                                // TODO: Navigate to settings
-                              } else if (value == 'signout') {
-                                final authProvider = Provider.of<AuthProvider>(context, listen: false);
-                                await authProvider.signOut();
-                              }
-                            },
-                            itemBuilder: (context) => [
-                              const PopupMenuItem(
-                                value: 'settings',
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.settings, size: 20),
-                                    SizedBox(width: 12),
-                                    Text('Settings'),
-                                  ],
-                                ),
-                              ),
-                              const PopupMenuItem(
-                                value: 'signout',
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.logout, size: 20, color: Colors.red),
-                                    SizedBox(width: 12),
-                                    Text('Sign Out', style: TextStyle(color: Colors.red)),
-                                  ],
-                                ),
-                              ),
-                            ],
-                            icon: const Icon(Icons.more_vert, color: Colors.grey),
-                          ),
-                        ],
-                      );
-                    },
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundColor: Colors.orange,
+                    child: Text(
+                      'TU',
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 20),
-                  // Stats
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _buildStatItem('Verified Visits', verifiedVisits.length.toString(), Icons.verified),
-                      _buildStatItem('Avg Rating', averageRating.toString(), Icons.star),
-                      _buildStatItem('Friends', friendCount.toString(), Icons.people),
-                    ],
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Test User',
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'test@example.com',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[400],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 24),
-            
-            // Quick Actions
+
+            // Profile Stats (Verified Visits, Avg Rating, Friends)
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.grey[900],
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.grey[700]!),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildStatItem('Verified Visits', verifiedVisits.length.toString(), Icons.verified),
+                  _buildStatItem(
+                    'Avg Rating',
+                    verifiedVisits.isEmpty
+                        ? '-'
+                        : (verifiedVisits
+                                .map((v) => v.rating)
+                                .fold<int>(0, (sum, r) => sum + r) /
+                            verifiedVisits.length)
+                            .toStringAsFixed(1),
+                    Icons.star,
+                  ),
+                  _buildStatItem('Friends', '0', Icons.people),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Verify Visit (moved above Favorites)
+            _buildVerifyVisitBox(context),
+            const SizedBox(height: 24),
+
+            // Favorites (Wishlist)
+            Container(
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Colors.grey[900],
                 borderRadius: BorderRadius.circular(16),
@@ -591,184 +189,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Quick Actions',
+                    'Favorite Restaurants',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w400,
+                      color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildActionButton(
-                          'Verify Visit',
-                          Icons.camera_alt,
-                          Colors.orange,
-                          _showVerifyVisitModal,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _buildActionButton(
-                          'Share Profile',
-                          Icons.share,
-                          Colors.blue,
-                          () {
-                            // TODO: Share profile
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-            
-            // Favorite Restaurant - Full Photo with Overlay
-            if (favoriteRestaurant != null)
-              _buildFavoriteRestaurantCard(favoriteRestaurant!)
-            else
-              Container(
-                width: double.infinity,
-                constraints: const BoxConstraints(
-                  maxHeight: 300, // Reasonable max height
-                ),
-                child: AspectRatio(
-                  aspectRatio: 1.0, // Perfect square
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[800],
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.grey[600]!, width: 2),
-                    ),
-                    child: Stack(
-                      children: [
-                        // Background pattern or placeholder
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Colors.grey[800]!,
-                                Colors.grey[900]!,
-                              ],
-                            ),
-                          ),
-                        ),
-                        // "Favorite Restaurant" title overlay
-                        Positioned(
-                          top: 20,
-                          left: 20,
-                          right: 20,
-                          child: const Text(
-                            'Favorite Restaurant',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        // Center content
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.favorite_border,
-                                size: 60,
-                                color: Colors.grey[500],
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                'No favorite selected',
-                                style: TextStyle(
-                                  color: Colors.grey[400],
-                                  fontSize: 16,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Tap ♡ on any verified visit',
-                                style: TextStyle(
-                                  color: Colors.grey[500],
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            const SizedBox(height: 24),
-            
-            // Verified Visits
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.grey[900],
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey[700]!),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Verified Visits',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      Text(
-                        '${verifiedVisits.length} visits',
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  if (verifiedVisits.isEmpty)
-                    Container(
-                      padding: const EdgeInsets.all(32),
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.camera_alt_outlined,
-                            size: 48,
-                            color: Colors.grey[600],
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'No verified visits yet',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey[400],
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Join weekly events and verify your attendance!',
-                            style: TextStyle(
-                              color: Colors.grey[500],
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    )
+                  if (favorites.isEmpty)
+                    Text('No favorites yet', style: TextStyle(color: Colors.grey[400]))
                   else
                     GridView.builder(
                       shrinkWrap: true,
@@ -777,19 +207,140 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         crossAxisCount: 2,
                         crossAxisSpacing: 12,
                         mainAxisSpacing: 12,
-                        childAspectRatio: 1,
+                        childAspectRatio: 3 / 2,
                       ),
-                      itemCount: verifiedVisits.length,
+                      itemCount: favorites.length.clamp(0, 4),
                       itemBuilder: (context, index) {
-                        final visit = verifiedVisits[index];
-                        return _buildVerifiedVisitCard(visit);
+                        final r = favorites[index];
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              Image.network(
+                                r.imageUrl ?? 'https://via.placeholder.com/300x200',
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) => Container(color: Colors.grey[800]),
+                              ),
+                              Container(color: Colors.black45),
+                              Positioned(
+                                left: 8,
+                                right: 8,
+                                bottom: 8,
+                                child: Text(
+                                  r.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
                       },
                     ),
                 ],
               ),
             ),
-            
-            const SizedBox(height: 100), // Bottom padding for navigation
+            const SizedBox(height: 24),
+
+            // Verified Visits
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.grey[900],
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.grey[700]!),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Recent Verified Visits',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  if (isLoading)
+                    const Center(child: CircularProgressIndicator())
+                  else if (verifiedVisits.isEmpty)
+                    const Center(
+                      child: Text(
+                        'No verified visits yet',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    )
+                  else
+                    ...verifiedVisits.take(5).map((visit) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(
+                              visit.imageUrl ?? 'https://via.placeholder.com/60x60',
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  width: 60,
+                                  height: 60,
+                                  color: Colors.grey[800],
+                                  child: const Icon(Icons.restaurant, color: Colors.grey),
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  visit.restaurantName,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Text(
+                                  visit.restaurantAddress,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[400],
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    ...List.generate(5, (index) => Icon(
+                                      index < visit.rating ? Icons.star : Icons.star_border,
+                                      size: 16,
+                                      color: Colors.orange,
+                                    )),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      visit.formattedDate,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey[500],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -805,254 +356,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
           value,
           style: const TextStyle(
             fontSize: 20,
-                    fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
         Text(
           label,
           style: TextStyle(
-            color: Colors.grey[400],
             fontSize: 12,
+            color: Colors.grey[400],
           ),
         ),
       ],
     );
   }
 
-  Widget _buildFavoriteRestaurantCard(Restaurant restaurant) {
-    return AspectRatio(
-      aspectRatio: 1.0, // Perfect square
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.red.withOpacity(0.4), width: 2),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(14),
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              // Background restaurant image
-              Image.network(
-                restaurant.imageUrl ?? 'https://via.placeholder.com/400x400?text=Restaurant',
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Colors.grey[800],
-                    child: const Center(
-                      child: Icon(Icons.restaurant, size: 60, color: Colors.white54),
-                    ),
-                  );
-                },
-              ),
-              // Gradient overlay for text readability
-              Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.black.withOpacity(0.7), // Darker at top for titles
-                      Colors.transparent,
-                      Colors.transparent,
-                      Colors.black.withOpacity(0.8), // Darker at bottom for details
-                    ],
-                    stops: const [0.0, 0.3, 0.7, 1.0],
-                  ),
-                ),
-              ),
-              // "Favorite Restaurant" title at top-left
-              Positioned(
-                top: 20,
-                left: 20,
-                right: 80, // Leave space for heart
-                child: Text(
-                  'Favorite Restaurant',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black54,
-                        blurRadius: 4,
-                        offset: Offset(1, 1),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              // Favorite heart badge (top-right)
-              Positioned(
-                top: 16,
-                right: 16,
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.9),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.red.withOpacity(0.4),
-                        blurRadius: 10,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: const Icon(
-                    Icons.favorite,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
-              ),
-              // Bottom content - name, cuisine and stars
-              Positioned(
-                bottom: 20,
-                left: 20,
-                right: 20,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Restaurant name
-                    Text(
-                      restaurant.name,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black54,
-                            blurRadius: 6,
-                            offset: Offset(2, 2),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    // Cuisine type
-                    Text(
-                      restaurant.categories?.first.title ?? 'Restaurant',
-                      style: TextStyle(
-                        color: Colors.orange.shade300,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        shadows: const [
-                          Shadow(
-                            color: Colors.black54,
-                            blurRadius: 4,
-                            offset: Offset(1, 1),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    // Star rating
-                    Row(
-                      children: List.generate(5, (index) {
-                        final rating = restaurant.rating ?? 0.0;
-                        return Icon(
-                          index < rating.floor()
-                              ? Icons.star
-                              : (index < rating ? Icons.star_half : Icons.star_border),
-                          color: Colors.white,
-                          size: 18,
-                        );
-                      }),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActionButton(String label, IconData icon, Color color, VoidCallback onPressed) {
-    return ElevatedButton.icon(
-      onPressed: onPressed,
-      icon: Icon(icon, size: 20),
-      label: Text(label),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAlreadyVerifiedCard(Restaurant restaurant) {
-    return Container(
-      padding: const EdgeInsets.all(16),
+  Widget _buildVerifyVisitBox(BuildContext context) {
+    return Container
+    (
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.grey[800],
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.green.withOpacity(0.3)),
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey[700]!),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Check mark icon
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Icon(
-              Icons.check_circle,
-              color: Colors.green,
-              size: 24,
+          const Text(
+            'Verify a Visit',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w400,
+              color: Colors.white,
             ),
           ),
-          const SizedBox(width: 12),
-          // Restaurant info
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  restaurant.name,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '${restaurant.name} has already been verified',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.green[300],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Verified badge
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              'VERIFIED',
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-                color: Colors.green[300],
-                letterSpacing: 0.5,
+          const SizedBox(height: 12),
+          Text('Choose a restaurant to verify your visit with a photo and rating.', style: TextStyle(color: Colors.grey[400])),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => _openVerifyModal(context),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
+              child: const Text('Verify Visit'),
             ),
           ),
         ],
@@ -1060,159 +412,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildVerifiedVisitCard(VerifiedVisit visit) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        image: DecorationImage(
-          image: NetworkImage(visit.imageUrl ?? 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop'),
-          fit: BoxFit.cover,
-        ),
+  void _openVerifyModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.grey[900],
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.transparent,
-              Colors.black.withOpacity(0.8),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[700],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'Verify a Visit',
+                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 8),
+              Text('Choose how you want to verify your visit:', style: TextStyle(color: Colors.grey[400])),
+              const SizedBox(height: 16),
+              ListTile(
+                leading: const Icon(Icons.star_rate_rounded, color: Colors.orange),
+                title: const Text('Featured Restaurant', style: TextStyle(color: Colors.white)),
+                subtitle: Text('Verify the current featured restaurant', style: TextStyle(color: Colors.grey[400])),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final featured = await RestaurantService.getFeaturedRestaurant();
+                  if (featured != null) {
+                    // ignore: use_build_context_synchronously
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => PhotoVerificationScreen(restaurant: featured)));
+                  } else {
+                    // ignore: use_build_context_synchronously
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('No featured restaurant available'), backgroundColor: Colors.red),
+                    );
+                  }
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.restaurant_rounded, color: Colors.white),
+                title: const Text('Any Restaurant', style: TextStyle(color: Colors.white)),
+                subtitle: Text('Search and select any restaurant', style: TextStyle(color: Colors.grey[400])),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final selected = await Navigator.push<Restaurant>(context, MaterialPageRoute(builder: (_) => const SelectRestaurantScreen()));
+                  if (selected != null) {
+                    // ignore: use_build_context_synchronously
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => PhotoVerificationScreen(restaurant: selected)));
+                  }
+                },
+              ),
+              const SizedBox(height: 8),
             ],
           ),
-        ),
-        padding: const EdgeInsets.all(12),
-        child: Stack(
-          children: [
-            // Heart button in top-right
-            Positioned(
-              top: 0,
-              right: 0,
-              child: GestureDetector(
-                onTap: () {
-                  // Create a Restaurant object from the verified visit data
-                  final restaurant = Restaurant(
-                    id: visit.restaurantId,
-                    yelpId: visit.restaurantId,
-                    name: visit.restaurantName,
-                    address: visit.restaurantAddress,
-                    city: 'Austin',
-                    state: 'TX',
-                    zipCode: '',
-                    latitude: 0.0,
-                    longitude: 0.0,
-                    imageUrl: visit.imageUrl,
-                    rating: visit.rating.toDouble(),
-                    categories: [],
-                  );
-                  setState(() {
-                    favoriteRestaurant = restaurant;
-                  });
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('${visit.restaurantName} set as favorite!'),
-                      backgroundColor: Colors.green,
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: favoriteRestaurant?.id == visit.restaurantId
-                        ? Colors.red.withOpacity(0.9) // Red background for favorite
-                        : Colors.transparent, // Transparent for clickable hearts
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.white.withOpacity(0.6), // White border for all
-                      width: 1.5,
-                    ),
-                  ),
-                  child: Icon(
-                    favoriteRestaurant?.id == visit.restaurantId
-                        ? Icons.favorite // Filled heart for current favorite
-                        : Icons.favorite_border, // Outline heart for clickable options
-                    color: Colors.white,
-                    size: 14,
-                  ),
-                ),
-              ),
-            ),
-            // Content at bottom
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-            Text(
-              visit.restaurantName,
-              style: const TextStyle(
-                fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                color: Colors.white,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                ...List.generate(5, (index) {
-                  return Icon(
-                    index < visit.rating
-                        ? Icons.star
-                        : Icons.star_border,
-                    color: Colors.white,
-                    size: 12,
-                  );
-                }),
-                const SizedBox(width: 4),
-                Text(
-                  visit.rating.toString(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-                  Text(
-                    _formatDate(visit.verifiedAt),
-                    style: TextStyle(
-                      color: Colors.grey[300],
-                      fontSize: 10,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+        );
+      },
     );
   }
-
-  String _formatDate(DateTime date) {
-    final now = DateTime.now();
-    final difference = now.difference(date).inDays;
-    
-    if (difference == 0) {
-      return 'Today';
-    } else if (difference == 1) {
-      return 'Yesterday';
-    } else if (difference < 7) {
-      return '$difference days ago';
-    } else if (difference < 30) {
-      final weeks = (difference / 7).floor();
-      return '$weeks ${weeks == 1 ? 'week' : 'weeks'} ago';
-    } else {
-      final months = (difference / 30).floor();
-      return '$months ${months == 1 ? 'month' : 'months'} ago';
-    }
-  }
 }
-
-

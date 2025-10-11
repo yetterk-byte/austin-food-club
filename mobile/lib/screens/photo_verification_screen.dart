@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../models/restaurant.dart';
-import '../models/verified_visit.dart';
 import '../services/verified_visits_service.dart';
 
 class PhotoVerificationScreen extends StatefulWidget {
@@ -404,15 +403,20 @@ class _PhotoVerificationScreenState extends State<PhotoVerificationScreen> {
 
     try {
       print('🔍 PhotoVerificationScreen: Submitting verification for ${widget.restaurant.name}');
-      
+      // Ensure we have a database restaurant id
+      String effectiveRestaurantId = widget.restaurant.id;
+      final ensured = await VerifiedVisitsService.ensureRestaurantId(widget.restaurant);
+      if (ensured != null && ensured.isNotEmpty) {
+        effectiveRestaurantId = ensured;
+      }
+
       // Create verified visit
       final verifiedVisit = await VerifiedVisitsService.createVerifiedVisit(
-        userId: 1, // TODO: Get from auth service
-        restaurantId: widget.restaurant.id,
+        restaurantId: effectiveRestaurantId,
         restaurantName: widget.restaurant.name,
         restaurantAddress: widget.restaurant.address,
         rating: _rating,
-        imageUrl: _selectedImagePath,
+        photoUrl: _selectedImagePath!,
         citySlug: 'austin',
       );
       

@@ -20,6 +20,30 @@ update_frontend() {
     # Upload to S3
     echo "Uploading to S3..."
     aws s3 sync build/web/ s3://austinfoodclub-frontend --region us-east-1
+
+    # Force fresh loads for critical files (avoid stale SW)
+    echo "Setting no-cache headers for critical files..."
+    aws s3 cp build/web/index.html s3://austinfoodclub-frontend/index.html \
+      --region us-east-1 \
+      --cache-control "no-cache, no-store, must-revalidate" \
+      --content-type "text/html" \
+      --metadata-directive REPLACE
+
+    if [ -f build/web/flutter_service_worker.js ]; then
+      aws s3 cp build/web/flutter_service_worker.js s3://austinfoodclub-frontend/flutter_service_worker.js \
+        --region us-east-1 \
+        --cache-control "no-cache, no-store, must-revalidate" \
+        --content-type "application/javascript" \
+        --metadata-directive REPLACE
+    fi
+
+    if [ -f build/web/version.json ]; then
+      aws s3 cp build/web/version.json s3://austinfoodclub-frontend/version.json \
+        --region us-east-1 \
+        --cache-control "no-cache, no-store, must-revalidate" \
+        --content-type "application/json" \
+        --metadata-directive REPLACE
+    fi
     
     # Invalidate CloudFront cache
     echo "Invalidating CloudFront cache..."

@@ -18,9 +18,21 @@ router.post('/send-code',
     phone: { type: 'string', required: true, pattern: /^\+1\d{10}$/ }
   }),
   asyncHandler(async (req, res) => {
-    // Manual CORS header for austinfoodclub.com
-    res.header('Access-Control-Allow-Origin', 'https://austinfoodclub.com');
-    res.header('Access-Control-Allow-Credentials', 'true');
+    // Respect allowed origins for CORS (support prod + localhost during dev)
+    const origin = req.headers.origin;
+    const allowedOrigins = [
+      'https://austinfoodclub.com',
+      'https://www.austinfoodclub.com',
+      'https://admin.austinfoodclub.com',
+      'http://localhost:8080',
+      'http://localhost:8081',
+      'http://localhost:8082',
+      'http://localhost:3000'
+    ];
+    if (origin && allowedOrigins.includes(origin)) {
+      res.header('Access-Control-Allow-Origin', origin);
+      res.header('Access-Control-Allow-Credentials', 'true');
+    }
     
     const { phone } = req.body;
     
@@ -64,9 +76,21 @@ router.post('/verify-code',
     name: { type: 'string', required: false }
   }),
   asyncHandler(async (req, res) => {
-    // Manual CORS header for austinfoodclub.com
-    res.header('Access-Control-Allow-Origin', 'https://austinfoodclub.com');
-    res.header('Access-Control-Allow-Credentials', 'true');
+    // Respect allowed origins for CORS (support prod + localhost during dev)
+    const origin = req.headers.origin;
+    const allowedOrigins = [
+      'https://austinfoodclub.com',
+      'https://www.austinfoodclub.com',
+      'https://admin.austinfoodclub.com',
+      'http://localhost:8080',
+      'http://localhost:8081',
+      'http://localhost:8082',
+      'http://localhost:3000'
+    ];
+    if (origin && allowedOrigins.includes(origin)) {
+      res.header('Access-Control-Allow-Origin', origin);
+      res.header('Access-Control-Allow-Credentials', 'true');
+    }
     
     const { phone, code, name } = req.body;
     
@@ -156,6 +180,8 @@ router.post('/verify-code',
       // Generate a simple session token (in production, use JWT)
       const sessionToken = Buffer.from(`${user.id}:${Date.now()}`).toString('base64');
       
+      const isDev = process.env.NODE_ENV !== 'production';
+
       res.json({
         success: true,
         message: 'Verification successful',
@@ -171,6 +197,7 @@ router.post('/verify-code',
             createdAt: user.createdAt
           },
           sessionToken: sessionToken,
+          authToken: isDev ? 'mock-token-consistent' : sessionToken,
           isNewUser: !user.lastLogin || (new Date() - user.lastLogin) < 60000 // New if created within last minute
         },
         timestamp: new Date().toISOString()

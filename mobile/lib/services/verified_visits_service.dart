@@ -1,20 +1,59 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../models/restaurant.dart';
 import '../models/verified_visit.dart';
 
 class VerifiedVisitsService {
   static const String baseUrl = 'https://api.austinfoodclub.com/api';
 
-  /// Get verified visits for a user
-  static Future<List<VerifiedVisit>> getUserVisits(int userId) async {
+  static final RegExp _cuidPattern = RegExp(r'^c[a-z0-9]{24,}$');
+
+  /// Ensure we have a database restaurantId. If only Yelp data is present, sync it first.
+  static Future<String?> ensureRestaurantId(Restaurant restaurant) async {
+    // If it already looks like a Prisma cuid, use it as-is
+    if (restaurant.id.isNotEmpty && _cuidPattern.hasMatch(restaurant.id)) {
+      return restaurant.id;
+    }
+    // Try to sync using Yelp ID
+    if ((restaurant.yelpId).isNotEmpty) {
+      try {
+        final res = await http.post(
+          Uri.parse('$baseUrl/restaurants/sync'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer mock-token-consistent',
+          },
+          body: json.encode({ 'yelpId': restaurant.yelpId }),
+        );
+        if (res.statusCode == 200) {
+          final data = json.decode(res.body);
+          final synced = (data['restaurant'] ?? data['data']) as Map<String, dynamic>?;
+          final dbId = synced != null ? (synced['id'] ?? '').toString() : '';
+          if (dbId.isNotEmpty) return dbId;
+        } else {
+          print('❌ ensureRestaurantId: sync failed ${res.statusCode} ${res.body}');
+        }
+      } catch (e) {
+        print('❌ ensureRestaurantId error: $e');
+      }
+    }
+    return null;
+  }
+
+  /// Get current user's verified visits (uses mock auth token in dev)
+  static Future<List<VerifiedVisit>> getMyVisits({int limit = 20}) async {
     try {
-      print('🔍 VerifiedVisitsService: Getting visits for user $userId');
-      
+      final uri = Uri.parse('$baseUrl/verified-visits').replace(queryParameters: {
+        'limit': limit.toString(),
+      });
+
       final response = await http.get(
-        Uri.parse('$baseUrl/verified-visits/user/$userId'),
+        uri,
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          'Authorization': 'Bearer mock-token-consistent',
         },
       );
       
@@ -22,30 +61,29 @@ class VerifiedVisitsService {
       
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        
-        // Handle standardized API response format
-        if (responseData['success'] == true && responseData['data'] != null) {
-          final Map<String, dynamic> data = responseData['data'];
-          if (data['visits'] != null) {
-            final List<dynamic> visitsData = data['visits'];
-            final visits = visitsData.map((json) => VerifiedVisit.fromJson(json)).toList();
-            
-            print('✅ VerifiedVisitsService: Found ${visits.length} visits for user $userId');
-            return visits;
-          }
+
+        // Standardized paginated format
+        final List<dynamic> items = (responseData['data'] ?? responseData['visits'] ?? []) as List<dynamic>;
+        final visits = <VerifiedVisit>[];
+        for (var i = 0; i < items.length; i++) {
+          final item = items[i] as Map<String, dynamic>;
+          final restaurant = (item['restaurant'] ?? {}) as Map<String, dynamic>;
+          visits.add(
+            VerifiedVisit(
+              id: i + 1,
+              userId: 0,
+              restaurantId: (restaurant['id'] ?? item['restaurantId'] ?? '').toString(),
+              restaurantName: (restaurant['name'] ?? '').toString(),
+              restaurantAddress: (restaurant['address'] ?? '').toString(),
+              rating: (item['rating'] ?? 0) is int ? item['rating'] : int.tryParse('${item['rating']}') ?? 0,
+              imageUrl: (item['photoUrl'] ?? item['imageUrl'])?.toString(),
+              verifiedAt: DateTime.tryParse(item['visitDate']?.toString() ?? '') ?? DateTime.now(),
+              citySlug: (restaurant['city'] ?? 'austin').toString(),
+            ),
+          );
         }
-        
-        // Fallback to old format for backward compatibility
-        if (responseData['success'] == true && responseData['visits'] != null) {
-          final List<dynamic> visitsData = responseData['visits'];
-          final visits = visitsData.map((json) => VerifiedVisit.fromJson(json)).toList();
-          
-          print('✅ VerifiedVisitsService: Found ${visits.length} visits for user $userId');
-          return visits;
-        }
-        
-        print('❌ VerifiedVisitsService: API returned unsuccessful response');
-        return [];
+        print('✅ VerifiedVisitsService: Found ${visits.length} visits');
+        return visits;
       } else {
         print('❌ VerifiedVisitsService: HTTP ${response.statusCode}: ${response.body}');
         return [];
@@ -58,31 +96,29 @@ class VerifiedVisitsService {
 
   /// Create a new verified visit
   static Future<VerifiedVisit?> createVerifiedVisit({
-    required int userId,
     required String restaurantId,
     required String restaurantName,
     required String restaurantAddress,
     required int rating,
-    String? imageUrl,
+    required String photoUrl,
     String citySlug = 'austin',
   }) async {
     try {
-      print('🔍 VerifiedVisitsService: Creating visit for user $userId at $restaurantName');
+      print('🔍 VerifiedVisitsService: Creating visit for $restaurantName');
       
       final response = await http.post(
         Uri.parse('$baseUrl/verified-visits'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          'Authorization': 'Bearer mock-token-consistent',
         },
         body: json.encode({
-          'userId': userId,
           'restaurantId': restaurantId,
-          'restaurantName': restaurantName,
-          'restaurantAddress': restaurantAddress,
           'rating': rating,
-          'imageUrl': imageUrl,
-          'citySlug': citySlug,
+          'photoUrl': photoUrl,
+          'review': null,
+          'visitDate': DateTime.now().toIso8601String(),
         }),
       );
       
@@ -90,15 +126,21 @@ class VerifiedVisitsService {
       
       if (response.statusCode == 201) {
         final data = json.decode(response.body);
-        
-        if (data['success'] == true && data['visit'] != null) {
-          final visit = VerifiedVisit.fromJson(data['visit']);
-          print('✅ VerifiedVisitsService: Created visit ${visit.id} for $restaurantName');
-          return visit;
-        } else {
-          print('❌ VerifiedVisitsService: API returned unsuccessful response');
-          return null;
-        }
+        final item = (data['data'] ?? data['visit'] ?? {}) as Map<String, dynamic>;
+        final restaurant = (item['restaurant'] ?? {}) as Map<String, dynamic>;
+        final visit = VerifiedVisit(
+          id: 1,
+          userId: 0,
+          restaurantId: (restaurant['id'] ?? restaurantId).toString(),
+          restaurantName: (restaurant['name'] ?? restaurantName).toString(),
+          restaurantAddress: (restaurant['address'] ?? restaurantAddress).toString(),
+          rating: (item['rating'] ?? rating) is int ? (item['rating'] ?? rating) : int.tryParse('${item['rating']}') ?? rating,
+          imageUrl: (item['photoUrl'] ?? photoUrl).toString(),
+          verifiedAt: DateTime.tryParse(item['visitDate']?.toString() ?? '') ?? DateTime.now(),
+          citySlug: (restaurant['city'] ?? citySlug).toString(),
+        );
+        print('✅ VerifiedVisitsService: Created visit for $restaurantName');
+        return visit;
       } else {
         print('❌ VerifiedVisitsService: HTTP ${response.statusCode}: ${response.body}');
         return null;

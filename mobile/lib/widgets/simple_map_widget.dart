@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+// The following imports are only used on web. They are ignored on other platforms.
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
+// Web-only registry for HTML views
+// ignore: undefined_prefixed_name
+import 'dart:ui_web' as ui;
 
 class SimpleMapWidget extends StatelessWidget {
   final double? latitude;
@@ -102,8 +109,53 @@ class SimpleMapWidget extends StatelessWidget {
     final lat = latitude ?? _defaultLat;
     final lng = longitude ?? _defaultLng;
     
+    // On web, render an embedded Google Map iframe (no API key required for basic embed)
+    if (kIsWeb) {
+      final viewId = 'map-iframe-$lat-$lng-${address ?? ''}';
+      final embedUrl = 'https://www.google.com/maps?q=$lat,$lng&z=15&output=embed';
+      // ignore: undefined_prefixed_name
+      ui.platformViewRegistry.registerViewFactory(viewId, (int _) {
+        final element = html.IFrameElement()
+          ..src = embedUrl
+          ..style.border = '0'
+          ..allowFullscreen = false
+          ..allow = 'geolocation'
+          ..width = '100%'
+          ..height = '100%';
+        return element;
+      });
+
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: SizedBox(
+          height: 220,
+          width: double.infinity,
+          child: Stack(
+            children: [
+              HtmlElementView(viewType: viewId),
+              Positioned(
+                bottom: 8,
+                right: 8,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  ),
+                  onPressed: () => _openMap(context),
+                  icon: const Icon(Icons.open_in_new, size: 16),
+                  label: const Text('Open in Maps'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // Fallback (non-web) - tap-to-open placeholder
     return Container(
-      height: 200,
+      height: 220,
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -123,92 +175,15 @@ class SimpleMapWidget extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             onTap: () => _openMap(context),
-            child: Stack(
-              children: [
-                // Map-like background pattern
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Colors.blue.shade100,
-                        Colors.green.shade100,
-                      ],
-                    ),
-                  ),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.map,
-                          size: 48,
-                          color: Colors.blue.shade600,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Tap to open in Maps',
-                          style: TextStyle(
-                            color: Colors.blue.shade700,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          address ?? 'Restaurant Location',
-                          style: TextStyle(
-                            color: Colors.grey.shade700,
-                            fontSize: 12,
-                          ),
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                // Google Maps logo
-                Positioned(
-                  bottom: 8,
-                  right: 8,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(4),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.map,
-                          size: 16,
-                          color: Colors.blue.shade600,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Google Maps',
-                          style: TextStyle(
-                            color: Colors.grey.shade700,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.map, size: 48, color: Colors.blue.shade600),
+                  const SizedBox(height: 8),
+                  Text('Tap to open in Maps', style: TextStyle(color: Colors.blue.shade700, fontSize: 16, fontWeight: FontWeight.w600)),
+                ],
+              ),
             ),
           ),
         ),

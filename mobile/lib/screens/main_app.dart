@@ -6,6 +6,7 @@ import 'friends_screen.dart';
 import '../models/restaurant.dart';
 import '../services/restaurant_service.dart';
 import '../widgets/api_status_indicator.dart';
+import '../config/feature_flags.dart';
 
 class NavItem {
   final IconData icon;
@@ -31,8 +32,8 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   int _currentIndex = 0;
   Restaurant? featuredRestaurant;
-  bool isLoading = true;
-  double _bottomNavOpacity = 0.0; // Control bottom nav visibility
+  double _bottomNavOpacity = 0.0;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -42,18 +43,16 @@ class _MainAppState extends State<MainApp> {
 
   Future<void> _loadFeaturedRestaurant() async {
     try {
-      print('🏠 MainApp: Starting to load featured restaurant...');
       final restaurant = await RestaurantService.getFeaturedRestaurant();
-      print('🏠 MainApp: Restaurant loaded: ${restaurant?.name}');
+      if (!mounted) return;
       setState(() {
         featuredRestaurant = restaurant;
-        isLoading = false;
+        _isLoading = false;
       });
-      print('🏠 MainApp: State updated - isLoading: false, restaurant: ${restaurant?.name}');
     } catch (e) {
-      print('❌ MainApp: Error loading featured restaurant: $e');
+      if (!mounted) return;
       setState(() {
-        isLoading = false;
+        _isLoading = false;
       });
     }
   }
@@ -61,14 +60,12 @@ class _MainAppState extends State<MainApp> {
   void _onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
-      // Reset bottom nav opacity when switching away from restaurant screen
       if (index != 0) {
         _bottomNavOpacity = 1.0;
       }
     });
   }
 
-  // Callback to update bottom nav opacity based on scroll position
   void _updateBottomNavOpacity(double opacity) {
     if (_bottomNavOpacity != opacity) {
       setState(() {
@@ -78,26 +75,12 @@ class _MainAppState extends State<MainApp> {
   }
 
   Widget _buildFloatingCircularNav() {
-    final List<NavItem> navItems = [
-      NavItem(
-        icon: Icons.restaurant,
-        activeIcon: Icons.restaurant,
-        label: 'This Week',
-        index: 0,
-      ),
-      NavItem(
-        icon: Icons.people_outline,
-        activeIcon: Icons.people,
-        label: 'Friends',
-        index: 1,
-      ),
-      NavItem(
-        icon: Icons.person_outline,
-        activeIcon: Icons.person,
-        label: 'Profile',
-        index: 2,
-      ),
-    ];
+    final List<NavItem> navItems = [];
+    navItems.add(NavItem(icon: Icons.restaurant, activeIcon: Icons.restaurant, label: 'This Week', index: 0));
+    if (FeatureFlags.enableFriends) {
+      navItems.add(NavItem(icon: Icons.groups_rounded, activeIcon: Icons.groups, label: 'Friends', index: navItems.length));
+    }
+    navItems.add(NavItem(icon: Icons.account_circle_rounded, activeIcon: Icons.account_circle, label: 'Profile', index: navItems.length));
 
     return Center(
       child: Container(
@@ -112,7 +95,7 @@ class _MainAppState extends State<MainApp> {
 
   Widget _buildCircularNavItem(NavItem item) {
     final bool isSelected = _currentIndex == item.index;
-    
+
     return GestureDetector(
       onTap: () => _onTabTapped(item.index),
       child: AnimatedContainer(
@@ -127,13 +110,12 @@ class _MainAppState extends State<MainApp> {
             child: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-            color: isSelected 
-                ? Colors.orange.withOpacity(0.25) // More see-through orange
-                : Colors.black.withOpacity(0.2), // More see-through black
-                // No border/outline as requested
+                color: isSelected
+                    ? Colors.orange.withOpacity(0.25)
+                    : Colors.black.withOpacity(0.2),
                 boxShadow: [
                   BoxShadow(
-                    color: isSelected 
+                    color: isSelected
                         ? Colors.orange.withOpacity(0.3)
                         : Colors.black.withOpacity(0.2),
                     blurRadius: isSelected ? 15 : 10,
@@ -141,75 +123,103 @@ class _MainAppState extends State<MainApp> {
                   ),
                 ],
               ),
-          child: Center(
-            child: Icon(
-              isSelected ? item.activeIcon : item.icon,
-              color: Colors.white, // Always white for maximum visibility
-              size: isSelected ? 26 : 22, // Smaller icons for smaller buttons
+              child: Center(
+                child: Icon(
+                  item.icon,
+                  color: Colors.white,
+                  size: isSelected ? 26 : 22,
+                ),
+              ),
             ),
-          ),
           ),
         ),
       ),
-    ),
-  );
+    );
   }
 
   List<Widget> get _screens {
-    return [
-      featuredRestaurant != null 
+    final bool hasRestaurant = featuredRestaurant != null;
+    final List<Widget> screens = [];
+    screens.add(
+      hasRestaurant
           ? RestaurantScreen(
               restaurant: featuredRestaurant!,
               onScrollOpacityChanged: _currentIndex == 0 ? _updateBottomNavOpacity : null,
             )
-          : const Center(child: CircularProgressIndicator(color: Colors.orange)),
-      const FriendsScreen(),
-      const ProfileScreen(),
-    ];
+          : _buildRestaurantUnavailable(),
+    );
+    if (FeatureFlags.enableFriends) {
+      screens.add(const FriendsScreen());
+    }
+    screens.add(const ProfileScreen());
+    return screens;
+  }
+
+  Widget _buildRestaurantUnavailable() {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.wifi_off_rounded, size: 80, color: Colors.orange),
+              const SizedBox(height: 16),
+              const Text(
+                "Featured restaurant unavailable",
+                style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                "We couldn't load this week's restaurant from Yelp. Please try again shortly.",
+                style: TextStyle(color: Colors.grey[400]),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _loadFeaturedRestaurant,
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.orange, foregroundColor: Colors.white),
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    print('🏠 MainApp: Building - isLoading: $isLoading, restaurant: ${featuredRestaurant?.name}');
-    if (isLoading) {
-      print('🏠 MainApp: Showing loading screen');
+    if (_isLoading) {
       return const Scaffold(
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(color: Colors.orange),
-              SizedBox(height: 16),
-              Text('Loading Austin Food Club...'),
-            ],
-          ),
+          child: CircularProgressIndicator(color: Colors.orange),
         ),
       );
     }
 
     return Scaffold(
-      extendBody: true, // This is crucial for glass effect
-      floatingActionButton: null, // Remove any existing FAB
-      bottomNavigationBar: null, // Remove traditional bottom bar
+      extendBody: true,
+      floatingActionButton: null,
+      bottomNavigationBar: null,
       body: Stack(
         children: [
-          // Main content
           IndexedStack(
             index: _currentIndex,
             children: _screens,
           ),
-          // Floating circular navigation with scroll-based opacity
           Positioned(
             bottom: 30 + MediaQuery.of(context).padding.bottom,
             left: 0,
             right: 0,
             child: AnimatedOpacity(
-              opacity: _currentIndex == 0 ? _bottomNavOpacity : 1.0, // Only fade on restaurant screen
+              opacity: (_currentIndex == 0 && featuredRestaurant != null) ? _bottomNavOpacity : 1.0,
               duration: const Duration(milliseconds: 200),
               child: _buildFloatingCircularNav(),
             ),
           ),
-          // API Status Indicator - moved to top
           Positioned(
             top: MediaQuery.of(context).padding.top + 10,
             right: 16,

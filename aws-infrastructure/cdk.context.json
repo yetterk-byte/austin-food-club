@@ -67,5 +67,59 @@
   "security-group:account=229037375031:region=us-east-1:securityGroupId=sg-06637b2f46c0db82a": {
     "securityGroupId": "sg-06637b2f46c0db82a",
     "allowAllOutbound": false
+  },
+  "vpc-provider:account=229037375031:filter.isDefault=true:region=us-east-1:returnAsymmetricSubnets=true": {
+    "vpcId": "vpc-0a757cd158287c43b",
+    "vpcCidrBlock": "172.31.0.0/16",
+    "ownerAccountId": "229037375031",
+    "availabilityZones": [],
+    "subnetGroups": [
+      {
+        "name": "Public",
+        "type": "Public",
+        "subnets": [
+          {
+            "subnetId": "subnet-0a2e246ffb715b713",
+            "cidr": "172.31.0.0/20",
+            "availabilityZone": "us-east-1a",
+            "routeTableId": "rtb-0a7169f2cb3264d98"
+          },
+          {
+            "subnetId": "subnet-062652dfc36cb26a8",
+            "cidr": "172.31.80.0/20",
+            "availabilityZone": "us-east-1b",
+            "routeTableId": "rtb-0a7169f2cb3264d98"
+          },
+          {
+            "subnetId": "subnet-06176c1e540a87bf6",
+            "cidr": "172.31.16.0/20",
+            "availabilityZone": "us-east-1c",
+            "routeTableId": "rtb-0a7169f2cb3264d98"
+          },
+          {
+            "subnetId": "subnet-0a13632c3ff2710a5",
+            "cidr": "172.31.32.0/20",
+            "availabilityZone": "us-east-1d",
+            "routeTableId": "rtb-0a7169f2cb3264d98"
+          },
+          {
+            "subnetId": "subnet-0760c5e5e737a4569",
+            "cidr": "172.31.48.0/20",
+            "availabilityZone": "us-east-1e",
+            "routeTableId": "rtb-0a7169f2cb3264d98"
+          },
+          {
+            "subnetId": "subnet-0d71f18c8ebcf842e",
+            "cidr": "172.31.64.0/20",
+            "availabilityZone": "us-east-1f",
+            "routeTableId": "rtb-0a7169f2cb3264d98"
+          }
+        ]
+      }
+    ]
+  },
+  "hosted-zone:account=229037375031:domainName=austinfoodclub.com:region=us-east-1": {
+    "Id": "/hostedzone/Z047127621P6DESU72DZV",
+    "Name": "austinfoodclub.com."
   }
 }

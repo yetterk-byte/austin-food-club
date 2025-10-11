@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import '../models/restaurant.dart';
 import '../widgets/rsvp_section.dart';
 import '../widgets/simple_map_widget.dart';
@@ -19,14 +20,21 @@ class RestaurantScreen extends StatefulWidget {
   State<RestaurantScreen> createState() => _RestaurantScreenState();
 }
 
-class _RestaurantScreenState extends State<RestaurantScreen> {
+class _RestaurantScreenState extends State<RestaurantScreen> with SingleTickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
+  late final AnimationController _arrowController;
 
   @override
   void initState() {
     super.initState();
     // Add scroll listener for bottom navigation opacity
     _scrollController.addListener(_onScroll);
+
+    // Pulsing arrow animation
+    _arrowController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..repeat(reverse: true);
   }
 
   void _onScroll() {
@@ -41,6 +49,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
 
   @override
   void dispose() {
+    _arrowController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -112,28 +121,25 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
   @override
   Widget build(BuildContext context) {
     print('🏪 RestaurantScreen: Building screen for ${widget.restaurant.name}');
-    print('🏪 RestaurantScreen: Restaurant data:');
-    print('  - Name: ${widget.restaurant.name}');
-    print('  - Address: ${widget.restaurant.address}');
-    print('  - ImageUrl: ${widget.restaurant.imageUrl}');
-    print('  - Rating: ${widget.restaurant.rating}');
-    print('  - Categories: ${widget.restaurant.categories}');
+    
+    // RESTORED FULL RESTAURANT SCREEN EXPERIENCE
     return Scaffold(
       backgroundColor: Colors.black,
-      body: CustomScrollView(
+      body: Container(
+        child: CustomScrollView(
         controller: _scrollController,
         slivers: [
-          // Full-screen Hero Image with Parallax Effect
+          // Full-screen Hero Image with Parallax + animated restaurant title
           SliverAppBar(
-            expandedHeight: 400, // Reduced height for testing
+            expandedHeight: MediaQuery.of(context).size.height, // Full screen hero
             floating: false,
             pinned: true,
-            backgroundColor: Colors.black, // Clean, solid app bar background
-            toolbarHeight: 80, // Increased height to accommodate large Monoton text
+            backgroundColor: Colors.black,
+            toolbarHeight: 60,
             title: Text(
               'Austin Food Club',
               style: AppTheme.monotonBranding.copyWith(
-                fontSize: 32,
+                fontSize: 28,
                 color: Colors.white,
               ),
             ),
@@ -143,23 +149,28 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                 final double expandedHeight = MediaQuery.of(context).size.height;
                 final double collapsedHeight = kToolbarHeight + MediaQuery.of(context).padding.top;
                 final double currentHeight = constraints.maxHeight;
-                final double scrollProgress = 1.0 - ((currentHeight - collapsedHeight) / (expandedHeight - collapsedHeight)).clamp(0.0, 1.0);
+                final double rawProgress = 1.0 - ((currentHeight - collapsedHeight) / (expandedHeight - collapsedHeight)).clamp(0.0, 1.0);
+
+                // Slightly quicker fall (less easing power)
+                final double positionProgress = math.pow(rawProgress, 1.4).toDouble();
                 
-                    // Calculate positions for the restaurant name transition
-                    final double heroNameTop = MediaQuery.of(context).padding.top + 60; // Higher since no Austin Food Club in hero
-                    final double heroNameLeft = 20;
-                final double contentNameTop = expandedHeight - (expandedHeight - collapsedHeight) * (1 - scrollProgress) + 60; // Approximate content position
+                // Start restaurant title below app name, animate toward details header
+                const double toolbarH = 60.0;
+                final double heroNameTop = MediaQuery.of(context).padding.top + toolbarH + 8;
+                final double heroNameLeft = 16;
+                final double contentNameTop = expandedHeight - 100; // target closer to details title
                 final double contentNameLeft = 20;
                 
-                // Interpolate between hero and content positions
-                final double nameTop = heroNameTop + (contentNameTop - heroNameTop) * scrollProgress;
-                final double nameLeft = heroNameLeft + (contentNameLeft - heroNameLeft) * scrollProgress;
+                // Interpolate between positions using slowed progress
+                final double nameTop = heroNameTop + (contentNameTop - heroNameTop) * positionProgress;
+                final double nameLeft = heroNameLeft + (contentNameLeft - heroNameLeft) * positionProgress;
                 
-                // Calculate font size transition (32px to 28px)
-                final double fontSize = 32.0 - (4.0 * scrollProgress);
-                
-                // Calculate opacity for the scroll indicator
-                final double scrollIndicatorOpacity = (1.0 - scrollProgress * 2).clamp(0.0, 1.0);
+                // Calculate opacity for the scroll indicator (keep visible longer)
+                final double scrollIndicatorOpacity = (1.0 - rawProgress * 1.2).clamp(0.0, 1.0);
+                // Slightly sooner handoff (~55% collapsed)
+                const double handoffStart = 0.55;
+                const double handoffEnd = 1.0;
+                final double heroOpacity = (1.0 - ((rawProgress - handoffStart) / (handoffEnd - handoffStart)).clamp(0.0, 1.0));
                 
                 return Stack(
                 fit: StackFit.expand,
@@ -193,67 +204,75 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                       );
                     },
                   ),
-                    // Subtle gradient for text readability
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                            Colors.black.withOpacity(0.3),
+                    // Dark gradient overlay for text readability
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
                             Colors.transparent,
-                          Colors.transparent,
-                          Colors.black.withOpacity(0.7),
-                        ],
-                          stops: const [0.0, 0.3, 0.7, 1.0],
+                            Colors.black.withOpacity(0.3),
+                            Colors.black.withOpacity(0.7),
+                          ],
+                          stops: const [0.0, 0.5, 1.0],
                         ),
                       ),
                     ),
-                    // Clean, simple app bar - elegant and straightforward
-                        // Austin Food Club is now always in the app bar
-                    // Animated restaurant name that transitions from hero to content position
-                    if (scrollProgress < 0.9) // Hide when almost fully scrolled to avoid overlap
-                      Positioned(
-                        top: nameTop,
-                        left: nameLeft,
-                        right: 20,
-                        child: AnimatedOpacity(
-                          duration: const Duration(milliseconds: 100),
-                          opacity: 1.0 - (scrollProgress * 1.2).clamp(0.0, 1.0),
-                          child: Text(
-                            widget.restaurant.name,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: fontSize,
-                              fontWeight: FontWeight.w300, // Light 300
-                              letterSpacing: -0.3,
-                              shadows: [
-                                Shadow(
-                                  color: Colors.black54,
-                                  blurRadius: 8 - (4 * scrollProgress), // Reduce shadow as it transitions
-                                  offset: Offset(2 - scrollProgress, 2 - scrollProgress),
-                                ),
-                              ],
-                            ),
+                    // Animated restaurant name under the app title (cross-fades during handoff)
+                    Positioned(
+                      top: nameTop,
+                      left: nameLeft,
+                      right: 20,
+                      child: Opacity(
+                        opacity: heroOpacity,
+                        child: Text(
+                          widget.restaurant.name,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          // Match details section typography
+                          style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w400,
+                            shadows: const [
+                              Shadow(
+                                color: Colors.black54,
+                                blurRadius: 8,
+                                offset: Offset(2, 2),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                        // Scroll indicator at bottom (fades out as you scroll)
-                        if (scrollIndicatorOpacity > 0)
-                          Positioned(
-                            bottom: 40,
-                            left: 0,
-                            right: 0,
-                            child: AnimatedOpacity(
-                              duration: const Duration(milliseconds: 200),
-                              opacity: scrollIndicatorOpacity,
-                              child: Icon(
-                                Icons.keyboard_arrow_up,
-                                color: Colors.white.withOpacity(0.8),
-                                size: 32,
+                    ),
+                    // Pulsing down-arrow scroll hint
+                    Positioned(
+                      bottom: 24,
+                      left: 0,
+                      right: 0,
+                      child: Opacity(
+                        opacity: scrollIndicatorOpacity,
+                        child: AnimatedBuilder(
+                          animation: _arrowController,
+                          builder: (context, child) {
+                            final double t = _arrowController.value; // 0..1
+                            final double opacity = 0.5 + 0.5 * t; // 0.5..1.0
+                            final double dy = 4 * (1 - t); // small up/down motion
+                            return Opacity(
+                              opacity: opacity,
+                              child: Transform.translate(
+                                offset: Offset(0, dy),
+                                child: const Icon(
+                                  Icons.keyboard_arrow_down_rounded,
+                                  color: Colors.white70,
+                                  size: 30,
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
                   ],
                 );
               },
@@ -305,14 +324,14 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                         AnimatedBuilder(
                           animation: _scrollController,
                           builder: (context, child) {
-                            // Calculate scroll progress for content visibility
+                            // Reveal the inline name earlier so hero lands precisely
                             final scrollOffset = _scrollController.hasClients ? _scrollController.offset : 0.0;
                             final expandedHeight = MediaQuery.of(context).size.height;
-                            final scrollProgress = (scrollOffset / (expandedHeight * 0.7)).clamp(0.0, 1.0);
+                            final scrollProgress = (scrollOffset / (expandedHeight * 0.8)).clamp(0.0, 1.0);
                             
                             return AnimatedOpacity(
-                              duration: const Duration(milliseconds: 200),
-                              opacity: scrollProgress > 0.8 ? 1.0 : 0.0, // Show when hero name is almost gone
+                              duration: const Duration(milliseconds: 150),
+                              opacity: scrollProgress > 0.65 ? 1.0 : 0.0,
                               child: Text(
                         widget.restaurant.name,
                         style: Theme.of(context).textTheme.headlineLarge?.copyWith(
@@ -526,7 +545,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        // Simplified location display
+                        // Map only
                         Container(
                           decoration: BoxDecoration(
                             color: Colors.grey[800],
@@ -538,26 +557,10 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(
-                                  Icons.location_on,
-                                  color: Colors.orange,
-                                  size: 32,
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  widget.restaurant.fullAddress,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                const SizedBox(height: 12),
                                 SimpleMapWidget(
                                   latitude: widget.restaurant.latitude,
                                   longitude: widget.restaurant.longitude,
-                                  address: widget.restaurant.fullAddress,
+                                  address: null,
                                 ),
                               ],
                             ),
@@ -573,10 +576,11 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                 ),
                   const SizedBox(height: 120), // Extra space for floating buttons
               ],
-              ),
             ),
           ),
+        ),
         ],
+      ),
       ),
     );
   }

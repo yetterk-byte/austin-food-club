@@ -682,7 +682,6 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.red.withOpacity(0.4), width: 2),
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(14),

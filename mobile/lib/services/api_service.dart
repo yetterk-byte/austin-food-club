@@ -1,8 +1,24 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'auth_storage.dart';
 
 class ApiService {
   static const String baseUrl = 'https://api.austinfoodclub.com/api';
+  
+  static Future<Map<String, String>> _headers({ bool auth = false, String? contentType }) async {
+    final Map<String, String> headers = {
+      'Accept': 'application/json',
+    };
+    if (contentType != null) {
+      headers['Content-Type'] = contentType;
+    }
+    if (auth) {
+      final token = await AuthStorage.getToken();
+      final bearer = (token != null && token.isNotEmpty) ? token : 'mock-token-consistent';
+      headers['Authorization'] = 'Bearer $bearer';
+    }
+    return headers;
+  }
   
   static Future<bool> testConnection() async {
     try {
@@ -25,14 +41,11 @@ class ApiService {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/rsvp'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
+        headers: await _headers(auth: true, contentType: 'application/json'),
         body: json.encode({
           'restaurantId': restaurantId,
           'day': day,
-          'userId': 'demo-user-123', // Using demo user for now
+          'status': 'going',
         }),
       );
       
@@ -50,20 +63,34 @@ class ApiService {
   }
 
   static Future<Map<String, int>> getRSVPCounts(String restaurantId) async {
-    // TODO: Implement RSVP counts endpoint on backend
-    // For now, return empty counts to prevent 422 errors
-    print('⚠️ RSVP counts endpoint not implemented, returning empty counts');
-    return {};
+    try {
+      final uri = Uri.parse('$baseUrl/rsvp/counts').replace(queryParameters: {
+        'restaurantId': restaurantId,
+      });
+      final response = await http.get(
+        uri,
+        headers: await _headers(),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        final Map<String, dynamic> counts = (data['data']?['dayCounts'] ?? data['dayCounts'] ?? {}) as Map<String, dynamic>;
+        return counts.map((k, v) => MapEntry(k, (v as num).toInt()));
+      } else {
+        print('❌ Failed to get RSVP counts: ${response.statusCode} - ${response.body}');
+        return {};
+      }
+    } catch (e) {
+      print('❌ Error getting RSVP counts: $e');
+      return {};
+    }
   }
 
   static Future<List<Map<String, dynamic>>> getVerifiedVisits(String userId) async {
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/verified-visits/user/$userId'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
+        headers: await _headers(auth: true, contentType: 'application/json'),
       );
       
       if (response.statusCode == 200) {

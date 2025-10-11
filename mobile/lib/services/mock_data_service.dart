@@ -96,7 +96,8 @@ class MockDataService {
   }
 
   static List<String> getDaysOfWeek() {
-    return ['Thursday', 'Friday', 'Saturday', 'Sunday'];
+    // Backend expects lowercase day names
+    return ['thursday', 'friday', 'saturday', 'sunday'];
   }
 
   static Future<Map<String, int>> getRSVPCounts(String restaurantId) async {

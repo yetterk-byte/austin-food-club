@@ -17,22 +17,23 @@ export class DomainAustinFoodClubStack extends cdk.Stack {
     // Domain configuration
     const domainName = 'austinfoodclub.com';
     const apiSubdomain = 'api.austinfoodclub.com';
+    const adminSubdomain = 'admin.austinfoodclub.com';
 
-    // Create hosted zone for the domain
-    const hostedZone = new route53.HostedZone(this, 'AustinFoodClubHostedZone', {
-      zoneName: domainName,
-      comment: `Hosted zone for ${domainName}`,
-    });
-
-    // Create SSL certificate for the domain and subdomains
-    const certificate = new acm.Certificate(this, 'AustinFoodClubCertificate', {
+    // Import existing hosted zone for the domain (avoid creating a new zone)
+    const hostedZone = route53.HostedZone.fromLookup(this, 'AustinFoodClubHostedZone', {
       domainName: domainName,
-      subjectAlternativeNames: [apiSubdomain],
-      validation: acm.CertificateValidation.fromDns(hostedZone),
     });
 
-    // Get existing S3 bucket (from previous deployment)
-    const webAppBucket = s3.Bucket.fromBucketName(this, 'WebAppBucket', 'basicaustinfoodclubstack-webappbucket8f6fa179-shyzfbe9qamw');
+    // Create a CloudFront-compatible certificate in us-east-1
+    const cfCertificate = new acm.DnsValidatedCertificate(this, 'AustinFoodClubCfCertificate', {
+      domainName: domainName,
+      subjectAlternativeNames: [apiSubdomain, adminSubdomain],
+      hostedZone: hostedZone,
+      region: 'us-east-1',
+    });
+
+    // Main site bucket (Flutter web app)
+    const webAppBucket = s3.Bucket.fromBucketName(this, 'WebAppBucket', 'austinfoodclub-frontend');
 
     // Create CloudFront distribution with custom domain
     const distribution = new cloudfront.Distribution(this, 'AustinFoodClubDistribution', {
@@ -43,11 +44,45 @@ export class DomainAustinFoodClubStack extends cdk.Stack {
         originRequestPolicy: cloudfront.OriginRequestPolicy.CORS_S3_ORIGIN,
       },
       domainNames: [domainName],
-      certificate: certificate,
+      certificate: cfCertificate,
       comment: `CloudFront distribution for ${domainName}`,
       priceClass: cloudfront.PriceClass.PRICE_CLASS_100,
       httpVersion: cloudfront.HttpVersion.HTTP2,
       enableIpv6: true,
+    });
+
+    // Admin S3 bucket and CloudFront
+    const adminBucket = new s3.Bucket(this, 'AdminWebBucket', {
+      // private bucket; access via CloudFront OAI
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
+    });
+
+    const adminOai = new cloudfront.OriginAccessIdentity(this, 'AdminOAI');
+    // Allow CloudFront to read from the bucket
+    adminBucket.grantRead(adminOai.grantPrincipal);
+
+    const adminDistribution = new cloudfront.Distribution(this, 'AdminDistribution', {
+      defaultBehavior: {
+        origin: new origins.S3Origin(adminBucket, { originAccessIdentity: adminOai }),
+        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
+      },
+      defaultRootObject: 'admin-dashboard.html',
+      domainNames: [adminSubdomain],
+      certificate: cfCertificate,
+      comment: `CloudFront distribution for ${adminSubdomain}`,
+      priceClass: cloudfront.PriceClass.PRICE_CLASS_100,
+      httpVersion: cloudfront.HttpVersion.HTTP2,
+      enableIpv6: true,
+      errorResponses: [
+        {
+          httpStatus: 404,
+          responseHttpStatus: 200,
+          responsePagePath: '/admin-dashboard.html',
+        },
+      ],
     });
 
     // Get existing ALB (from ECS stack)
@@ -56,14 +91,17 @@ export class DomainAustinFoodClubStack extends cdk.Stack {
     });
 
     // Add HTTPS listener to ALB
+    // HTTPS listener forwards to existing backend target group
     const httpsListener = alb.addListener('HttpsListener', {
       port: 443,
       protocol: elbv2.ApplicationProtocol.HTTPS,
-      certificates: [certificate],
-      defaultAction: elbv2.ListenerAction.fixedResponse(404, {
-        contentType: 'text/plain',
-        messageBody: 'Not Found',
-      }),
+      certificates: [cfCertificate],
+      // forward to imported target group
+      defaultAction: elbv2.ListenerAction.forward([
+        elbv2.ApplicationTargetGroup.fromTargetGroupAttributes(this, 'ImportedBackendTG', {
+          targetGroupArn: 'arn:aws:elasticloadbalancing:us-east-1:229037375031:targetgroup/ECSAus-Backe-JOCBBUXAFOVB/ffbf0e7093acbafe',
+        }),
+      ]),
     });
 
     // Create Route 53 records
@@ -79,6 +117,13 @@ export class DomainAustinFoodClubStack extends cdk.Stack {
       zone: hostedZone,
       recordName: apiSubdomain,
       target: route53.RecordTarget.fromAlias(new route53Targets.LoadBalancerTarget(alb)),
+    });
+
+    // Admin subdomain points to admin CloudFront
+    new route53.ARecord(this, 'AdminDomainRecord', {
+      zone: hostedZone,
+      recordName: adminSubdomain,
+      target: route53.RecordTarget.fromAlias(new route53Targets.CloudFrontTarget(adminDistribution)),
     });
 
     // WWW subdomain redirects to main domain
@@ -100,13 +145,23 @@ export class DomainAustinFoodClubStack extends cdk.Stack {
     });
 
     new cdk.CfnOutput(this, 'CertificateArn', {
-      value: certificate.certificateArn,
-      description: 'SSL Certificate ARN',
+      value: cfCertificate.certificateArn,
+      description: 'SSL Certificate ARN (us-east-1 for CloudFront)',
     });
 
     new cdk.CfnOutput(this, 'CloudFrontDomainName', {
       value: distribution.distributionDomainName,
       description: 'CloudFront distribution domain name',
+    });
+
+    new cdk.CfnOutput(this, 'AdminBucketName', {
+      value: adminBucket.bucketName,
+      description: 'S3 bucket name for admin dashboard',
+    });
+
+    new cdk.CfnOutput(this, 'AdminCloudFrontDomainName', {
+      value: adminDistribution.distributionDomainName,
+      description: 'CloudFront distribution domain name for admin',
     });
 
     new cdk.CfnOutput(this, 'MainDomainUrl', {
@@ -117,6 +172,11 @@ export class DomainAustinFoodClubStack extends cdk.Stack {
     new cdk.CfnOutput(this, 'ApiDomainUrl', {
       value: `https://${apiSubdomain}`,
       description: 'API endpoint URL',
+    });
+
+    new cdk.CfnOutput(this, 'AdminDomainUrl', {
+      value: `https://${adminSubdomain}`,
+      description: 'Admin dashboard URL',
     });
   }
 }

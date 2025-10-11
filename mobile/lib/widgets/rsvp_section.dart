@@ -164,7 +164,8 @@ class _RSVPSectionState extends State<RSVPSection> {
             alignment: WrapAlignment.center,
             children: daysOfWeek.map((day) {
               final isSelected = selectedDay == day;
-              final count = rsvpCounts[day] ?? 0;
+              // Support counts keyed by either lowercase or capitalized days
+              final count = rsvpCounts[day] ?? rsvpCounts[day[0].toUpperCase() + day.substring(1)] ?? 0;
               final isLoading = loadingDay == day;
               
               return GestureDetector(
@@ -182,7 +183,7 @@ class _RSVPSectionState extends State<RSVPSection> {
                   child: Column(
                     children: [
                       Text(
-                        day.substring(0, 3), // Show first 3 letters
+                        (day[0].toUpperCase() + day.substring(1)).substring(0, 3), // Show first 3 letters capitalized
                         style: TextStyle(
                           color: isSelected ? Colors.white : Colors.white70,
                           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,

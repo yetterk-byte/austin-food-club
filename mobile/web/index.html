@@ -14,7 +14,7 @@
     This is a placeholder for base href that will be replaced by the value of
     the `--base-href` argument provided to `flutter build`.
   -->
-  <base href="$FLUTTER_BASE_HREF">
+  <base href="/" />
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
@@ -80,17 +80,14 @@
       overflow: hidden;
     }
     
-    /* Force Flutter app container to be visible with red border for debugging */
+    /* Flutter app container */
     #flutter-app, flt-glass-pane, flutter-view {
       background-color: #000000 !important;
-      border: 3px solid red !important;
       min-height: 100vh !important;
     }
     
-    /* Make sure Flutter canvas is visible */
-    canvas {
-      border: 2px solid green !important;
-    }
+    /* Remove debug canvas border */
+    canvas { }
     
     /* Monoton font for branding */
     .monoton {
@@ -132,9 +129,18 @@
       scriptLoaded = true;
       console.log('Creating script tag for main.dart.js');
       
-      // Force HTML renderer for Safari compatibility
-      window.flutterWebRenderer = "html";
-      console.log('Using HTML renderer for better Safari compatibility');
+      // Configure Flutter engine to use HTML renderer for better compatibility
+      window._flutter = window._flutter || {};
+      window._flutter.loader = window._flutter.loader || {};
+      window._flutter.loader.didCreateEngineInitializer = async function(engineInitializer) {
+        console.log('Initializing Flutter engine with HTML renderer...');
+        const appRunner = await engineInitializer.initializeEngine({
+          renderer: "html"
+        });
+        console.log('Starting Flutter app...');
+        await appRunner.runApp();
+        console.log('Flutter app started successfully!');
+      };
       
       var scriptTag = document.createElement('script');
       scriptTag.src = 'main.dart.js';

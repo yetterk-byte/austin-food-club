@@ -60,7 +60,7 @@ app.use((req, res, next) => {
   const origin = req.headers.origin;
   console.log(`🌐 CORS: Request from origin: ${origin}`);
   
-  if (origin === 'https://austinfoodclub.com' || origin === 'https://www.austinfoodclub.com') {
+  if (origin === 'https://austinfoodclub.com' || origin === 'https://www.austinfoodclub.com' || origin === 'https://admin.austinfoodclub.com') {
     console.log(`✅ CORS: Setting headers for ${origin}`);
     res.header('Access-Control-Allow-Origin', origin);
     res.header('Access-Control-Allow-Credentials', 'true');
@@ -94,7 +94,8 @@ const corsOptions = {
       'http://localhost:8082',
       'http://localhost:3000',
       'https://austinfoodclub.com',
-      'https://www.austinfoodclub.com'
+      'https://www.austinfoodclub.com',
+      'https://admin.austinfoodclub.com'
     ];
     
     // Check if origin matches allowed origins or localhost pattern
@@ -120,7 +121,7 @@ app.use(cors(corsOptions));
 // Additional CORS middleware to ensure headers are set
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  if (origin === 'https://austinfoodclub.com' || origin === 'https://www.austinfoodclub.com') {
+  if (origin === 'https://austinfoodclub.com' || origin === 'https://www.austinfoodclub.com' || origin === 'https://admin.austinfoodclub.com') {
     res.header('Access-Control-Allow-Origin', origin);
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
@@ -181,46 +182,6 @@ app.use('/api/v1', apiRouter);
 
 // Simple restaurant routes (working version)
 app.use('/api/restaurants', simpleRestaurantRoutes);
-
-// Proxy endpoint to bypass Safari CORS issues
-app.post('/api/proxy/verification/send-code', asyncHandler(async (req, res) => {
-  const { phone } = req.body;
-  
-  if (!phone) {
-    return res.status(400).json({
-      success: false,
-      message: 'Phone number is required',
-      timestamp: new Date().toISOString()
-    });
-  }
-  
-  // Generate 6-digit verification code
-  const code = Math.floor(100000 + Math.random() * 900000).toString();
-  
-  // Store code with expiration (10 minutes)
-  const verificationCodes = new Map();
-  verificationCodes.set(phone, {
-    code,
-    expiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
-    attempts: 0
-  });
-  
-  // Mock SMS sending for testing
-  console.log(`📱 [MOCK SMS] Verification code for ${phone}: ${code}`);
-  console.log(`📱 [MOCK SMS] Message: "Your Austin Food Club verification code is: ${code}. This code expires in 10 minutes."`);
-  
-  res.json({
-    success: true,
-    message: 'Verification code sent successfully (mock mode)',
-    data: {
-      phone: phone,
-      expiresIn: 600, // 10 minutes in seconds
-      mockCode: code, // Include code in response for testing
-      note: 'This is a mock SMS - no actual SMS was sent'
-    },
-    timestamp: new Date().toISOString()
-  });
-}));
 
 // Auth routes (public)
 app.use('/api/auth', authRoutes);
