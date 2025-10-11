@@ -22,6 +22,9 @@ echo "🌍 AWS Region: $AWS_REGION"
 export CDK_DEFAULT_ACCOUNT=$AWS_ACCOUNT
 export CDK_DEFAULT_REGION=$AWS_REGION
 
+# Known resources
+WEB_APP_BUCKET="austinfoodclub-frontend"
+
 # Navigate to infrastructure directory
 cd aws-infrastructure
 
@@ -33,20 +36,11 @@ npm install
 echo "🔧 Bootstrapping CDK..."
 npx cdk bootstrap
 
-# Deploy infrastructure
+# Deploy infrastructure (all stacks)
 echo "🏗️ Deploying infrastructure..."
-npx cdk deploy --require-approval never
+npx cdk deploy --all --require-approval never || npx cdk deploy DomainAustinFoodClubStack ECSAustinFoodClubStack MonitoringAustinFoodClubStack --require-approval never
 
-# Get outputs
-echo "📊 Getting deployment outputs..."
-LOAD_BALANCER_DNS=$(aws cloudformation describe-stacks --stack-name AustinFoodClubStack --query 'Stacks[0].Outputs[?OutputKey==`LoadBalancerDNS`].OutputValue' --output text)
-WEB_APP_BUCKET=$(aws cloudformation describe-stacks --stack-name AustinFoodClubStack --query 'Stacks[0].Outputs[?OutputKey==`WebAppBucketName`].OutputValue' --output text)
-CLOUDFRONT_DOMAIN=$(aws cloudformation describe-stacks --stack-name AustinFoodClubStack --query 'Stacks[0].Outputs[?OutputKey==`CloudFrontDomainName`].OutputValue' --output text)
-
-echo "✅ Infrastructure deployed successfully!"
-echo "🌐 Load Balancer DNS: $LOAD_BALANCER_DNS"
-echo "🪣 Web App Bucket: $WEB_APP_BUCKET"
-echo "☁️ CloudFront Domain: $CLOUDFRONT_DOMAIN"
+echo "✅ Infrastructure deploy command executed"
 
 # Build and push Docker image
 echo "🐳 Building and pushing Docker image..."
@@ -68,6 +62,11 @@ docker push $AWS_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com/austin-food-club-back
 
 echo "✅ Docker image pushed successfully!"
 
+# Force new ECS deployment to pick up latest image
+echo "🔁 Forcing ECS service deployment..."
+aws ecs update-service --cluster austin-food-club-cluster --service austin-food-club-backend --force-new-deployment --region $AWS_REGION || true
+echo "✅ ECS service update requested"
+
 # Build Flutter web app
 echo "📱 Building Flutter web app..."
 cd ../mobile
@@ -81,10 +80,14 @@ aws s3 sync build/web/ s3://$WEB_APP_BUCKET --delete
 
 # Invalidate CloudFront cache
 echo "🔄 Invalidating CloudFront cache..."
-CLOUDFRONT_ID=$(aws cloudformation describe-stacks --stack-name AustinFoodClubStack --query 'Stacks[0].Outputs[?OutputKey==`CloudFrontDistributionId`].OutputValue' --output text)
-aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths "/*"
+# Discover distributions by alias and invalidate
+CF_IDS=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items && contains(join(',',Aliases.Items),'austinfoodclub.com')].Id" --output text)
+for ID in $CF_IDS; do
+  echo "Invalidating CloudFront distribution: $ID"
+  aws cloudfront create-invalidation --distribution-id $ID --paths "/*" || true
+done
 
 echo "🎉 Deployment completed successfully!"
-echo "🌐 Your app will be available at: https://$CLOUDFRONT_DOMAIN"
-echo "🔗 Backend API: http://$LOAD_BALANCER_DNS"
+echo "🌐 Frontend updated on CloudFront aliases for austinfoodclub.com"
+echo "🔗 Backend ECS service redeploy requested (cluster: austin-food-club-cluster, service: austin-food-club-backend)"
 
