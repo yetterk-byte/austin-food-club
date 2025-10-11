@@ -43,4 +43,48 @@ jobs:
           name: server-log
           path: server/server.log
 
+  flutter-web-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Get dependencies
+        working-directory: mobile
+        run: flutter pub get
+
+      - name: Build Flutter Web (release)
+        working-directory: mobile
+        run: flutter build web --release --no-wasm-dry-run
+
+  smoke-staging:
+    if: ${{ secrets.STAGING_BASE_URL != '' }}
+    runs-on: ubuntu-latest
+    env:
+      SMOKE_BASE_URL: ${{ secrets.STAGING_BASE_URL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install server dependencies
+        working-directory: server
+        run: npm ci
+
+      - name: Run smoke test against staging
+        working-directory: server
+        run: npm run smoke
+
 
